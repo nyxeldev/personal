@@ -160,7 +160,7 @@ export default function Nav() {
         id="nav-sheet"
         ref={sheetRef}
         className={`sheet ${open ? "is-open" : ""}`}
-        hidden={!open}
+        inert={!open}
       >
         <nav className="sheet__links" aria-label="Sections">
           {LINKS.map((l, i) => (

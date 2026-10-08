@@ -8,7 +8,7 @@
 }
 
 .nav.is-stuck {
-  background: color-mix(in srgb, var(--bg) 78%, transparent);
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
   backdrop-filter: saturate(180%) blur(14px);
   -webkit-backdrop-filter: saturate(180%) blur(14px);
   border-bottom-color: var(--line);
@@ -48,7 +48,7 @@
 
 .nav__mark:hover .nav__mark-glyph {
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .nav__mark-text {
@@ -196,13 +196,17 @@
   justify-content: space-between;
   padding: clamp(2rem, 8vw, 4rem) var(--gut) calc(var(--gut) + 1rem);
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
-  transition: opacity var(--d-mid) var(--e-io);
+  transition: opacity var(--d-mid) var(--e-io),
+    visibility 0s linear var(--d-mid);
 }
 
 .sheet.is-open {
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
+  transition: opacity var(--d-mid) var(--e-io), visibility 0s;
 }
 
 .sheet__links {

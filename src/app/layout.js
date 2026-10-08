@@ -15,12 +15,11 @@ const mono = JetBrains_Mono({
   variable: "--font-mono",
 });
 
-// Deploy paytida haqiqiy domenni bering: NEXT_PUBLIC_SITE_URL=https://...
-// Aks holda OG rasm havolasi nisbiy qoladi va ba'zi platformalar uni ko'rsatmaydi.
-const SITE = process.env.NEXT_PUBLIC_SITE_URL;
+// Boshqa domenga qo'yilsa NEXT_PUBLIC_SITE_URL bilan almashtiriladi
+const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://nyxeldev.pro";
 
 export const metadata = {
-  ...(SITE ? { metadataBase: new URL(SITE) } : {}),
+  metadataBase: new URL(SITE),
   title: "Jahongir Hamidov — Full-Stack Developer",
   description:
     "I build intelligent, data-driven systems with a focus on reliable backend architecture and security.",

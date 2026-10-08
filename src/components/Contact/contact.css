@@ -40,7 +40,7 @@
   width: 100%;
   padding: 0.85rem 1rem;
   background: var(--bg-raise);
-  border: 1px solid var(--line-2);
+  border: 1px solid var(--line-strong);
   border-radius: var(--radius);
   font-size: var(--t-sm);
   color: var(--ink);
@@ -62,14 +62,14 @@
 
 .field input[aria-invalid="true"],
 .field textarea[aria-invalid="true"] {
-  border-color: #d14343;
+  border-color: var(--danger);
 }
 
 .field__err {
   display: block;
   margin-top: 0.4rem;
   font-size: var(--t-xs);
-  color: #d14343;
+  color: var(--danger);
 }
 
 .honey {
@@ -103,11 +103,17 @@
 }
 
 .cform__status.is-ok {
-  color: #15803d;
+  color: #136c34;
 }
 
 .cform__status.is-err {
-  color: #d14343;
+  color: var(--danger);
+}
+
+.cform__status a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .dark-theme .cform__status.is-ok {

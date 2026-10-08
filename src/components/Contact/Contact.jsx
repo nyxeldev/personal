@@ -14,6 +14,11 @@ const EMAILJS = {
   publicKey: "vMRalq9p-Z-2v0CRO",
 };
 
+// Xat shu manzilga tushadi. EmailJS shablonida "To Email" maydoni
+// {{to_email}} bo'lsa shu qiymat ishlatiladi; qat'iy manzil yozilgan bo'lsa
+// shablonning o'zini EmailJS panelida almashtirish kerak.
+const INBOX = "imhamidovic@gmail.com";
+
 const CHANNELS = [
   {
     icon: Mail,
@@ -22,7 +27,7 @@ const CHANNELS = [
     href: "mailto:imhamidovic@gmail.com",
   },
   { icon: Send, label: "Telegram", value: "@nyxeldev", href: "https://t.me/nyxeldev" },
-  { icon: Github, label: "GitHub", value: "@nyxeldev", href: "https://github.com/nyxeldev" },
+  { icon: Github, label: "GitHub", value: "nyxeldev", href: "https://github.com/nyxeldev" },
   {
     icon: Linkedin,
     label: "LinkedIn",
@@ -79,16 +84,26 @@ export default function Contact() {
       Object.entries(form).map(([k, v]) => [k, v.replace(/[<>]/g, "")])
     );
 
-    emailjs.send(EMAILJS.serviceID, EMAILJS.templateID, clean, EMAILJS.publicKey).then(
+    const payload = {
+      ...clean,
+      to_email: INBOX,
+      // "Reply" bosilganda javob to'g'ridan-to'g'ri yozuvchiga ketadi
+      reply_to: clean.email,
+      from_name: clean.name,
+    };
+
+    emailjs.send(EMAILJS.serviceID, EMAILJS.templateID, payload, EMAILJS.publicKey).then(
       () => {
         setStatus({ type: "ok", text: "Sent. I’ll get back to you shortly." });
         setForm(EMPTY);
         setSending(false);
       },
       () => {
+        // yuborish uzilsa odam yo'qolib qolmasin — to'g'ridan-to'g'ri yo'l beramiz
         setStatus({
           type: "err",
-          text: "That didn’t go through. Email me directly instead.",
+          text: "That didn’t go through. Reach me directly at",
+          mailto: INBOX,
         });
         setSending(false);
       }
@@ -188,6 +203,12 @@ export default function Contact() {
                 {status && (
                   <p className={`cform__status is-${status.type}`} role="status">
                     {status.text}
+                    {status.mailto && (
+                      <>
+                        {" "}
+                        <a href={`mailto:${status.mailto}`}>{status.mailto}</a>
+                      </>
+                    )}
                   </p>
                 )}
               </div>

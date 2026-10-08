@@ -15,41 +15,49 @@ const ieltsBlur =
 
 // SEASMP arxitekturasi — qatlamlar bo'yicha
 const STACK = [
-  { tier: "Client", items: ["4 role-specific dashboards"] },
-  { tier: "Gateway", items: ["Fastify", "JWT refresh rotation", "RBAC", "Rate limiting"] },
-  { tier: "Services", items: ["FastAPI — analytics & ML", "Celery — scheduled ETL"] },
+  { tier: "Client", items: ["Next.js App Router", "4 role-specific dashboards"] },
+  {
+    tier: "Gateway",
+    items: ["Fastify core API", "4-role RBAC", "JWT refresh rotation", "Rate limiting"],
+  },
+  {
+    tier: "Services",
+    items: ["FastAPI — analytics & ML", "Celery — nightly rescoring"],
+  },
   { tier: "Data", items: ["PostgreSQL", "Redis"] },
+  { tier: "Ship", items: ["Docker", "GitHub Actions", "GHCR"] },
 ];
 
-/**
- * Faza matnlari brief'dagi faktlarga tayanadi.
- * Problem va Result bandlari umumiy ta'rif — real raqamlar bilan almashtirilishi kerak.
- */
 const PHASES = [
   {
     id: "problem",
     label: "Problem",
-    body: "Attendance, grades and engagement lived in disconnected spreadsheets. Nobody held a single view of a cohort, and a student drifting off track surfaced at the end of term — far too late to act on.",
+    body: "Four roles need one platform and almost none of the same data. And the question actually worth answering — which student is drifting — only has value while the term is still running, not in a report written after it ends. Attendance on top of that has to be taken in seconds, from a phone, with a code nobody can forward to a friend.",
   },
   {
     id: "architecture",
     label: "Architecture",
-    body: "Two services behind one gateway. Fastify fronts the product API and owns auth and access control; FastAPI runs analytics and the model, so a heavy query never blocks a page load. PostgreSQL is the system of record, Redis holds short-lived state, and Celery runs the scheduled work.",
+    body: "A Fastify core API alongside a FastAPI analytics service, talking over an internal HTTP contract. I chose synchronous calls over a message broker because inter-service volume is low and I wanted the failure mode to stay legible: an analytics outage degrades the /analytics routes and nothing else, instead of quietly queueing work nobody is watching. PostgreSQL is the system of record, Redis holds short-lived state, Celery runs everything scheduled.",
   },
   {
     id: "engineering",
     label: "Engineering",
-    body: "Four role-specific dashboards, each scoped to what that role may actually see. Attendance is taken by QR code backed by a Redis one-time token, so a screenshotted code is already spent. An ETL pipeline feeds a Random Forest model that flags at-risk students while the term is still running.",
+    body: "Four role-specific dashboards on a single Next.js App Router codebase — route guards, role-conditional rendering and per-role fetching, so a student session never issues an admin query in the first place. QR attendance runs end to end in the browser: camera capture, a one-time Redis token on a 5-minute TTL verified against the JWT actor, and an optimistic UI that rolls back the moment the server rejects.",
+  },
+  {
+    id: "model",
+    label: "Model",
+    body: "An ETL pipeline over production tables feeds eight behavioural features into a Random Forest with balanced class weights. Celery rescores nightly; the monthly retrain is promoted only when its AUC beats the model already deployed. The honest caveat: at 191 enrollments and 6 dropout events the dataset is still small, so what is proven today is the pipeline end to end — it re-validates itself as the data grows.",
   },
   {
     id: "security",
     label: "Security",
-    body: "RBAC enforced at the data layer rather than in the UI. JWT refresh rotation, TOTP two-factor authentication, rate limiting on public routes, and audit logging on privileged actions so any change traces back to a person and a time.",
+    body: "Four-role RBAC with ownership checks at the service layer rather than only on the route, so authorisation does not depend on which entry point was used. JWT refresh rotation, TOTP two-factor, rate limiting, and a before/after audit log — every privileged change traces back to a person, a time and the value it replaced.",
   },
   {
-    id: "result",
-    label: "Result",
-    body: "One platform in place of the spreadsheet workflow: live attendance, role-correct dashboards, and early warning on students at risk — with a CI pipeline keeping each change verified before it ships.",
+    id: "shipping",
+    label: "Shipping",
+    body: "Five CI jobs running in parallel — Jest, Vitest, a Postgres and Redis integration suite, pytest and Playwright — then a Docker build, then GHCR. The spread is the point: each layer gets checked by something that can actually see it.",
   },
 ];
 
@@ -78,8 +86,21 @@ export default function Work() {
               <span className="cs__kicker mono">Case study — 01</span>
               <h3 className="cs__title">SEASMP</h3>
               <p className="cs__sub">Education Analytics &amp; Monitoring Platform</p>
+              <p className="cs__meta mono">Solo developer · May 2026 — present</p>
             </div>
-            <span className="cs__badge mono">Fastify · FastAPI · PostgreSQL</span>
+
+            <div className="cs__aside">
+              <span className="cs__badge mono">Fastify · FastAPI · PostgreSQL</span>
+              <a
+                className="worklink"
+                href="https://github.com/nyxeldev/seasmp"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Github size={15} strokeWidth={1.8} />
+                nyxeldev/seasmp
+              </a>
+            </div>
           </div>
 
           {/* arxitektura qatlamlari */}
@@ -126,6 +147,19 @@ export default function Work() {
             >
               <p>{current.body}</p>
             </div>
+          </div>
+
+          {/* eng qiziq topilma — alohida ajratilgan */}
+          <div className="find">
+            <span className="find__label mono">The bug worth keeping</span>
+            <p className="find__body">
+              Behind Nginx, <code>request.ip</code> resolved to the container address.
+              One line, three silent failures at once: rate limiting bucketed every
+              visitor into the same counter, audit attribution recorded the proxy
+              instead of the actor, and the unknown-IP anomaly signal could never fire.
+              Every test stayed green throughout — they were asserting the behaviour of
+              the code, not of the deployment it runs in.
+            </p>
           </div>
         </Reveal>
 

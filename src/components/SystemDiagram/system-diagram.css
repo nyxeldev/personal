@@ -2,7 +2,6 @@
   width: 100%;
   max-width: 440px;
   margin-inline: auto;
-  color: var(--line);
 }
 
 .sysdia__svg {
@@ -108,6 +107,18 @@
   stroke-width: 3;
   opacity: 1;
   animation-duration: 1.3s;
+}
+
+/* SVG kichrayganda yozuv ham kichrayadi — viewBox birligida kattalashtiramiz */
+@media (max-width: 620px) {
+  .sysdia__label {
+    font-size: 15px;
+  }
+
+  .sysdia__node--source .sysdia__label,
+  .sysdia__node--out .sysdia__label {
+    font-size: 14px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

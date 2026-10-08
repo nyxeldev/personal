@@ -8,19 +8,24 @@
   /* bo'lim ichidagi tokenlarni qayta belgilaymiz */
   --ink: #f4f4f1;
   --ink-2: #b0b0a9;
-  --ink-3: #85857d;
-  --ink-4: #62625c;
+  --ink-3: #8e8e88;
+  --ink-4: #7d7d78;
   --line: #222228;
   --line-2: #33333b;
   --accent: #5b8bff;
+  --on-accent: #08080a;
   --accent-line: rgba(91, 139, 255, 0.35);
   --accent-wash: rgba(91, 139, 255, 0.12);
 }
 
-/* qorong'i temada tasma yo'qolib ketmasligi uchun chegara beramiz */
+/*
+ * Yorug' temada bu tasma qora bo'lgani uchun kuchli "teskari" nuqta.
+ * Qorong'i temada esa qora qoraga qo'shilib ketadi — shuning uchun u yerda
+ * ko'tarilgan panelga aylanadi va akcent chizig'i bilan ajratiladi.
+ */
 .dark-theme .datastory {
-  background: #0e0e12;
-  border-block: 1px solid var(--line-2);
+  background: #111117;
+  border-block: 1px solid var(--accent-line);
 }
 
 .datastory .shell {
@@ -63,7 +68,7 @@
 }
 
 .dark-theme .joinviz {
-  background: #09090c;
+  background: #0a0a0e;
 }
 
 .joinviz__svg {
@@ -117,6 +122,13 @@
   fill: var(--ink-2);
 }
 
+.joinviz__sub {
+  font-size: 9.5px !important;
+  letter-spacing: 0.06em !important;
+  fill: var(--ink-4) !important;
+  text-transform: none;
+}
+
 .joinviz__nodes g:hover rect {
   stroke: var(--accent);
   fill: var(--accent-wash);
@@ -158,16 +170,55 @@
   fill: #ff8f8f;
 }
 
-/* ---------- matn ---------- */
-.datastory__grid {
+/* ---------- uchta kamchilik ---------- */
+.faults {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(1.5rem, 4vw, 3.5rem);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.25rem, 3vw, 2.25rem);
+  border-top: 1px solid var(--line);
+  padding-top: clamp(1.75rem, 4vw, 2.75rem);
+}
+
+.fault__n {
+  display: block;
+  color: var(--accent);
+  margin-bottom: 0.9rem;
+}
+
+.fault__title {
+  font-size: var(--t-h3);
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin-bottom: 0.65rem;
+}
+
+.fault__body {
+  color: var(--ink-2);
+  font-size: var(--t-sm);
+  line-height: 1.65;
+}
+
+/* ---------- natija ---------- */
+.datastory__out {
+  display: grid;
+  grid-template-columns: 148px minmax(0, 1fr);
+  gap: clamp(1rem, 3vw, 2.5rem);
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+  padding-top: clamp(1.75rem, 4vw, 2.75rem);
+  border-top: 1px solid var(--line);
+}
+
+.datastory__out-label {
+  color: var(--ink-4);
+  padding-top: 0.4rem;
 }
 
 .datastory__body {
   color: var(--ink-2);
-  max-width: 54ch;
+  font-size: var(--t-lead);
+  line-height: 1.55;
+  letter-spacing: -0.015em;
+  max-width: 62ch;
 }
 
 .datastory__body code {
@@ -183,7 +234,7 @@
 /* ---------- raqamlar ---------- */
 .statrow {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: clamp(1rem, 3vw, 2.5rem);
   margin-top: clamp(2.5rem, 6vw, 4.5rem);
   padding-top: clamp(1.5rem, 3vw, 2.5rem);
@@ -197,7 +248,7 @@
 }
 
 .stat__n {
-  font-size: clamp(2.25rem, 1.2rem + 4vw, 4rem);
+  font-size: clamp(2rem, 1rem + 3.4vw, 3.4rem);
   font-weight: 500;
   letter-spacing: -0.05em;
   line-height: 1;
@@ -215,14 +266,58 @@
 }
 
 /* ---------- moslashuv ---------- */
+/* keng ekranda surish kerak emas — izoh ham yashirin */
+.joinviz__hint {
+  display: none;
+}
+
+/* diagramma siqilib o'qilmay qolmasin — ramka ichida surib ko'riladi */
+@media (max-width: 620px) {
+  .joinviz {
+    padding-bottom: 0.5rem;
+  }
+
+  .joinviz__scroll {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+  }
+
+  .joinviz__svg {
+    min-width: 470px;
+  }
+
+  .joinviz__hint {
+    display: block;
+    margin-top: 0.85rem;
+    text-align: center;
+    color: var(--ink-4);
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 1040px) {
+  .faults {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+
+  .statrow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 920px) {
-  .datastory__top,
-  .datastory__grid {
+  .datastory__top {
     grid-template-columns: 1fr;
   }
 
   .datastory__intro {
     max-width: none;
+  }
+
+  .datastory__out {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
   }
 }
 

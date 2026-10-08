@@ -11,17 +11,18 @@
   --bg-sunk: #f1f1ed;
   --bg-ink: #0a0a0a;
 
-  /* Matn */
+  /* Matn — ink-3 va ink-4 mayda yorliqlar uchun, AA dan o'tadi */
   --ink: #0a0a0a;
   --ink-2: #44443f;
-  --ink-3: #78786f;
-  --ink-4: #a3a39a;
+  --ink-3: #5e5e59;
+  --ink-4: #686863;
   --on-ink: #f8f8f6;
   --on-ink-2: #9a9a93;
 
-  /* Chiziqlar */
+  /* Chiziqlar — line-strong forma elementlari chegarasi uchun (3:1) */
   --line: #e4e4de;
   --line-2: #d3d3ca;
+  --line-strong: #93938d;
   --line-ink: #262626;
 
   /* Akcent — electric blue / cyan */
@@ -31,6 +32,10 @@
   --cyan: #00c8f0;
   --accent-wash: rgba(11, 76, 255, 0.08);
   --accent-line: rgba(11, 76, 255, 0.22);
+  /* akcent foni ustidagi matn */
+  --on-accent: #ffffff;
+
+  --danger: #bf3434;
 
   /* Shriftlar */
   --sans: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -72,13 +77,14 @@
 
   --ink: #f4f4f1;
   --ink-2: #b4b4ad;
-  --ink-3: #85857d;
-  --ink-4: #5a5a54;
+  --ink-3: #8e8e88;
+  --ink-4: #7d7d78;
   --on-ink: #08080a;
   --on-ink-2: #4a4a46;
 
   --line: #222228;
   --line-2: #32323a;
+  --line-strong: #5c5c64;
   --line-ink: #e4e4de;
 
   --accent: #5b8bff;
@@ -87,6 +93,10 @@
   --cyan: #2ad8ff;
   --accent-wash: rgba(91, 139, 255, 0.12);
   --accent-line: rgba(91, 139, 255, 0.3);
+  /* och ko'k akcent ustida oq o'qilmaydi — to'q matn qo'yamiz */
+  --on-accent: #08080a;
+
+  --danger: #ff8a8a;
 }
 
 /* ---------- 2. Reset ---------- */
@@ -163,7 +173,7 @@ p {
 
 ::selection {
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 :focus-visible {
@@ -270,7 +280,7 @@ p {
 
 .btn--primary:hover {
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .btn--ghost {
