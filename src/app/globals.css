@@ -1,141 +1,399 @@
-@import url("https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&display=swap");
+/* ============================================================
+   INTELLIGENT SYSTEMS — dizayn tizimi
+   Linear x Vercel x Apple x AI lab
+   ============================================================ */
 
-@import "tailwindcss";
-
-/* Font family uchun asosiy class */
-.readhat {
-  font-family: "Red Hat Display", sans-serif;
-}
-
-/* Light va Dark theme uchun umumiy CSS variables */
+/* ---------- 1. Tokenlar ---------- */
 :root {
-  --font-family: "Red Hat Display", sans-serif;
-}
-/* Light Theme Variables */
-.light-theme {
-  --bg: #f9fafb;
-  --secondary-bg: #ffffff;
-  --text: #1f2937;
-  --text-secondary: #6b7280;
-  --accent: #0ea5e9;
-  --highlight: #f43f5e;
-  --border: #e5e7eb;
+  /* Sirtlar */
+  --bg: #f8f8f6;
+  --bg-raise: #ffffff;
+  --bg-sunk: #f1f1ed;
+  --bg-ink: #0a0a0a;
+
+  /* Matn */
+  --ink: #0a0a0a;
+  --ink-2: #44443f;
+  --ink-3: #78786f;
+  --ink-4: #a3a39a;
+  --on-ink: #f8f8f6;
+  --on-ink-2: #9a9a93;
+
+  /* Chiziqlar */
+  --line: #e4e4de;
+  --line-2: #d3d3ca;
+  --line-ink: #262626;
+
+  /* Akcent — electric blue / cyan */
+  --accent: #0b4cff;
+  --accent-hi: #3d74ff;
+  --accent-lo: #0836b8;
+  --cyan: #00c8f0;
+  --accent-wash: rgba(11, 76, 255, 0.08);
+  --accent-line: rgba(11, 76, 255, 0.22);
+
+  /* Shriftlar */
+  --sans: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono: var(--font-mono), ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Tipografik shkala — fluid */
+  --t-display: clamp(2.75rem, 1.2rem + 6.4vw, 7rem);
+  --t-h1: clamp(2.25rem, 1.2rem + 4.2vw, 4.5rem);
+  --t-h2: clamp(1.75rem, 1.1rem + 2.6vw, 3rem);
+  --t-h3: clamp(1.25rem, 1rem + 1.1vw, 1.75rem);
+  --t-lead: clamp(1.0625rem, 0.98rem + 0.5vw, 1.375rem);
+  --t-body: 1rem;
+  --t-sm: 0.875rem;
+  --t-xs: 0.75rem;
+  --t-mono: 0.6875rem;
+
+  /* Ritm */
+  --gut: clamp(1.25rem, 0.6rem + 2.6vw, 3.5rem);
+  --sec-y: clamp(5rem, 3rem + 9vw, 11rem);
+  --max: 1320px;
+  --max-text: 58ch;
+
+  /* Harakat */
+  --e-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --e-io: cubic-bezier(0.65, 0, 0.35, 1);
+  --d-fast: 0.18s;
+  --d-mid: 0.4s;
+  --d-slow: 0.8s;
+
+  --radius: 4px;
+  --radius-lg: 10px;
 }
 
-/* Dark Theme Variables */
 .dark-theme {
-  --bg: #3c4043;
-  --secondary-bg: #2c2f31;
-  --text: #e8eaed;
-  --text-secondary: #a8b0b8;
-  --accent: #00c9a7;
-  --highlight: #ff6b6b;
-  --border: #4f5458;
+  --bg: #08080a;
+  --bg-raise: #101014;
+  --bg-sunk: #0c0c0f;
+  --bg-ink: #f2f2ef;
+
+  --ink: #f4f4f1;
+  --ink-2: #b4b4ad;
+  --ink-3: #85857d;
+  --ink-4: #5a5a54;
+  --on-ink: #08080a;
+  --on-ink-2: #4a4a46;
+
+  --line: #222228;
+  --line-2: #32323a;
+  --line-ink: #e4e4de;
+
+  --accent: #5b8bff;
+  --accent-hi: #8aacff;
+  --accent-lo: #3566e8;
+  --cyan: #2ad8ff;
+  --accent-wash: rgba(91, 139, 255, 0.12);
+  --accent-line: rgba(91, 139, 255, 0.3);
+}
+
+/* ---------- 2. Reset ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
 }
 
 body {
-  font-family: var(--font-family);
-  margin: 0;
-  padding: 0;
-  background-color: var(--bg);
-  color: var(--text);
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--t-body);
+  line-height: 1.6;
+  font-synthesis-weight: none;
+  font-optical-sizing: auto;
+  font-feature-settings: "cv05" 1, "ss03" 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  transition: background-color var(--d-mid) var(--e-io), color var(--d-mid) var(--e-io);
 }
 
-/* Global element styles */
-section {
-  background-color: var(--bg);
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
 h1,
 h2,
-h3 {
-  color: var(--text);
+h3,
+h4 {
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.04;
+  text-wrap: balance;
 }
 
 p {
-  color: var(--text-secondary);
+  text-wrap: pretty;
 }
 
-input,
-textarea {
-  background-color: var(--bg);
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 0.5rem;
-  padding: 0.75rem;
-}
-
-button {
-  background-color: var(--accent);
-  color: var(--text);
-  border-radius: 0.5rem;
-  font-weight: 600;
-  padding: 0.5rem 1rem;
-  transition: all 0.3s ease;
-}
-
-button:hover {
-  background-color: var(--highlight);
+::selection {
+  background: var(--accent);
   color: #fff;
 }
 
-a {
-  color: var(--text);
-  text-decoration: none;
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
-a:hover {
+/* ---------- 3. Layout primitivlari ---------- */
+.shell {
+  width: 100%;
+  max-width: var(--max);
+  margin-inline: auto;
+  padding-inline: var(--gut);
+}
+
+.section {
+  padding-block: var(--sec-y);
+  position: relative;
+}
+
+/* fiksirlangan nav balandligi + havo */
+[id] {
+  scroll-margin-top: 92px;
+}
+
+.rule {
+  height: 1px;
+  background: var(--line);
+  border: 0;
+}
+
+/* Bo'lim sarlavhasi: 01 / WHO I AM */
+.sec-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--mono);
+  font-size: var(--t-mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: clamp(2rem, 1rem + 3vw, 4rem);
+}
+
+.sec-label__num {
   color: var(--accent);
+  font-variant-numeric: tabular-nums;
 }
 
-.card {
-  background-color: var(--secondary-bg);
-  border: 1px solid var(--border);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  border-bottom-left-radius: 1rem;
-  border-bottom-right-radius: 1rem;
-  padding: 1.5rem;
+.sec-label__bar {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+  margin-left: 0.5rem;
 }
 
-.popup {
-  background-color: var(--secondary-bg);
-  color: var(--text);
-  border: 2px solid var(--accent);
-  border-radius: 1rem;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-  padding: 1.5rem;
+/* Mono yorliq */
+.mono {
+  font-family: var(--mono);
+  font-size: var(--t-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
 }
 
-.gradient-bg {
-  background-image: linear-gradient(to bottom right, var(--bg), var(--accent));
+.lead {
+  font-size: var(--t-lead);
+  line-height: 1.5;
+  color: var(--ink-2);
+  letter-spacing: -0.015em;
+  max-width: var(--max-text);
 }
 
-/* Custom animations */
-@keyframes pulse {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
+/* ---------- 4. Tugmalar ---------- */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.95rem 1.5rem;
+  border-radius: 100px;
+  font-size: var(--t-sm);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  transition: background-color var(--d-fast) var(--e-io),
+    color var(--d-fast) var(--e-io), border-color var(--d-fast) var(--e-io),
+    transform var(--d-fast) var(--e-out);
 }
 
-.pulse {
-  animation: pulse 2s infinite ease-in-out;
+.btn__arrow {
+  transition: transform var(--d-mid) var(--e-out);
 }
 
-.hire-me-btn {
-  background-color: var(--highlight);
+.btn:hover .btn__arrow {
+  transform: translateX(4px);
+}
+
+.btn--primary {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.btn--primary:hover {
+  background: var(--accent);
   color: #fff;
-  padding: 0.75rem 1.5rem;
-  border-radius: 9999px;
-  font-weight: 600;
-  box-shadow: 0 10px 20px rgba(244, 63, 94, 0.3);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.hire-me-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 24px rgba(244, 63, 94, 0.4);
+.btn--ghost {
+  border: 1px solid var(--line-2);
+  color: var(--ink);
+}
+
+.btn--ghost:hover {
+  border-color: var(--ink);
+  background: var(--bg-raise);
+}
+
+/* ---------- 5. Animatsiya yordamchilari ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s var(--e-out), transform 0.7s var(--e-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Harf-harf ochilish */
+.split {
+  display: inline-block;
+}
+
+.split__line {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  /* descender (g, y, p) kesilmasligi uchun ozgina havo */
+  padding-bottom: 0.12em;
+  margin-bottom: -0.12em;
+}
+
+.split__word {
+  display: inline-block;
+  transform: translateY(104%);
+  transition: transform 0.9s var(--e-out);
+  transition-delay: var(--word-delay, 0ms);
+  will-change: transform;
+}
+
+.is-in .split__word {
+  transform: none;
+}
+
+/* Fon to'ri */
+.grid-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 20%, transparent 75%);
+  opacity: 0.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .split__word {
+    transform: none;
+  }
+}
+
+/* ---------- 6. Skip link ---------- */
+.skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 200;
+  padding: 0.85rem 1.25rem;
+  background: var(--ink);
+  color: var(--on-ink);
+  border-radius: 0 0 var(--radius) 0;
+  font-size: var(--t-sm);
+}
+
+.skip:focus {
+  left: 0;
+}
+
+/* ---------- 7. O'qish progressi ---------- */
+.progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 2px;
+  z-index: 101;
+  background: var(--accent);
+  transform: scaleX(var(--p, 0));
+  transform-origin: 0 50%;
+  will-change: transform;
+  pointer-events: none;
+}
+
+/* ---------- 8. Kirish xoreografiyasi ---------- */
+@keyframes page-in {
+  from {
+    opacity: 0;
+  }
+}
+
+body {
+  animation: page-in 0.5s var(--e-io) both;
 }

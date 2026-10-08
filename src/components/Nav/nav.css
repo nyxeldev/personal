@@ -1,0 +1,287 @@
+.nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 100;
+  transition: background-color var(--d-mid) var(--e-io),
+    border-color var(--d-mid) var(--e-io), backdrop-filter var(--d-mid) var(--e-io);
+  border-bottom: 1px solid transparent;
+}
+
+.nav.is-stuck {
+  background: color-mix(in srgb, var(--bg) 78%, transparent);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border-bottom-color: var(--line);
+}
+
+.nav__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  height: 68px;
+}
+
+/* ---------- logotip ---------- */
+.nav__mark {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  flex-shrink: 0;
+}
+
+.nav__mark-glyph {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--ink);
+  color: var(--on-ink);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  transition: background-color var(--d-fast) var(--e-io);
+}
+
+.nav__mark:hover .nav__mark-glyph {
+  background: var(--accent);
+  color: #fff;
+}
+
+.nav__mark-text {
+  font-size: var(--t-sm);
+}
+
+/* ---------- havolalar ---------- */
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.nav__link {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 100px;
+  font-size: var(--t-sm);
+  color: var(--ink-3);
+  transition: color var(--d-fast) var(--e-io), background-color var(--d-fast) var(--e-io);
+}
+
+.nav__link-num {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: var(--ink-4);
+  transition: color var(--d-fast) var(--e-io);
+}
+
+.nav__link:hover {
+  color: var(--ink);
+  background: var(--bg-sunk);
+}
+
+.nav__link.is-active {
+  color: var(--ink);
+}
+
+.nav__link.is-active .nav__link-num {
+  color: var(--accent);
+}
+
+/* ---------- o'ng chekka ---------- */
+.nav__end {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.magnetic {
+  display: inline-block;
+  will-change: transform;
+  transition: transform 0.45s var(--e-out);
+}
+
+.nav__resume {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--line-2);
+  border-radius: 100px;
+  font-size: var(--t-sm);
+  transition: border-color var(--d-fast) var(--e-io), background-color var(--d-fast) var(--e-io);
+}
+
+.nav__resume:hover {
+  border-color: var(--ink);
+  background: var(--bg-raise);
+}
+
+.nav__icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 100px;
+  color: var(--ink-2);
+  border: 1px solid transparent;
+  transition: color var(--d-fast) var(--e-io), background-color var(--d-fast) var(--e-io),
+    border-color var(--d-fast) var(--e-io);
+}
+
+.nav__icon:hover {
+  color: var(--ink);
+  background: var(--bg-sunk);
+  border-color: var(--line);
+}
+
+/* ---------- burger ---------- */
+.nav__burger {
+  display: none;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+}
+
+.nav__burger-bars {
+  position: relative;
+  display: block;
+  width: 18px;
+  height: 10px;
+}
+
+.nav__burger-bars i {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 1.5px;
+  background: var(--ink);
+  border-radius: 2px;
+  transition: transform var(--d-mid) var(--e-out), opacity var(--d-fast) linear;
+}
+
+.nav__burger-bars i:first-child {
+  top: 0;
+}
+
+.nav__burger-bars i:last-child {
+  bottom: 0;
+}
+
+.nav__burger-bars.is-x i:first-child {
+  transform: translateY(4.25px) rotate(45deg);
+}
+
+.nav__burger-bars.is-x i:last-child {
+  transform: translateY(-4.25px) rotate(-45deg);
+}
+
+/* ---------- mobil varaq ---------- */
+.sheet {
+  position: fixed;
+  inset: 68px 0 0 0;
+  z-index: 99;
+  /* to'liq shaffof emas — matn fon bilan aralashmaydi */
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(2rem, 8vw, 4rem) var(--gut) calc(var(--gut) + 1rem);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--d-mid) var(--e-io);
+}
+
+.sheet.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sheet__links {
+  display: flex;
+  flex-direction: column;
+}
+
+.sheet__link {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--line);
+  font-size: clamp(1.75rem, 9vw, 2.5rem);
+  letter-spacing: -0.035em;
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+.sheet.is-open .sheet__link {
+  animation: sheet-in 0.6s var(--e-out) forwards;
+  animation-delay: calc(var(--i) * 55ms + 80ms);
+}
+
+@keyframes sheet-in {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.sheet__num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+}
+
+.sheet__resume {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1.05rem 1.5rem;
+  border-radius: 100px;
+  background: var(--ink);
+  color: var(--on-ink);
+  font-size: var(--t-sm);
+  font-weight: 500;
+}
+
+/* ---------- moslashuv ---------- */
+@media (max-width: 1080px) {
+  .nav__link-num {
+    display: none;
+  }
+}
+
+@media (max-width: 920px) {
+  .nav__links {
+    display: none;
+  }
+
+  .nav__burger {
+    display: grid;
+  }
+}
+
+@media (max-width: 560px) {
+  .nav__mark-text,
+  .nav__resume {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet.is-open .sheet__link {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -1,87 +1,76 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
-import AnimatedBackground from "../AnimatedBackground/AnimatedBackground";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
+import SplitText from "@/components/ui/SplitText";
+import Reveal from "@/components/ui/Reveal";
+import Magnetic from "@/components/ui/Magnetic";
+import SystemDiagram from "@/components/SystemDiagram/SystemDiagram";
 import "./hero.css";
 
 export default function Hero() {
-  const textVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: "easeOut" },
-    },
-  };
-
-  const buttonVariants = {
-    hover: {
-      scale: 1.03,
-      backgroundColor: "var(--highlight)",
-      transition: { duration: 0.3 },
-    },
-    tap: { scale: 0.97 },
-  };
-
   return (
-    <section
-      id="home"
-      className="min-h-screen flex items-center justify-center py-16 px-4 hero-section"
-    >
-      <AnimatedBackground />
-      <div className="max-w-4xl mx-auto text-center">
-        <motion.h1
-          variants={textVariants}
-          initial="hidden"
-          animate="visible"
-          className="text-4xl md:text-6xl font-bold mb-6"
-        >
-          Hey, I'm <span className="text-[var(--accent)]">Hamidov</span> — a
-          Creative Full Stack Developer
-        </motion.h1>
-        <motion.p
-          variants={textVariants}
-          initial="hidden"
-          animate="visible"
-          className="text-lg md:text-xl mb-8"
-        >
-          I craft modern, responsive, and lightning-fast web applications using
-          <strong> Next.js</strong>, <strong>TailwindCSS</strong>, and a touch
-          of creativity. Let’s bring your next big idea to life!
-        </motion.p>
-        <div className="flex gap-4 justify-center">
-          <motion.a
-            href="#projects"
-            onClick={(e) => {
-              e.preventDefault();
-              document
-                .querySelector("#projects")
-                .scrollIntoView({ behavior: "smooth" });
-            }}
-            variants={buttonVariants}
-            whileHover="hover"
-            whileTap="tap"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[var(--accent)] text-white font-semibold shadow-md transition duration-300"
-          >
-            See My Projects <ArrowRight size={20} />
-          </motion.a>
-          <motion.a
-            href="#contact"
-            onClick={(e) => {
-              e.preventDefault();
-              document
-                .querySelector("#contact")
-                .scrollIntoView({ behavior: "smooth" });
-            }}
-            variants={buttonVariants}
-            whileHover="hover"
-            whileTap="tap"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[var(--accent)] text-[var(--accent)] font-semibold transition duration-300"
-          >
-            Let's Connect
-          </motion.a>
+    <section className="hero" id="top">
+      <div className="grid-bg" aria-hidden="true" />
+
+      <div className="hero__inner shell">
+        <div className="hero__copy">
+          <Reveal className="hero__eyebrow">
+            <span className="hero__dot" aria-hidden="true" />
+            <span className="mono">Available for work</span>
+            <span className="hero__sep" aria-hidden="true" />
+            <span className="mono">Tashkent, UZ</span>
+          </Reveal>
+
+          <h1 className="hero__name">
+            <SplitText text="Jahongir" as="span" delay={60} />
+            <SplitText text="Hamidov" as="span" delay={160} className="hero__name-last" />
+          </h1>
+
+          <Reveal className="hero__role" delay={380}>
+            <span className="hero__role-main">Full-Stack Developer</span>
+            <span className="hero__role-tags mono">Data · AI · Security</span>
+          </Reveal>
+
+          <Reveal as="p" className="hero__lead lead" delay={460}>
+            I build intelligent, data-driven systems with a focus on reliable backend
+            architecture and security.
+          </Reveal>
+
+          <Reveal className="hero__cta" delay={560}>
+            <Magnetic strength={0.25}>
+              <a href="#work" className="btn btn--primary">
+                View selected work
+                <ArrowRight size={16} strokeWidth={2} className="btn__arrow" />
+              </a>
+            </Magnetic>
+
+            <Magnetic strength={0.25}>
+              <a
+                href="/files/Resume.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn--ghost"
+              >
+                Download résumé
+                <ArrowUpRight size={16} strokeWidth={2} className="btn__arrow" />
+              </a>
+            </Magnetic>
+          </Reveal>
         </div>
+
+        <Reveal className="hero__viz" delay={300}>
+          <SystemDiagram />
+          <span className="hero__viz-cap mono">
+            live architecture
+            <span className="hero__viz-hint"> — hover to trace</span>
+          </span>
+        </Reveal>
+      </div>
+
+      <div className="hero__floor shell" aria-hidden="true">
+        <span className="mono">Scroll</span>
+        <span className="hero__floor-line" />
+        <span className="mono">01 / Who I am</span>
       </div>
     </section>
   );

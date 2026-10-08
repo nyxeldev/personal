@@ -1,0 +1,120 @@
+.sysdia {
+  width: 100%;
+  max-width: 440px;
+  margin-inline: auto;
+  color: var(--line);
+}
+
+.sysdia__svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  transform: translate3d(var(--px, 0), var(--py, 0), 0);
+  transition: transform 0.6s var(--e-out);
+}
+
+/* ---------- chiziqlar ---------- */
+.sysdia__wire {
+  fill: none;
+  stroke: var(--line-2);
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  transition: stroke var(--d-mid) var(--e-io);
+}
+
+.sysdia__flow {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 30 100;
+  stroke-dashoffset: 130;
+  opacity: 0.9;
+  /* tinch holat — juda sekin */
+  animation: sd-flow 9s linear infinite;
+}
+
+@keyframes sd-flow {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ---------- tugunlar ---------- */
+.sysdia__node {
+  cursor: default;
+}
+
+.sysdia__box {
+  fill: var(--bg-raise);
+  stroke: var(--line-2);
+  stroke-width: 1.5;
+  transition: fill var(--d-mid) var(--e-io), stroke var(--d-mid) var(--e-io);
+}
+
+.sysdia__label {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  fill: var(--ink-2);
+  transition: fill var(--d-mid) var(--e-io);
+  user-select: none;
+}
+
+/* manba va chiqish tugunlari biroz boshqacha */
+.sysdia__node--source .sysdia__box,
+.sysdia__node--out .sysdia__box {
+  fill: transparent;
+  stroke-dasharray: 3 4;
+}
+
+.sysdia__node--source .sysdia__label,
+.sysdia__node--out .sysdia__label {
+  fill: var(--ink-3);
+  font-size: 11px;
+}
+
+.sysdia__node--core .sysdia__box {
+  stroke: var(--ink);
+}
+
+.sysdia__node--core .sysdia__label {
+  fill: var(--ink);
+}
+
+/* ---------- hover: arxitektura jonlanadi ---------- */
+.sysdia:hover .sysdia__flow {
+  animation-duration: 2.6s;
+}
+
+.sysdia:hover .sysdia__wire {
+  stroke: var(--accent-line);
+}
+
+.sysdia__node.is-hot .sysdia__box {
+  fill: var(--accent-wash);
+  stroke: var(--accent);
+}
+
+.sysdia__node.is-hot .sysdia__label {
+  fill: var(--accent);
+}
+
+.sysdia__edges g.is-hot .sysdia__wire {
+  stroke: var(--accent);
+}
+
+.sysdia__edges g.is-hot .sysdia__flow {
+  stroke-width: 3;
+  opacity: 1;
+  animation-duration: 1.3s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sysdia__flow {
+    animation: none;
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    opacity: 0.35;
+  }
+}

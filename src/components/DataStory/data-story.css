@@ -1,0 +1,243 @@
+/* Butun bo'lim teskari (qora) tasma — sahifadagi eng kuchli nuqta */
+.datastory {
+  background: #09090b;
+  color: #f4f4f1;
+  margin-block: clamp(3rem, 7vw, 6rem);
+  overflow: hidden;
+
+  /* bo'lim ichidagi tokenlarni qayta belgilaymiz */
+  --ink: #f4f4f1;
+  --ink-2: #b0b0a9;
+  --ink-3: #85857d;
+  --ink-4: #62625c;
+  --line: #222228;
+  --line-2: #33333b;
+  --accent: #5b8bff;
+  --accent-line: rgba(91, 139, 255, 0.35);
+  --accent-wash: rgba(91, 139, 255, 0.12);
+}
+
+/* qorong'i temada tasma yo'qolib ketmasligi uchun chegara beramiz */
+.dark-theme .datastory {
+  background: #0e0e12;
+  border-block: 1px solid var(--line-2);
+}
+
+.datastory .shell {
+  padding-inline: clamp(1.5rem, 5vw, 4rem);
+}
+
+.datastory__top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: clamp(1.5rem, 5vw, 4rem);
+  align-items: end;
+}
+
+.datastory__head {
+  font-size: var(--t-h1);
+  display: flex;
+  flex-direction: column;
+  letter-spacing: -0.045em;
+}
+
+.datastory__head-accent {
+  color: var(--accent);
+}
+
+.datastory__intro {
+  color: var(--ink-2);
+  font-size: var(--t-lead);
+  line-height: 1.5;
+  letter-spacing: -0.015em;
+  max-width: 46ch;
+}
+
+/* ---------- join diagrammasi ---------- */
+.joinviz {
+  margin-block: clamp(2.5rem, 6vw, 4.5rem);
+  padding: clamp(1rem, 3vw, 2rem);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: #0c0c10;
+}
+
+.dark-theme .joinviz {
+  background: #09090c;
+}
+
+.joinviz__svg {
+  width: 100%;
+  height: auto;
+  max-width: 720px;
+  margin-inline: auto;
+  overflow: visible;
+}
+
+.joinviz__wires path {
+  fill: none;
+  stroke: var(--line-2);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+/* buzilgan bog'lanish — uzuq chiziq */
+.joinviz__broken {
+  stroke-dasharray: 5 5;
+  stroke: #4a3030 !important;
+}
+
+.joinviz__flows path {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 32 100;
+  stroke-dashoffset: 132;
+  animation: jv-flow 5.5s linear infinite;
+}
+
+@keyframes jv-flow {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.joinviz__nodes rect {
+  fill: #121217;
+  stroke: var(--line-2);
+  stroke-width: 1.5;
+  transition: stroke var(--d-mid) var(--e-io), fill var(--d-mid) var(--e-io);
+}
+
+.joinviz__nodes text {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  fill: var(--ink-2);
+}
+
+.joinviz__nodes g:hover rect {
+  stroke: var(--accent);
+  fill: var(--accent-wash);
+}
+
+.joinviz__join rect {
+  stroke: #8a4b4b;
+}
+
+.joinviz__join text {
+  fill: #ff8f8f;
+}
+
+.joinviz__out rect {
+  stroke-dasharray: 3 4;
+  fill: transparent;
+}
+
+/* ---------- belgilar ---------- */
+.joinviz__leader {
+  fill: none;
+  stroke: #6b4242;
+  stroke-width: 1;
+  stroke-dasharray: 3 4;
+}
+
+.joinviz__fault {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  fill: #ff8f8f;
+}
+
+.joinviz__loss {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  fill: #ff8f8f;
+}
+
+/* ---------- matn ---------- */
+.datastory__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.datastory__body {
+  color: var(--ink-2);
+  max-width: 54ch;
+}
+
+.datastory__body code {
+  font-family: var(--mono);
+  font-size: 0.82em;
+  letter-spacing: 0.06em;
+  padding: 0.14em 0.42em;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.07);
+  color: var(--ink);
+}
+
+/* ---------- raqamlar ---------- */
+.statrow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 3vw, 2.5rem);
+  margin-top: clamp(2.5rem, 6vw, 4.5rem);
+  padding-top: clamp(1.5rem, 3vw, 2.5rem);
+  border-top: 1px solid var(--line);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.stat__n {
+  font-size: clamp(2.25rem, 1.2rem + 4vw, 4rem);
+  font-weight: 500;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.stat__k {
+  font-family: var(--mono);
+  font-size: var(--t-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  line-height: 1.6;
+}
+
+/* ---------- moslashuv ---------- */
+@media (max-width: 920px) {
+  .datastory__top,
+  .datastory__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .datastory__intro {
+    max-width: none;
+  }
+}
+
+@media (max-width: 620px) {
+  .statrow {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .joinviz__flows path {
+    animation: none;
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    opacity: 0.4;
+  }
+}

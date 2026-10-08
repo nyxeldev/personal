@@ -1,0 +1,71 @@
+.who__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.85fr);
+  gap: clamp(2.5rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.who__head {
+  font-size: var(--t-h1);
+  display: flex;
+  flex-direction: column;
+  letter-spacing: -0.042em;
+}
+
+.who__head-dim {
+  color: var(--ink-3);
+}
+
+.who__lead {
+  margin-top: clamp(1.5rem, 3vw, 2rem);
+  color: var(--ink);
+  font-weight: 450;
+}
+
+.who__body {
+  margin-top: 1.25rem;
+  max-width: var(--max-text);
+  color: var(--ink-2);
+}
+
+.who__body em {
+  font-style: normal;
+  color: var(--ink);
+  box-shadow: inset 0 -0.42em 0 var(--accent-wash);
+}
+
+/* ---------- faktlar ustuni ---------- */
+.who__facts {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--line);
+}
+
+.fact {
+  display: grid;
+  gap: 0.3rem;
+  padding-block: 1.15rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.fact__k {
+  color: var(--ink-4);
+}
+
+.fact__v {
+  font-size: var(--t-sm);
+  letter-spacing: -0.012em;
+  color: var(--ink);
+}
+
+.fact__sub {
+  font-size: var(--t-xs);
+  color: var(--ink-3);
+  line-height: 1.5;
+}
+
+@media (max-width: 920px) {
+  .who__grid {
+    grid-template-columns: 1fr;
+  }
+}

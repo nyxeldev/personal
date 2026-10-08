@@ -1,30 +1,30 @@
-"use client";
-
-import Navbar from "@/components/Navbar/Navbar";
+import Nav from "@/components/Nav/Nav";
+import ScrollProgress from "@/components/ui/ScrollProgress";
 import Hero from "@/components/Hero/Hero";
-import About from "@/components/About/About";
-import Skills from "@/components/Skills/Skills";
-import Projects from "@/components/Projects/Projects";
-import Testimonial from "@/components/Testimonial/Testimonial";
-import Blog from "@/components/Blog/Blog";
+import WhoIAm from "@/components/WhoIAm/WhoIAm";
+import WhatIBuild from "@/components/WhatIBuild/WhatIBuild";
+import Work from "@/components/Work/Work";
+import DataStory from "@/components/DataStory/DataStory";
 import Contact from "@/components/Contact/Contact";
 import Footer from "@/components/Footer/Footer";
-import useTheme from "@/hooks/useTheme";
 
 export default function Home() {
-  const { theme } = useTheme();
-
   return (
-    <div className={`${theme}-theme`}>
-      <Navbar />
-      <Hero />
-      <About />
-      <Skills />
-      <Projects />
-      <Testimonial />
-      <Blog />
-      <Contact />
+    <>
+      <ScrollProgress />
+      <a className="skip" href="#main">
+        Skip to content
+      </a>
+      <Nav />
+      <main id="main">
+        <Hero />
+        <WhoIAm />
+        <WhatIBuild />
+        <Work />
+        <DataStory />
+        <Contact />
+      </main>
       <Footer />
-    </div>
+    </>
   );
 }

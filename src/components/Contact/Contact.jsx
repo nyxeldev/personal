@@ -1,302 +1,225 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Send,
-  Github,
-  Mail,
-  Linkedin,
-  CheckCircle,
-  AlertCircle,
-} from "lucide-react";
+import { useState } from "react";
 import emailjs from "@emailjs/browser";
+import { ArrowRight, Mail, Send, Github, Linkedin } from "lucide-react";
+import SplitText from "@/components/ui/SplitText";
+import Reveal from "@/components/ui/Reveal";
+import Magnetic from "@/components/ui/Magnetic";
+import "./contact.css";
+
+const EMAILJS = {
+  serviceID: "service_hssxaha",
+  templateID: "template_lkwk49g",
+  publicKey: "vMRalq9p-Z-2v0CRO",
+};
+
+const CHANNELS = [
+  {
+    icon: Mail,
+    label: "Email",
+    value: "imhamidovic@gmail.com",
+    href: "mailto:imhamidovic@gmail.com",
+  },
+  { icon: Send, label: "Telegram", value: "@nyxeldev", href: "https://t.me/nyxeldev" },
+  { icon: Github, label: "GitHub", value: "@nyxeldev", href: "https://github.com/nyxeldev" },
+  {
+    icon: Linkedin,
+    label: "LinkedIn",
+    value: "iamhamidov",
+    href: "https://www.linkedin.com/in/iamhamidov/",
+  },
+];
+
+const EMPTY = { name: "", email: "", phone: "", message: "" };
+
+// botlar to'ldiradigan ko'rinmas maydon
+const HONEY = "company_website";
 
 export default function Contact() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    message: "",
-  });
-  const [status, setStatus] = useState({ message: "", type: "" });
+  const [form, setForm] = useState(EMPTY);
   const [errors, setErrors] = useState({});
+  const [status, setStatus] = useState(null);
+  const [sending, setSending] = useState(false);
+  const [trap, setTrap] = useState("");
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.2, delayChildren: 0.3 },
-    },
+  const update = (e) => {
+    const { name, value } = e.target;
+    setForm((f) => ({ ...f, [name]: value }));
+    setErrors((prev) => (prev[name] ? { ...prev, [name]: null } : prev));
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: "easeOut" },
-    },
+  const validate = () => {
+    const next = {};
+    if (!form.name.trim()) next.name = "Your name, please.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) next.email = "That address looks off.";
+    if (form.message.trim().length < 10) next.message = "A little more context helps.";
+    setErrors(next);
+    return Object.keys(next).length === 0;
   };
 
-  const buttonVariants = {
-    hover: { scale: 1.05, transition: { duration: 0.2 } },
-    tap: { scale: 0.95 },
-  };
-
-  const popupVariants = {
-    hidden: { opacity: 0, scale: 0.8, y: 50 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      transition: { duration: 0.4, ease: "easeOut" },
-    },
-    exit: {
-      opacity: 0,
-      scale: 0.8,
-      y: 50,
-      transition: { duration: 0.3, ease: "easeIn" },
-    },
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = "Name is required";
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Invalid email format";
-    }
-    if (formData.phone && !/^\+?[1-9]\d{1,14}$/.test(formData.phone)) {
-      newErrors.phone = "Invalid phone number";
-    }
-    if (!formData.message.trim()) newErrors.message = "Message is required";
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = (e) => {
+  const submit = (e) => {
     e.preventDefault();
-    if (!validateForm()) return;
+    if (sending) return;
 
-    setStatus({ message: "Sending...", type: "info" });
+    // honeypot to'lgan bo'lsa — bu bot, jim chiqamiz
+    if (trap) {
+      setStatus({ type: "ok", text: "Sent. I’ll get back to you shortly." });
+      setForm(EMPTY);
+      return;
+    }
 
-    const serviceID = "service_hssxaha";
-    const templateID = "template_lkwk49g";
-    const publicKey = "vMRalq9p-Z-2v0CRO";
+    if (!validate()) return;
+
+    setSending(true);
+    setStatus({ type: "info", text: "Sending…" });
 
     // XSS oldini olish uchun ma'lumotlarni tozalash
-    const sanitizedFormData = {
-      name: formData.name.replace(/[<>]/g, ""),
-      email: formData.email.replace(/[<>]/g, ""),
-      phone: formData.phone.replace(/[<>]/g, ""),
-      message: formData.message.replace(/[<>]/g, ""),
-    };
+    const clean = Object.fromEntries(
+      Object.entries(form).map(([k, v]) => [k, v.replace(/[<>]/g, "")])
+    );
 
-    emailjs.send(serviceID, templateID, sanitizedFormData, publicKey).then(
+    emailjs.send(EMAILJS.serviceID, EMAILJS.templateID, clean, EMAILJS.publicKey).then(
       () => {
-        setStatus({ message: "Message sent successfully!", type: "success" });
-        setFormData({ name: "", email: "", phone: "", message: "" });
-        setErrors({});
+        setStatus({ type: "ok", text: "Sent. I’ll get back to you shortly." });
+        setForm(EMPTY);
+        setSending(false);
       },
-      (error) => {
+      () => {
         setStatus({
-          message: "Failed to send message. Please try again.",
-          type: "error",
+          type: "err",
+          text: "That didn’t go through. Email me directly instead.",
         });
-        console.error("EmailJS error:", error);
+        setSending(false);
       }
     );
   };
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: "" });
-  };
-
-  useEffect(() => {
-    if (status.message && status.message !== "Sending...") {
-      const timer = setTimeout(
-        () => setStatus({ message: "", type: "" }),
-        4000
-      );
-      return () => clearTimeout(timer);
-    }
-  }, [status]);
-
-  const socialLinks = [
-    {
-      name: "Telegram",
-      url: "https://t.me/im_hamidov",
-      icon: <Send size={24} />,
-    },
-    {
-      name: "GitHub",
-      url: "https://github.com/brdevs-tm",
-      icon: <Github size={24} />,
-    },
-    {
-      name: "Gmail",
-      url: "mailto:imhamidovic@gmail.com",
-      icon: <Mail size={24} />,
-    },
-    {
-      name: "LinkedIn",
-      url: "https://www.linkedin.com/in/iamhamidov/",
-      icon: <Linkedin size={24} />,
-    },
-  ];
-
   return (
-    <section id="contact" className="py-16 px-4 min-h-[50vh] flex items-center">
-      <div className="max-w-2xl mx-auto w-full">
-        <AnimatePresence>
-          {status.message && status.message !== "Sending..." && (
-            <motion.div
-              className={`fixed top-4 right-4 p-4 z-[100] popup flex items-center gap-2 ${
-                status.type === "success"
-                  ? "bg-[var(--accent)]"
-                  : "bg-[var(--highlight)]"
-              }`}
-              variants={popupVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-            >
-              {status.type === "success" ? (
-                <CheckCircle size={20} className="text-[var(--text)]" />
-              ) : (
-                <AlertCircle size={20} className="text-[var(--text)]" />
-              )}
-              <p className="text-sm font-medium">{status.message}</p>
-            </motion.div>
-          )}
-        </AnimatePresence>
+    <section className="section contact" id="contact">
+      <div className="shell">
+        <Reveal className="sec-label">
+          <span className="sec-label__num">05</span>
+          <span>Contact</span>
+          <span className="sec-label__bar" />
+        </Reveal>
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
-          <motion.div className="card" variants={itemVariants}>
-            <div className="text-center py-6 gradient-bg">
-              <h2 className="text-2xl md:text-3xl font-semibold">
-                📬 Get in Touch
-              </h2>
-              <p className="mt-1 text-sm">Send me a message to collaborate!</p>
-            </div>
+        <h2 className="contact__head">
+          <SplitText text="Let’s build something" as="span" />
+          <SplitText text="that holds up." as="span" delay={120} className="contact__head-dim" />
+        </h2>
 
-            <form onSubmit={handleSubmit} className="p-8 space-y-5">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium">
-                  Name
+        <div className="contact__grid">
+          {/* ---------- forma ---------- */}
+          <Reveal className="cform" delay={120}>
+            <form onSubmit={submit} noValidate>
+              <div className="cform__row">
+                <label className="field">
+                  <span className="field__label mono">Name</span>
+                  <input
+                    name="name"
+                    value={form.name}
+                    onChange={update}
+                    placeholder="Jane Doe"
+                    aria-invalid={!!errors.name}
+                  />
+                  {errors.name && <span className="field__err">{errors.name}</span>}
                 </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 w-full p-3 rounded-lg transition-all focus:ring-2 focus:ring-[var(--accent)]"
-                />
-                {errors.name && (
-                  <p className="text-sm text-[var(--highlight)] mt-1">
-                    {errors.name}
-                  </p>
-                )}
+
+                <label className="field">
+                  <span className="field__label mono">Email</span>
+                  <input
+                    name="email"
+                    type="email"
+                    value={form.email}
+                    onChange={update}
+                    placeholder="jane@company.com"
+                    aria-invalid={!!errors.email}
+                  />
+                  {errors.email && <span className="field__err">{errors.email}</span>}
+                </label>
               </div>
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium">
-                  Email
-                </label>
+
+              <label className="field">
+                <span className="field__label mono">Phone — optional</span>
                 <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  className="mt-1 w-full p-3 rounded-lg transition-all focus:ring-2 focus:ring-[var(--accent)]"
-                />
-                {errors.email && (
-                  <p className="text-sm text-[var(--highlight)] mt-1">
-                    {errors.email}
-                  </p>
-                )}
-              </div>
-              <div>
-                <label htmlFor="phone" className="block text-sm font-medium">
-                  Phone (optional)
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
                   name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="mt-1 w-full p-3 rounded-lg transition-all focus:ring-2 focus:ring-[var(--accent)]"
+                  value={form.phone}
+                  onChange={update}
+                  placeholder="+998 ..."
                 />
-                {errors.phone && (
-                  <p className="text-sm text-[var(--highlight)] mt-1">
-                    {errors.phone}
-                  </p>
-                )}
-              </div>
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium">
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  required
-                  rows={4}
-                  className="mt-1 w-full p-3 rounded-lg transition-all focus:ring-2 focus:ring-[var(--accent)]"
-                />
-                {errors.message && (
-                  <p className="text-sm text-[var(--highlight)] mt-1">
-                    {errors.message}
-                  </p>
-                )}
-              </div>
-              <motion.button
-                type="submit"
-                className="w-full py-3 bg-[var(--accent)] hover:bg-[var(--highlight)] transition-colors"
-                variants={buttonVariants}
-                whileHover="hover"
-                whileTap="tap"
-              >
-                Send Message
-              </motion.button>
-            </form>
+              </label>
 
-            <div className="py-6 text-center bg-[var(--border)]">
-              <p className="text-sm mb-4">
-                Connect with me on social platforms
-              </p>
-              <div className="flex justify-center gap-6">
-                {socialLinks.map((link, index) => (
-                  <motion.a
-                    key={index}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-[var(--accent)]"
-                    variants={buttonVariants}
-                    whileHover={{ scale: 1.2, rotate: 5 }}
-                  >
-                    {link.icon}
-                  </motion.a>
-                ))}
+              {/* honeypot — ekranda ham, skrinriderda ham ko'rinmaydi */}
+              <div className="honey" aria-hidden="true">
+                <label htmlFor={HONEY}>Company website</label>
+                <input
+                  id={HONEY}
+                  name={HONEY}
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={trap}
+                  onChange={(e) => setTrap(e.target.value)}
+                />
               </div>
-            </div>
-          </motion.div>
-        </motion.div>
+
+              <label className="field">
+                <span className="field__label mono">Message</span>
+                <textarea
+                  name="message"
+                  rows={5}
+                  value={form.message}
+                  onChange={update}
+                  placeholder="What are you building?"
+                  aria-invalid={!!errors.message}
+                />
+                {errors.message && <span className="field__err">{errors.message}</span>}
+              </label>
+
+              <div className="cform__foot">
+                <Magnetic strength={0.22}>
+                  <button type="submit" className="btn btn--primary" disabled={sending}>
+                    {sending ? "Sending…" : "Send message"}
+                    <ArrowRight size={16} strokeWidth={2} className="btn__arrow" />
+                  </button>
+                </Magnetic>
+
+                {status && (
+                  <p className={`cform__status is-${status.type}`} role="status">
+                    {status.text}
+                  </p>
+                )}
+              </div>
+            </form>
+          </Reveal>
+
+          {/* ---------- to'g'ridan-to'g'ri aloqa ---------- */}
+          <div className="channels">
+            {CHANNELS.map((c, i) => {
+              const Icon = c.icon;
+              return (
+                <Reveal key={c.label} delay={140 + i * 70}>
+                  <a
+                    className="channel"
+                    href={c.href}
+                    target={c.href.startsWith("http") ? "_blank" : undefined}
+                    rel={c.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  >
+                    <span className="channel__icon">
+                      <Icon size={16} strokeWidth={1.7} />
+                    </span>
+                    <span className="channel__text">
+                      <span className="channel__label mono">{c.label}</span>
+                      <span className="channel__value">{c.value}</span>
+                    </span>
+                    <ArrowRight size={15} strokeWidth={1.8} className="channel__arrow" />
+                  </a>
+                </Reveal>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </section>
   );
