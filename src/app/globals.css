@@ -407,16 +407,3 @@ p {
 body {
   animation: page-in 0.5s var(--e-io) both;
 }
-
-/* ---------- 9. O'qish rejimlari ---------- */
-/*
- * display:none ataylab — yashirilgan blok Tab tartibida ham,
- * skrinriderda ham qolmasligi kerak.
- */
-.mode-recruiter .engineer-only {
-  display: none !important;
-}
-
-.mode-engineer .recruiter-only {
-  display: none !important;
-}

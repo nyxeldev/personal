@@ -77,7 +77,7 @@ export default function Decisions() {
   const [open, setOpen] = useState(0);
 
   return (
-    <section className="section decisions engineer-only" id="decisions">
+    <section className="section decisions" id="decisions">
       <div className="shell">
         <Reveal className="sec-label">
           <span className="sec-label__num">05</span>

@@ -150,7 +150,7 @@ export default function Work() {
           </div>
 
           {/* eng qiziq topilma — alohida ajratilgan */}
-          <div className="find engineer-only">
+          <div className="find">
             <span className="find__label mono">The bug worth keeping</span>
             <p className="find__body">
               Behind Nginx, <code>request.ip</code> resolved to the container address.
@@ -167,7 +167,7 @@ export default function Work() {
             (kichik dataset, sinxron chaqiruvlar) — Jahongir o'z fikriga
             ko'ra to'g'rilashi mumkin.
           */}
-          <div className="next engineer-only">
+          <div className="next">
             <span className="next__label mono">What I would improve next</span>
             <ul className="next__list">
               <li>

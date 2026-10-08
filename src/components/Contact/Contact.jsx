@@ -5,7 +5,6 @@ import { ArrowRight, Mail, Send, Github, Linkedin } from "lucide-react";
 import SplitText from "@/components/ui/SplitText";
 import Reveal from "@/components/ui/Reveal";
 import Magnetic from "@/components/ui/Magnetic";
-import useMode from "@/hooks/useMode";
 import "./contact.css";
 
 // Xat shu manzilga tushadi.
@@ -38,7 +37,6 @@ const EMPTY = { name: "", email: "", phone: "", message: "" };
 const HONEY = "company_website";
 
 export default function Contact() {
-  const { mode } = useMode();
   const [form, setForm] = useState(EMPTY);
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState(null);
@@ -140,7 +138,7 @@ export default function Contact() {
     <section className="section contact" id="contact">
       <div className="shell">
         <Reveal className="sec-label">
-          <span className="sec-label__num">{mode === "engineer" ? "06" : "05"}</span>
+          <span className="sec-label__num">06</span>
           <span>Contact</span>
           <span className="sec-label__bar" />
         </Reveal>

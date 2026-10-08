@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowUp } from "lucide-react";
+import BuildLog from "./BuildLog";
 import "./footer.css";
 
 const LINKS = [
@@ -21,6 +22,7 @@ export default function Footer() {
           <span className="foot__note mono">
             Intelligent systems · Tashkent, UZ · © {year}
           </span>
+          <BuildLog />
         </div>
 
         <nav className="foot__links" aria-label="Elsewhere">

@@ -1,7 +1,7 @@
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/hooks/useTheme";
-import { ModeProvider } from "@/hooks/useMode";
+import { SITE, SITE_URL } from "@/lib/site";
 
 const sans = Inter({
   subsets: ["latin"],
@@ -16,14 +16,10 @@ const mono = JetBrains_Mono({
   variable: "--font-mono",
 });
 
-// Boshqa domenga qo'yilsa NEXT_PUBLIC_SITE_URL bilan almashtiriladi
-const SITE = process.env.NEXT_PUBLIC_SITE_URL || "https://nyxeldev.pro";
-
 export const metadata = {
-  metadataBase: new URL(SITE),
-  title: "Jahongir Hamidov — Full-Stack Developer",
-  description:
-    "I build intelligent, data-driven systems with a focus on reliable backend architecture and security.",
+  metadataBase: new URL(SITE_URL),
+  title: SITE.title,
+  description: SITE.description,
   keywords: [
     "Jahongir Hamidov",
     "full-stack developer",
@@ -32,12 +28,13 @@ export const metadata = {
     "Next.js",
     "application security",
   ],
-  authors: [{ name: "Jahongir Hamidov" }],
+  authors: [{ name: SITE.name, url: SITE_URL }],
   icons: { icon: "/images/favicon.ico" },
   openGraph: {
-    title: "Jahongir Hamidov — Full-Stack Developer",
+    title: SITE.title,
     description:
       "Intelligent, data-driven systems. Backend architecture, data engineering and security.",
+    url: SITE_URL,
     type: "website",
     locale: "en_US",
     images: [
@@ -51,7 +48,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Jahongir Hamidov — Full-Stack Developer",
+    title: SITE.title,
     description:
       "Intelligent, data-driven systems. Backend architecture, data engineering and security.",
     images: ["/images/og.png"],
@@ -65,15 +62,34 @@ export const viewport = {
   ],
 };
 
-// Sahifa chizilishidan oldin tema va rejimni qo'yadi — aks holda qorong'i
-// temada oq lip-lip bo'ladi, rejim esa bir lahza noto'g'ri kontent ko'rsatadi
+// Qidiruv tizimlari (Google) va ijtimoiy tarmoqlar sahifani shaxs
+// sifatida to'g'ri o'qishi uchun — da'vo emas, machine-readable fakt.
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: SITE.name,
+  url: SITE_URL,
+  jobTitle: "Full-Stack Developer",
+  email: `mailto:${SITE.email}`,
+  sameAs: [SITE.github, SITE.linkedin, SITE.telegram],
+  knowsAbout: [
+    "Full-stack development",
+    "Data engineering",
+    "Application security",
+    "Next.js",
+    "FastAPI",
+    "PostgreSQL",
+  ],
+};
+
+// Sahifa chizilishidan oldin temani qo'yadi, aks holda qorong'i
+// temada oq lip-lip bo'ladi
 const bootScript = `
 try {
   var t = localStorage.getItem("theme") || "light";
-  var m = localStorage.getItem("mode") || "recruiter";
-  document.documentElement.classList.add(t + "-theme", "mode-" + m);
+  document.documentElement.classList.add(t + "-theme");
 } catch (e) {
-  document.documentElement.classList.add("light-theme", "mode-recruiter");
+  document.documentElement.classList.add("light-theme");
 }
 `;
 
@@ -82,9 +98,11 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${sans.variable} ${mono.variable}`} suppressHydrationWarning>
       <body>
         <script dangerouslySetInnerHTML={{ __html: bootScript }} />
-        <ThemeProvider>
-          <ModeProvider>{children}</ModeProvider>
-        </ThemeProvider>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

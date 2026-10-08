@@ -27,6 +27,40 @@
   color: var(--ink-4);
 }
 
+/* ---------- GitHub build log ---------- */
+.buildlog {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--ink-4);
+}
+
+.buildlog__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #16a34a;
+  flex-shrink: 0;
+}
+
+.buildlog a {
+  color: var(--ink-3);
+  transition: color var(--d-fast) var(--e-io);
+}
+
+.buildlog a:hover {
+  color: var(--accent);
+}
+
+.buildlog__sep {
+  opacity: 0.6;
+}
+
+.buildlog__time {
+  color: var(--ink-4);
+}
+
 .foot__links {
   display: flex;
   flex-wrap: wrap;

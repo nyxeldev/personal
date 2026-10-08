@@ -12,16 +12,13 @@ import {
   Sun,
   Hash,
   Boxes,
-  SlidersHorizontal,
 } from "lucide-react";
 import useTheme from "@/hooks/useTheme";
-import useMode from "@/hooks/useMode";
 import usePlatformKey from "@/hooks/usePlatformKey";
 import "./command-center.css";
 
 export default function CommandCenter() {
   const { theme, toggleTheme } = useTheme();
-  const { mode, setMode } = useMode();
 
   const { modKey } = usePlatformKey();
 
@@ -122,22 +119,8 @@ export default function CommandCenter() {
           close();
         },
       },
-      {
-        id: "t-mode",
-        group: "Preferences",
-        label:
-          mode === "engineer"
-            ? "Switch to recruiter mode — the short version"
-            : "Switch to engineer mode — architecture and decisions",
-        icon: SlidersHorizontal,
-        keywords: "mode recruiter engineer depth detail",
-        run: () => {
-          setMode(mode === "engineer" ? "recruiter" : "engineer");
-          close();
-        },
-      },
     ],
-    [theme, mode, go, openUrl, toggleTheme, setMode, close]
+    [theme, go, openUrl, toggleTheme, close]
   );
 
   // "resume" yozilganda "résumé" ham topilsin

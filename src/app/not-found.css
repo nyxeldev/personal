@@ -1,0 +1,49 @@
+.lost {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  text-align: center;
+}
+
+.lost__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 44rem;
+}
+
+.lost__code {
+  font-size: clamp(3rem, 2rem + 4vw, 5rem);
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+}
+
+.lost__head {
+  font-size: var(--t-h1);
+  letter-spacing: -0.04em;
+  margin-bottom: 1.25rem;
+}
+
+.lost__sub {
+  color: var(--ink-3);
+  font-size: var(--t-lead);
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+  margin-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+/*
+ * Strelka chapga ishora qiladi ("orqaga"), lekin umumiy .btn qoidasi
+ * hover'da uni o'ngga suradi (odatda "oldinga" tugmalar uchun). Shu yerda
+ * yo'nalishni teskari qilamiz — import tartibiga bog'liq bo'lmasligi
+ * uchun .btn bilan birga zanjirlab, aniq ustunlik beramiz.
+ */
+.lost__back.btn:hover .btn__arrow {
+  transform: translateX(-4px);
+}
