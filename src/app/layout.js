@@ -1,6 +1,7 @@
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/hooks/useTheme";
+import { ModeProvider } from "@/hooks/useMode";
 
 const sans = Inter({
   subsets: ["latin"],
@@ -64,13 +65,15 @@ export const viewport = {
   ],
 };
 
-// Sahifa chizilishidan oldin temani qo'yadi, aks holda qorong'i temada oq lip-lip bo'ladi
-const themeInitScript = `
+// Sahifa chizilishidan oldin tema va rejimni qo'yadi — aks holda qorong'i
+// temada oq lip-lip bo'ladi, rejim esa bir lahza noto'g'ri kontent ko'rsatadi
+const bootScript = `
 try {
   var t = localStorage.getItem("theme") || "light";
-  document.documentElement.classList.add(t + "-theme");
+  var m = localStorage.getItem("mode") || "recruiter";
+  document.documentElement.classList.add(t + "-theme", "mode-" + m);
 } catch (e) {
-  document.documentElement.classList.add("light-theme");
+  document.documentElement.classList.add("light-theme", "mode-recruiter");
 }
 `;
 
@@ -78,8 +81,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${sans.variable} ${mono.variable}`} suppressHydrationWarning>
       <body>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-        <ThemeProvider>{children}</ThemeProvider>
+        <script dangerouslySetInnerHTML={{ __html: bootScript }} />
+        <ThemeProvider>
+          <ModeProvider>{children}</ModeProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

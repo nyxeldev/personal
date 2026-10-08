@@ -211,6 +211,49 @@
   }
 }
 
+/* ---------- keyingi qadamlar ---------- */
+.next {
+  display: grid;
+  grid-template-columns: 172px minmax(0, 1fr);
+  gap: clamp(1rem, 3vw, 2rem);
+  margin: 0 clamp(1.5rem, 3vw, 2.5rem) clamp(1.5rem, 3vw, 2.5rem);
+  padding-top: clamp(1.25rem, 2.5vw, 1.75rem);
+  border-top: 1px solid var(--line);
+}
+
+.next__label {
+  color: var(--ink-4);
+  padding-top: 0.25rem;
+}
+
+.next__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-width: 68ch;
+}
+
+.next__list li {
+  position: relative;
+  padding-left: 1.1rem;
+  color: var(--ink-2);
+  font-size: var(--t-sm);
+  line-height: 1.7;
+}
+
+.next__list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.62em;
+  width: 5px;
+  height: 1px;
+  background: var(--ink-4);
+}
+
 /* ---------- ikkinchi ish ---------- */
 .mini {
   display: grid;
@@ -300,7 +343,8 @@
 }
 
 @media (max-width: 860px) {
-  .find {
+  .find,
+  .next {
     grid-template-columns: 1fr;
     gap: 0.7rem;
   }

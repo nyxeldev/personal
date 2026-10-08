@@ -109,6 +109,77 @@
   transition: transform 0.45s var(--e-out);
 }
 
+/* ---------- rejim almashtirgich ---------- */
+.modesw {
+  position: relative;
+  display: flex;
+  padding: 3px;
+  border: 1px solid var(--line-2);
+  border-radius: 100px;
+  background: var(--bg-sunk);
+}
+
+/* suriluvchi fon */
+.modesw::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: calc(50% - 3px);
+  border-radius: 100px;
+  background: var(--ink);
+  transition: transform 0.4s var(--e-out);
+}
+
+.modesw[data-mode="engineer"]::before {
+  transform: translateX(100%);
+}
+
+.modesw__btn {
+  position: relative;
+  z-index: 1;
+  /* ikkala tugma aniq 50% — aks holda suriluvchi pill ularga mos tushmaydi */
+  flex: 1 1 0;
+  text-align: center;
+  padding: 0.32rem 0.7rem;
+  border-radius: 100px;
+  font-size: var(--t-xs);
+  letter-spacing: -0.005em;
+  color: var(--ink-3);
+  white-space: nowrap;
+  transition: color var(--d-mid) var(--e-io);
+}
+
+.modesw__btn.is-on {
+  color: var(--on-ink);
+}
+
+/* ---------- ⌘K ---------- */
+.nav__cmdk {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  padding: 0.38rem 0.55rem;
+  border: 1px solid var(--line-2);
+  border-radius: 6px;
+  color: var(--ink-3);
+  transition: color var(--d-fast) var(--e-io), border-color var(--d-fast) var(--e-io),
+    background-color var(--d-fast) var(--e-io);
+}
+
+.nav__cmdk-key {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.02em;
+}
+
+.nav__cmdk:hover {
+  color: var(--ink);
+  border-color: var(--ink-4);
+  background: var(--bg-sunk);
+}
+
 .nav__resume {
   display: inline-flex;
   align-items: center;
@@ -245,6 +316,21 @@
   color: var(--accent);
 }
 
+.sheet__foot {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sheet .modesw {
+  align-self: flex-start;
+}
+
+.sheet .modesw__btn {
+  padding: 0.5rem 1.1rem;
+  font-size: var(--t-sm);
+}
+
 .sheet__resume {
   display: inline-flex;
   align-items: center;
@@ -272,6 +358,12 @@
 
   .nav__burger {
     display: grid;
+  }
+
+  /* bu ikkisi mobil menyu ichida beriladi */
+  .nav__end > .modesw,
+  .nav__cmdk {
+    display: none;
   }
 }
 

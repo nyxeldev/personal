@@ -150,7 +150,7 @@ export default function Work() {
           </div>
 
           {/* eng qiziq topilma — alohida ajratilgan */}
-          <div className="find">
+          <div className="find engineer-only">
             <span className="find__label mono">The bug worth keeping</span>
             <p className="find__body">
               Behind Nginx, <code>request.ip</code> resolved to the container address.
@@ -160,6 +160,33 @@ export default function Work() {
               Every test stayed green throughout — they were asserting the behaviour of
               the code, not of the deployment it runs in.
             </p>
+          </div>
+
+          {/*
+            Keyingi qadamlar rezyumedagi faktlardan kelib chiqadi
+            (kichik dataset, sinxron chaqiruvlar) — Jahongir o'z fikriga
+            ko'ra to'g'rilashi mumkin.
+          */}
+          <div className="next engineer-only">
+            <span className="next__label mono">What I would improve next</span>
+            <ul className="next__list">
+              <li>
+                The model is the honest weak point. Six dropout events is not enough
+                to trust a score, so the next move is more signal rather than a
+                better algorithm — attendance streaks and assignment latency before
+                anything fancier.
+              </li>
+              <li>
+                Synchronous service calls were the right trade at this volume, but
+                there is no backpressure if analytics slows down. A timeout budget
+                and a circuit breaker come before a broker does.
+              </li>
+              <li>
+                The request.ip bug got through because nothing tested the app behind
+                its own proxy. A single integration test that runs through Nginx
+                would have caught it, and would catch the next one like it.
+              </li>
+            </ul>
           </div>
         </Reveal>
 

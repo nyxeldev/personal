@@ -5,8 +5,10 @@ import WhoIAm from "@/components/WhoIAm/WhoIAm";
 import WhatIBuild from "@/components/WhatIBuild/WhatIBuild";
 import Work from "@/components/Work/Work";
 import DataStory from "@/components/DataStory/DataStory";
+import Decisions from "@/components/Decisions/Decisions";
 import Contact from "@/components/Contact/Contact";
 import Footer from "@/components/Footer/Footer";
+import CommandCenter from "@/components/CommandCenter/CommandCenter";
 
 export default function Home() {
   return (
@@ -22,9 +24,11 @@ export default function Home() {
         <WhatIBuild />
         <Work />
         <DataStory />
+        <Decisions />
         <Contact />
       </main>
       <Footer />
+      <CommandCenter />
     </>
   );
 }

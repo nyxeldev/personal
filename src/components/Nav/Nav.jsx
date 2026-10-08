@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Moon, Sun, ArrowUpRight } from "lucide-react";
 import useTheme from "@/hooks/useTheme";
+import useMode, { MODES } from "@/hooks/useMode";
+import usePlatformKey from "@/hooks/usePlatformKey";
 import Magnetic from "@/components/ui/Magnetic";
 import "./nav.css";
 
@@ -11,11 +13,17 @@ const LINKS = [
   { id: "build", num: "02", label: "Expertise" },
   { id: "work", num: "03", label: "Work" },
   { id: "data", num: "04", label: "Data" },
-  { id: "contact", num: "05", label: "Contact" },
+  { id: "decisions", num: "05", label: "Decisions", engineerOnly: true },
+  { id: "contact", label: "Contact" },
 ];
+
+// Contact raqami rejimga qarab suriladi: recruiter'da Decisions yo'q
+const contactNum = (mode) => (mode === "engineer" ? "06" : "05");
 
 export default function Nav() {
   const { theme, toggleTheme } = useTheme();
+  const { mode, setMode } = useMode();
+  const { modKey } = usePlatformKey();
   const [stuck, setStuck] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("");
@@ -109,15 +117,45 @@ export default function Nav() {
               <a
                 key={l.id}
                 href={`#${l.id}`}
-                className={`nav__link ${active === l.id ? "is-active" : ""}`}
+                className={`nav__link ${active === l.id ? "is-active" : ""} ${
+                  l.engineerOnly ? "engineer-only" : ""
+                }`}
               >
-                <span className="nav__link-num">{l.num}</span>
+                <span className="nav__link-num">{l.num ?? contactNum(mode)}</span>
                 {l.label}
               </a>
             ))}
           </nav>
 
           <div className="nav__end">
+            <div
+              className="modesw"
+              role="group"
+              aria-label="Reading mode"
+              data-mode={mode}
+            >
+              {MODES.map((m) => (
+                <button
+                  key={m.id}
+                  type="button"
+                  className={`modesw__btn ${mode === m.id ? "is-on" : ""}`}
+                  aria-pressed={mode === m.id}
+                  onClick={() => setMode(m.id)}
+                >
+                  {m.label}
+                </button>
+              ))}
+            </div>
+
+            <button
+              className="nav__cmdk"
+              onClick={() => window.dispatchEvent(new CustomEvent("cmdk:open"))}
+              aria-label="Open command centre"
+            >
+              <span className="nav__cmdk-key">{modKey}</span>
+              <span className="nav__cmdk-key">K</span>
+            </button>
+
             <Magnetic strength={0.2}>
               <a
                 className="nav__resume"
@@ -167,26 +205,42 @@ export default function Nav() {
             <a
               key={l.id}
               href={`#${l.id}`}
-              className="sheet__link"
+              className={`sheet__link ${l.engineerOnly ? "engineer-only" : ""}`}
               style={{ "--i": i }}
               onClick={() => setOpen(false)}
             >
-              <span className="sheet__num">{l.num}</span>
+              <span className="sheet__num">{l.num ?? contactNum(mode)}</span>
               {l.label}
             </a>
           ))}
         </nav>
 
-        <a
-          className="sheet__resume"
-          href="/files/Resume.pdf"
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => setOpen(false)}
-        >
-          Download résumé
-          <ArrowUpRight size={16} strokeWidth={2} />
-        </a>
+        <div className="sheet__foot">
+          <div className="modesw" role="group" aria-label="Reading mode" data-mode={mode}>
+            {MODES.map((m) => (
+              <button
+                key={m.id}
+                type="button"
+                className={`modesw__btn ${mode === m.id ? "is-on" : ""}`}
+                aria-pressed={mode === m.id}
+                onClick={() => setMode(m.id)}
+              >
+                {m.label}
+              </button>
+            ))}
+          </div>
+
+          <a
+            className="sheet__resume"
+            href="/files/Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setOpen(false)}
+          >
+            Download résumé
+            <ArrowUpRight size={16} strokeWidth={2} />
+          </a>
+        </div>
       </div>
     </>
   );

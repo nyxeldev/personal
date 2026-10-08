@@ -1,0 +1,201 @@
+.cmdk {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(3rem, 14vh, 9rem) var(--gut) var(--gut);
+}
+
+.cmdk__scrim {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  background: color-mix(in srgb, var(--bg-ink) 42%, transparent);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  animation: cmdk-fade 0.18s var(--e-io);
+  cursor: default;
+}
+
+.cmdk__panel {
+  position: relative;
+  width: min(560px, 100%);
+  max-height: min(60vh, 520px);
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-raise);
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+  animation: cmdk-in 0.22s var(--e-out);
+}
+
+.dark-theme .cmdk__panel {
+  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.7);
+}
+
+@keyframes cmdk-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes cmdk-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.985);
+  }
+}
+
+/* ---------- qidiruv ---------- */
+.cmdk__search {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 1rem;
+  border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
+}
+
+.cmdk__input {
+  flex: 1;
+  min-width: 0;
+  padding: 1.1rem 0;
+  border: none;
+  background: none;
+  font-size: var(--t-body);
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
+.cmdk__input:focus {
+  outline: none;
+}
+
+.cmdk__input::placeholder {
+  color: var(--ink-4);
+}
+
+.cmdk__esc {
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--ink-4);
+  border: 1px solid var(--line-2);
+  border-radius: 4px;
+  padding: 0.2rem 0.4rem;
+}
+
+/* ---------- ro'yxat ---------- */
+.cmdk__list {
+  overflow-y: auto;
+  padding: 0.5rem;
+  overscroll-behavior: contain;
+}
+
+.cmdk__group {
+  padding: 0.75rem 0.65rem 0.4rem;
+  color: var(--ink-4);
+}
+
+.cmdk__item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  padding: 0.6rem 0.65rem;
+  border-radius: var(--radius);
+  text-align: left;
+  color: var(--ink-2);
+  transition: background-color var(--d-fast) var(--e-io), color var(--d-fast) var(--e-io);
+}
+
+.cmdk__item.is-on {
+  background: var(--bg-sunk);
+  color: var(--ink);
+}
+
+.cmdk__icon {
+  flex-shrink: 0;
+  color: var(--ink-4);
+}
+
+.cmdk__item.is-on .cmdk__icon {
+  color: var(--accent);
+}
+
+.cmdk__label {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--t-sm);
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cmdk__go {
+  flex-shrink: 0;
+  color: var(--ink-4);
+  opacity: 0;
+  transition: opacity var(--d-fast) var(--e-io);
+}
+
+.cmdk__item.is-on .cmdk__go {
+  opacity: 1;
+}
+
+.cmdk__empty {
+  padding: 1.75rem 0.65rem;
+  text-align: center;
+  color: var(--ink-3);
+  font-size: var(--t-sm);
+}
+
+/* ---------- pastki qator ---------- */
+.cmdk__foot {
+  display: flex;
+  gap: 1.1rem;
+  padding: 0.7rem 1rem;
+  border-top: 1px solid var(--line);
+  color: var(--ink-4);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.cmdk__foot span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.cmdk__foot kbd {
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1;
+  padding: 0.22rem 0.32rem;
+  border: 1px solid var(--line-2);
+  border-radius: 3px;
+  color: var(--ink-3);
+}
+
+@media (max-width: 560px) {
+  .cmdk {
+    padding-top: 4rem;
+  }
+
+  .cmdk__foot span:first-child {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cmdk__panel,
+  .cmdk__scrim {
+    animation: none;
+  }
+}
