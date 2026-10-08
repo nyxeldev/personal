@@ -1,23 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import emailjs from "@emailjs/browser";
 import { ArrowRight, Mail, Send, Github, Linkedin } from "lucide-react";
 import SplitText from "@/components/ui/SplitText";
 import Reveal from "@/components/ui/Reveal";
 import Magnetic from "@/components/ui/Magnetic";
 import "./contact.css";
 
-const EMAILJS = {
-  serviceID: "service_hssxaha",
-  templateID: "template_lkwk49g",
-  publicKey: "vMRalq9p-Z-2v0CRO",
-};
-
-// Xat shu manzilga tushadi. EmailJS shablonida "To Email" maydoni
-// {{to_email}} bo'lsa shu qiymat ishlatiladi; qat'iy manzil yozilgan bo'lsa
-// shablonning o'zini EmailJS panelida almashtirish kerak.
+// Xat shu manzilga tushadi.
 const INBOX = "imhamidovic@gmail.com";
+
+// FormSubmit — OAuth yo'q, demak EmailJS'dagidek "token muddati tugadi"
+// holati ham yo'q. Statik eksport uchun mos: faqat POST qilinadi.
+const ENDPOINT = `https://formsubmit.co/ajax/${INBOX}`;
 
 const CHANNELS = [
   {
@@ -63,7 +58,7 @@ export default function Contact() {
     return Object.keys(next).length === 0;
   };
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault();
     if (sending) return;
 
@@ -84,30 +79,59 @@ export default function Contact() {
       Object.entries(form).map(([k, v]) => [k, v.replace(/[<>]/g, "")])
     );
 
-    const payload = {
-      ...clean,
-      to_email: INBOX,
-      // "Reply" bosilganda javob to'g'ridan-to'g'ri yozuvchiga ketadi
-      reply_to: clean.email,
-      from_name: clean.name,
+    // Yuborish uzilsa yozilgan matn yo'qolmasin: pochta ilovasi to'ldirilgan
+    // holda ochiladi, odam faqat "Send" bosadi.
+    const failed = () => {
+      const subject = encodeURIComponent(`Portfolio — ${clean.name}`);
+      const lines = [clean.message, "", `— ${clean.name}`, clean.email];
+      if (clean.phone) lines.push(clean.phone);
+      const body = encodeURIComponent(lines.join("\n"));
+
+      setStatus({
+        type: "err",
+        text: "That didn’t send. Your message is safe — open it in your mail app:",
+        mailto: `mailto:${INBOX}?subject=${subject}&body=${body}`,
+        mailtoLabel: `Email it to ${INBOX}`,
+      });
+      setSending(false);
     };
 
-    emailjs.send(EMAILJS.serviceID, EMAILJS.templateID, payload, EMAILJS.publicKey).then(
-      () => {
+    // FormData bilan yuboramiz: JSON Content-Type CORS preflight chaqiradi,
+    // multipart esa "simple request" — qo'shimcha OPTIONS so'rovi bo'lmaydi.
+    const body = new FormData();
+    Object.entries(clean).forEach(([k, v]) => body.append(k, v));
+    body.append("_subject", `Portfolio — ${clean.name}`);
+    body.append("_template", "table");
+    body.append("_captcha", "false");
+    // FormSubmit'ning o'z honeypot maydoni — serverda ham filtrlanadi
+    body.append("_honey", "");
+
+    // javob kelmasa ham forma "Sending…" da qotib qolmasin
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 15000);
+
+    try {
+      const res = await fetch(ENDPOINT, {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body,
+        signal: ctrl.signal,
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok && String(data.success) === "true") {
         setStatus({ type: "ok", text: "Sent. I’ll get back to you shortly." });
         setForm(EMPTY);
         setSending(false);
-      },
-      () => {
-        // yuborish uzilsa odam yo'qolib qolmasin — to'g'ridan-to'g'ri yo'l beramiz
-        setStatus({
-          type: "err",
-          text: "That didn’t go through. Reach me directly at",
-          mailto: INBOX,
-        });
-        setSending(false);
+      } else {
+        failed();
       }
-    );
+    } catch {
+      failed();
+    } finally {
+      clearTimeout(timer);
+    }
   };
 
   return (
@@ -206,7 +230,7 @@ export default function Contact() {
                     {status.mailto && (
                       <>
                         {" "}
-                        <a href={`mailto:${status.mailto}`}>{status.mailto}</a>
+                        <a href={status.mailto}>{status.mailtoLabel}</a>
                       </>
                     )}
                   </p>
