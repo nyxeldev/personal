@@ -1,66 +1,58 @@
-"use client";
-
 import SplitText from "@/components/ui/SplitText";
 import Reveal from "@/components/ui/Reveal";
 import "./who-i-am.css";
 
 const FACTS = [
   {
-    k: "Studying",
-    v: "Information Security Management",
-    sub: "International Islamic Academy of Uzbekistan · 2023—2027",
+    k: "Education",
+    v: "BSc · Information Security Management",
+    sub: "International Islamic Academy of Uzbekistan · 2023 — present",
   },
   {
     k: "Foundation",
-    v: "Front-End Development, React",
-    sub: "Najot Ta'lim · 2024",
+    v: "Front-End Development (ReactJS)",
+    sub: "Najot Ta’lim · July 2023 — May 2024",
   },
-  { k: "Based in", v: "Tashkent, Uzbekistan", sub: "Open to remote work" },
   {
     k: "Languages",
-    v: "Uzbek, Tajik, English, Russian",
-    sub: "Native · Bilingual · Intermediate",
+    v: "Uzbek · Native",
+    sub: "English · Upper-Intermediate / Russian · Pre-Intermediate",
   },
 ];
 
 export default function WhoIAm() {
   return (
-    <section className="section who" id="about">
+    <section className="section who" id="about" aria-labelledby="about-title">
       <div className="shell">
-        <Reveal className="sec-label">
-          <span className="sec-label__num">01</span>
-          <span>Who I am</span>
+        <div className="sec-label">
+          <span className="sec-label__num">06</span>
+          <span>About / trajectory</span>
           <span className="sec-label__bar" />
-        </Reveal>
-
+        </div>
         <div className="who__grid">
           <div className="who__main">
-            <h2 className="who__head">
-              <SplitText text="Building systems" as="span" />
-              <SplitText text="that think." as="span" delay={120} className="who__head-dim" />
+            <h2 className="who__head" id="about-title">
+              <SplitText text="From interfaces" as="span" />
+              <br />
+              <SplitText
+                text="to the systems behind them."
+                as="span"
+                delay={110}
+                className="who__head-dim"
+              />
             </h2>
-
-            <Reveal as="p" className="lead who__lead" delay={200}>
-              Full-stack developer moving from frontend toward backend, data and
-              intelligent systems.
+            <Reveal as="p" className="who__body" delay={180}>
+              React and frontend development were my starting point. Building
+              SEASMP took that work into APIs, relational models, Python
+              analytics and application security.
             </Reveal>
-
-            <Reveal as="p" className="who__body" delay={280}>
-              I started where most people see the work — the interface. Then I kept
-              following the problem backwards: into the API, into the schema, into the
-              pipeline that fed it. That path is the reason I care less about how a screen
-              looks on its own and more about whether the number on it is{" "}
-              <em>correct</em>.
-            </Reveal>
-
-            <Reveal as="p" className="who__body" delay={340}>
-              Today I work across the stack — React and Next.js on the surface, Node.js
-              and FastAPI underneath, PostgreSQL and Python where the data actually lives.
-              Security is not a final checklist in that process; studying information
-              security full time has made it the thing I design around first.
+            <Reveal as="p" className="who__body" delay={240}>
+              I’m studying Information Security Management and based in
+              Tashkent, Uzbekistan. I’m looking for full-stack and backend
+              opportunities where I can keep developing practical data
+              engineering skills.
             </Reveal>
           </div>
-
           <div className="who__facts">
             {FACTS.map((f, i) => (
               <Reveal className="fact" key={f.k} delay={120 + i * 70}>

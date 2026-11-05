@@ -18,6 +18,7 @@ const mono = JetBrains_Mono({
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
+  alternates: { canonical: SITE_URL },
   title: SITE.title,
   description: SITE.description,
   keywords: [
@@ -82,11 +83,10 @@ const personJsonLd = {
   ],
 };
 
-// Sahifa chizilishidan oldin temani qo'yadi, aks holda qorong'i
-// temada oq lip-lip bo'ladi
+// Apply the saved theme before paint. Motion is armed by hydrated components.
 const bootScript = `
 try {
-  var t = localStorage.getItem("theme") || "light";
+  var t = localStorage.getItem("theme") === "dark" ? "dark" : "light";
   document.documentElement.classList.add(t + "-theme");
 } catch (e) {
   document.documentElement.classList.add("light-theme");
@@ -95,7 +95,11 @@ try {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${sans.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${sans.variable} ${mono.variable}`}
+      suppressHydrationWarning
+    >
       <body>
         <script dangerouslySetInnerHTML={{ __html: bootScript }} />
         <script

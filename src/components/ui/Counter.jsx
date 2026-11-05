@@ -3,13 +3,26 @@
 import { useEffect, useState } from "react";
 import useInView from "./useInView";
 
-/** Ekranga kirganda 0 dan `to` gacha sanaydi. */
+/**
+ * Ekranga kirganda 0 dan `to` gacha sanaydi.
+ * Boshlang'ich render har doim `to` qiymatini ko'rsatadi (SSR/JS'siz holat
+ * uchun to'g'ri yakuniy son) — faqat JS hydratsiyadan keyin, ekranga
+ * kirganda, hisoblash animatsiyasi bilan almashtiriladi.
+ */
 export default function Counter({ to, duration = 1400, suffix = "", prefix = "" }) {
   const [ref, inView] = useInView({ threshold: 0.5 });
-  const [n, setN] = useState(0);
+  const [n, setN] = useState(to);
+  const [armed, setArmed] = useState(false);
+
+  // Faqat mount bo'lgach animatsiyaga "qurollanadi" — shu paytgacha
+  // yakuniy qiymat ko'rinib turadi, hech qanday "0 dan boshlanish" yoki
+  // bo'sh holat ko'rsatilmaydi.
+  useEffect(() => {
+    setArmed(true);
+  }, []);
 
   useEffect(() => {
-    if (!inView) return;
+    if (!armed || !inView) return;
 
     const reduced =
       typeof window !== "undefined" &&
@@ -20,6 +33,7 @@ export default function Counter({ to, duration = 1400, suffix = "", prefix = "" 
       return;
     }
 
+    setN(0);
     let frame = 0;
     const t0 = performance.now();
 
@@ -33,7 +47,7 @@ export default function Counter({ to, duration = 1400, suffix = "", prefix = "" 
 
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [inView, to, duration]);
+  }, [armed, inView, to, duration]);
 
   return (
     <span ref={ref} className="counter">

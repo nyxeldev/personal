@@ -1,254 +1,249 @@
-"use client";
-
-import { useState } from "react";
-import Image from "next/image";
 import { ArrowUpRight, Github } from "lucide-react";
-import SplitText from "@/components/ui/SplitText";
 import Reveal from "@/components/ui/Reveal";
 import Parallax from "@/components/ui/Parallax";
-import ielts from "../../../public/images/project3.png";
+import { PROOF } from "@/lib/projects";
 import "./work.css";
 
-// IELTS kartasi uchun oldindan tayyorlangan blur (output: "export" da optimizator ishlamaydi)
-const ieltsBlur =
-  "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAA4KCw0LCQ4NDA0QDw4RFiQXFhQUFiwgIRokNC43NjMuMjI6QVNGOj1OPjIySGJJTlZYXV5dOEVmbWVabFNbXVn/2wBDAQ8QEBYTFioXFypZOzI7WVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVlZWVn/wAARCAAHAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABAUG/8QAIhAAAgEEAQQDAAAAAAAAAAAAAQIDAAQFESESEzFBByNR/8QAFQEBAQAAAAAAAAAAAAAAAAAAAwT/xAAZEQEAAwEBAAAAAAAAAAAAAAABAAIRISL/2gAMAwEAAhEDEQA/AMzkMrNc3bySSEknQG+APVQoWJmUE8E6NFFb1UCpyIsm91//2Q==";
-
-// SEASMP arxitekturasi — qatlamlar bo'yicha
-const STACK = [
-  { tier: "Client", items: ["Next.js App Router", "4 role-specific dashboards"] },
+const DETAILS = [
   {
-    tier: "Gateway",
-    items: ["Fastify core API", "4-role RBAC", "JWT refresh rotation", "Rate limiting"],
+    id: "seasmp-architecture",
+    title: "Architecture",
+    body: "Next.js dashboards call a Fastify core API. Python analytics runs in a separate FastAPI service, reached through synchronous HTTP with an internal key. PostgreSQL stores application data; Redis supports short-lived state; Celery schedules analytics tasks.",
+    proof: PROOF.analytics,
+    label: "Service contract",
   },
   {
-    tier: "Services",
-    items: ["FastAPI — analytics & ML", "Celery — nightly rescoring"],
-  },
-  { tier: "Data", items: ["PostgreSQL", "Redis"] },
-  { tier: "Ship", items: ["Docker", "GitHub Actions", "GHCR"] },
-];
-
-const PHASES = [
-  {
-    id: "problem",
-    label: "Problem",
-    body: "Four roles need one platform and almost none of the same data. And the question actually worth answering — which student is drifting — only has value while the term is still running, not in a report written after it ends. Attendance on top of that has to be taken in seconds, from a phone, with a code nobody can forward to a friend.",
+    id: "seasmp-attendance",
+    title: "Attendance",
+    body: "QR attendance uses a five-minute Redis token containing a course and lesson date. The API checks the authenticated student’s active enrollment and existing attendance, then deletes the token after creating a record. This does not establish physical presence or prevent forwarding.",
+    proof: PROOF.attendance,
+    label: "Attendance service",
   },
   {
-    id: "architecture",
-    label: "Architecture",
-    body: "A Fastify core API alongside a FastAPI analytics service, talking over an internal HTTP contract. I chose synchronous calls over a message broker because inter-service volume is low and I wanted the failure mode to stay legible: an analytics outage degrades the /analytics routes and nothing else, instead of quietly queueing work nobody is watching. PostgreSQL is the system of record, Redis holds short-lived state, Celery runs everything scheduled.",
+    id: "seasmp-model",
+    title: "Data & ML",
+    body: "An ETL pipeline feeds a Random Forest with balanced class weights. Celery schedules nightly rescoring and monthly retraining. Training records AUC and replaces the active artifact; the retraining task logs the comparison, including degradation. Conditional promotion is a next step.",
+    proof: PROOF.retraining,
+    label: "Retraining behavior",
   },
   {
-    id: "engineering",
-    label: "Engineering",
-    body: "Four role-specific dashboards on a single Next.js App Router codebase — route guards, role-conditional rendering and per-role fetching, so a student session never issues an admin query in the first place. QR attendance runs end to end in the browser: camera capture, a one-time Redis token on a 5-minute TTL verified against the JWT actor, and an optimistic UI that rolls back the moment the server rejects.",
-  },
-  {
-    id: "model",
-    label: "Model",
-    body: "An ETL pipeline over production tables feeds eight behavioural features into a Random Forest with balanced class weights. Celery rescores nightly; the monthly retrain is promoted only when its AUC beats the model already deployed. The honest caveat: at 191 enrollments and 6 dropout events the dataset is still small, so what is proven today is the pipeline end to end — it re-validates itself as the data grows.",
-  },
-  {
-    id: "security",
-    label: "Security",
-    body: "Four-role RBAC with ownership checks at the service layer rather than only on the route, so authorisation does not depend on which entry point was used. JWT refresh rotation, TOTP two-factor, rate limiting, and a before/after audit log — every privileged change traces back to a person, a time and the value it replaced.",
-  },
-  {
-    id: "shipping",
-    label: "Shipping",
-    body: "Five CI jobs running in parallel — Jest, Vitest, a Postgres and Redis integration suite, pytest and Playwright — then a Docker build, then GHCR. The spread is the point: each layer gets checked by something that can actually see it.",
+    id: "seasmp-security",
+    title: "Security",
+    body: "The API includes four-role access control, service-level ownership checks, TOTP 2FA, and audit logging on authentication and selected mutations. JWT access tokens are paired with hashed, opaque refresh tokens: exchanging a refresh token removes its stored predecessor. The global request limit is keyed by client IP.",
+    proof: PROOF.auth,
+    label: "Authentication implementation",
   },
 ];
 
 export default function Work() {
-  const [phase, setPhase] = useState("problem");
-  const current = PHASES.find((p) => p.id === phase);
-
   return (
-    <section className="section work" id="work">
+    <section className="section work" id="work" aria-labelledby="work-title">
       <div className="shell">
-        <Reveal className="sec-label">
-          <span className="sec-label__num">03</span>
+        <div className="sec-label">
+          <span className="sec-label__num">01</span>
           <span>Selected work</span>
           <span className="sec-label__bar" />
-        </Reveal>
-
-        <h2 className="work__head">
-          <SplitText text="Fewer projects." as="span" />
-          <SplitText text="More depth." as="span" delay={110} className="work__head-dim" />
+        </div>
+        <h2 className="work__head" id="work-title">
+          Systems, with the details.
         </h2>
-
-        {/* ---------- asosiy case study ---------- */}
-        <Reveal className="cs" delay={120}>
+        <p className="work__intro lead">What I built, why it works this way, and where it goes next.</p>
+        <Reveal className="cs" id="seasmp">
           <div className="cs__head">
             <div>
-              <span className="cs__kicker mono">Case study — 01</span>
+              <span className="cs__kicker mono">
+                Education · Analytics · Security
+              </span>
               <h3 className="cs__title">SEASMP</h3>
-              <p className="cs__sub">Education Analytics &amp; Monitoring Platform</p>
-              <p className="cs__meta mono">Solo developer · May 2026 — present</p>
+              <p className="cs__sub">
+                Smart Education Analytics &amp; Security Monitoring Platform
+              </p>
+              <p className="cs__meta mono">
+                Solo developer · May 2026 — present · In development
+              </p>
             </div>
-
-            <div className="cs__aside">
-              <span className="cs__badge mono">Fastify · FastAPI · PostgreSQL</span>
-              <a
-                className="worklink"
-                href="https://github.com/nyxeldev/seasmp"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Github size={15} strokeWidth={1.8} />
-                nyxeldev/seasmp
-              </a>
+            <a
+              className="worklink"
+              href="https://github.com/nyxeldev/seasmp"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Github size={16} />
+              Source <ArrowUpRight size={15} />
+            </a>
+          </div>
+          <div className="cs__highlights" aria-label="Project highlights">
+            <div><span className="mono">Application</span><strong>Four user roles</strong><p>Dashboards shaped around each workflow.</p></div>
+            <div><span className="mono">Intelligence</span><strong>Python analytics</strong><p>ETL, risk scoring and scheduled training.</p></div>
+            <div><span className="mono">Trust</span><strong>Security by design</strong><p>Ownership checks, TOTP and audit events.</p></div>
+          </div>
+          <div className="cs__overview">
+            <div>
+              <span className="mono">Problem</span>
+              <p>
+                Students, teachers and administrators need different views of
+                attendance, course performance and emerging student risk.
+              </p>
+            </div>
+            <div>
+              <span className="mono">My contribution</span>
+              <p>
+                I built the role-specific web dashboards, core API, analytics
+                pipeline and security monitoring features in a monorepo.
+              </p>
             </div>
           </div>
-
-          {/* arxitektura qatlamlari */}
-          <div className="stackmap">
-            {STACK.map((layer, i) => (
-              <div className="stackmap__row" key={layer.tier} style={{ "--i": i }}>
-                <span className="stackmap__tier mono">{layer.tier}</span>
-                <div className="stackmap__items">
-                  {layer.items.map((it) => (
-                    <span className="stackmap__cell" key={it}>
-                      {it}
-                    </span>
-                  ))}
-                </div>
+          <div className="stackmap" aria-label="SEASMP service structure">
+            {[
+              ["Client", "Next.js dashboards"],
+              ["Core", "Fastify · Prisma · JWT access / opaque refresh"],
+              ["Analytics", "FastAPI · Python · Celery"],
+              ["Data", "PostgreSQL · Redis"],
+            ].map(([tier, text]) => (
+              <div className="stackmap__row" key={tier}>
+                <span className="stackmap__tier mono">{tier}</span>
+                <span className="stackmap__cell">{text}</span>
               </div>
             ))}
           </div>
-
-          {/* fazalar */}
-          <div className="phases">
-            <div className="phases__tabs" role="tablist" aria-label="Case study phases">
-              {PHASES.map((p) => (
-                <button
-                  key={p.id}
-                  role="tab"
-                  type="button"
-                  id={`tab-${p.id}`}
-                  aria-selected={phase === p.id}
-                  aria-controls={`panel-${p.id}`}
-                  className={`phases__tab ${phase === p.id ? "is-active" : ""}`}
-                  onClick={() => setPhase(p.id)}
+          <div className="cs__details">
+            {DETAILS.map((d) => (
+              <section
+                className="cs__detail"
+                id={d.id}
+                key={d.id}
+                aria-labelledby={`${d.id}-title`}
+              >
+                <h4 id={`${d.id}-title`}>{d.title}</h4>
+                <p>{d.body}</p>
+                <a
+                  className="worklink"
+                  href={d.proof}
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  {p.label}
-                </button>
-              ))}
-            </div>
-
-            <div
-              className="phases__panel"
-              role="tabpanel"
-              id={`panel-${current.id}`}
-              aria-labelledby={`tab-${current.id}`}
-              key={current.id}
-            >
-              <p>{current.body}</p>
+                  {d.label}
+                  <ArrowUpRight size={14} />
+                </a>
+              </section>
+            ))}
+          </div>
+          <div className="find" id="seasmp-testing">
+            <span className="find__label mono">Testing &amp; delivery</span>
+            <div className="find__body">
+              <p>
+                The CI workflow defines Jest, Vitest, PostgreSQL/Redis
+                integration, pytest and Playwright jobs before Docker image
+                publishing to GHCR. This describes the configured checks, not a
+                claim that every current run passes.
+              </p>
+              <a
+                className="worklink"
+                href={PROOF.ci}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Inspect the workflow
+                <ArrowUpRight size={14} />
+              </a>
             </div>
           </div>
-
-          {/* eng qiziq topilma — alohida ajratilgan */}
-          <div className="find">
-            <span className="find__label mono">The bug worth keeping</span>
-            <p className="find__body">
-              Behind Nginx, <code>request.ip</code> resolved to the container address.
-              One line, three silent failures at once: rate limiting bucketed every
-              visitor into the same counter, audit attribution recorded the proxy
-              instead of the actor, and the unknown-IP anomaly signal could never fire.
-              Every test stayed green throughout — they were asserting the behaviour of
-              the code, not of the deployment it runs in.
-            </p>
-          </div>
-
-          {/*
-            Keyingi qadamlar rezyumedagi faktlardan kelib chiqadi
-            (kichik dataset, sinxron chaqiruvlar) — Jahongir o'z fikriga
-            ko'ra to'g'rilashi mumkin.
-          */}
-          <div className="next">
-            <span className="next__label mono">What I would improve next</span>
+          <details className="next">
+            <summary className="next__label mono">Limits &amp; next steps <span aria-hidden="true">+</span></summary>
             <ul className="next__list">
               <li>
-                The model is the honest weak point. Six dropout events is not enough
-                to trust a score, so the next move is more signal rather than a
-                better algorithm — attendance streaks and assignment latency before
-                anything fancier.
+                My recorded data snapshot contained 191 enrollments and six
+                dropout events. That is too little to establish predictive
+                reliability; the counts are a project snapshot, not a live
+                metric.
               </li>
               <li>
-                Synchronous service calls were the right trade at this volume, but
-                there is no backpressure if analytics slows down. A timeout budget
-                and a circuit breaker come before a broker does.
+                Evaluate candidate models before replacing the active artifact.
+                Compare on a consistent validation set and promote only when the
+                acceptance criteria are met.
               </li>
               <li>
-                The request.ip bug got through because nothing tested the app behind
-                its own proxy. A single integration test that runs through Nginx
-                would have caught it, and would catch the next one like it.
+                Add explicit HTTP timeout budgets and failure tests between
+                services. Separation reduces coupling; it does not guarantee
+                failure isolation.
+              </li>
+              <li>
+                Test QR consumption under concurrency and clarify the classroom
+                flow. The current course token is not a proof of physical
+                presence.
               </li>
             </ul>
-          </div>
+          </details>
         </Reveal>
-
-        {/* ---------- ikkinchi ish ---------- */}
-        <Reveal className="mini" delay={160}>
+        <Reveal className="mini" id="ielts">
           <a
             className="mini__media"
             href="https://speakready.netlify.app"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="IELTS Speaking Practice — open live demo"
+            aria-label="Open IELTS Speaking Practice live demo"
           >
             <Parallax amount={26}>
-              <Image
-                src={ielts}
-                alt="IELTS Speaking Practice interface"
-                width={760}
-                height={420}
-                placeholder="blur"
-                blurDataURL={ieltsBlur}
-                sizes="(max-width: 920px) 100vw, 50vw"
-              />
+              <picture>
+                <source
+                  srcSet="/images/ielts-640.webp 640w, /images/ielts-1100.webp 1100w"
+                  sizes="(max-width: 920px) 90vw, 40vw"
+                  type="image/webp"
+                />
+                <img
+                  src="/images/ielts-1100.webp"
+                  width="1100"
+                  height="688"
+                  loading="lazy"
+                  decoding="async"
+                  alt="IELTS Speaking Practice live landing page with Part 1, Part 2 and Part 3 choices"
+                />
+              </picture>
             </Parallax>
           </a>
-
           <div className="mini__body">
-            <span className="cs__kicker mono">Case study — 02</span>
+            <span className="cs__kicker mono">Frontend foundation</span>
             <h3 className="mini__title">IELTS Speaking Practice</h3>
             <p className="mini__text">
-              A focused tool that generates randomised questions for each IELTS Speaking
-              part. Minimal by design — the point is to start talking, not to read an
-              interface.
+              A practice interface for moving through IELTS speaking questions.
+              I built the Next.js frontend, speaking-part navigation, browser
+              speech controls and REST API integration.
             </p>
-
+            <p className="mini__text">
+              The public frontend includes loading and error handling. Practice
+              depends on an external question API; backend ownership and
+              availability are not established by this repository.
+            </p>
             <div className="mini__chips">
-              {["Next.js", "CSS", "Ant Design", "REST API"].map((t) => (
+              {["Next.js", "React", "Ant Design", "REST API"].map((t) => (
                 <span className="chip" key={t}>
                   {t}
                 </span>
               ))}
             </div>
-
             <div className="mini__links">
               <a
+                className="worklink"
                 href="https://speakready.netlify.app"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="worklink"
               >
                 Live demo
-                <ArrowUpRight size={15} strokeWidth={2} className="btn__arrow" />
+                <ArrowUpRight size={15} />
               </a>
               <a
-                href="https://github.com/nyxeldev/speaking-new"
+                className="worklink"
+                href={PROOF.ielts}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="worklink"
               >
-                <Github size={15} strokeWidth={1.8} />
-                Source
+                Practice implementation
+                <ArrowUpRight size={15} />
               </a>
             </div>
+            <p className="mini__caption">
+              Live landing-page capture · October 2026
+            </p>
           </div>
         </Reveal>
       </div>

@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
   letter-spacing: -0.042em;
-  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+  margin-bottom: 1rem;
 }
 
 .contact__head-dim {
@@ -12,7 +12,7 @@
 
 .contact__grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
   gap: clamp(2rem, 5vw, 4.5rem);
   align-items: start;
 }
@@ -45,7 +45,9 @@
   font-size: var(--t-sm);
   color: var(--ink);
   resize: vertical;
-  transition: border-color var(--d-fast) var(--e-io), box-shadow var(--d-fast) var(--e-io);
+  transition:
+    border-color var(--d-fast) var(--e-io),
+    box-shadow var(--d-fast) var(--e-io);
 }
 
 .field input::placeholder,
@@ -149,7 +151,9 @@
   border: 1px solid var(--line-2);
   border-radius: 8px;
   color: var(--ink-3);
-  transition: color var(--d-fast) var(--e-io), border-color var(--d-fast) var(--e-io),
+  transition:
+    color var(--d-fast) var(--e-io),
+    border-color var(--d-fast) var(--e-io),
     background-color var(--d-fast) var(--e-io);
 }
 
@@ -183,7 +187,9 @@
   flex-shrink: 0;
   color: var(--ink-4);
   transform: rotate(-45deg);
-  transition: transform var(--d-mid) var(--e-out), color var(--d-fast) var(--e-io);
+  transition:
+    transform var(--d-mid) var(--e-out),
+    color var(--d-fast) var(--e-io);
 }
 
 .channel:hover .channel__arrow {
@@ -204,3 +210,44 @@
     gap: 0;
   }
 }
+
+.contact__intro {
+  color: var(--ink-2);
+  margin-bottom: 2.5rem;
+  max-width: 62ch;
+}
+.cform fieldset {
+  border: 0;
+  min-width: 0;
+}
+.cform legend {
+  margin-bottom: 1.25rem;
+}
+.contact__resume {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.cform__privacy {
+  color: var(--ink-3);
+  font-size: var(--t-xs);
+  margin-top: 1rem;
+}
+.cform__status {
+  margin-top: 1rem;
+}
+.cform input,
+.cform textarea {
+  font-size: 1rem;
+}
+
+.contact { background: linear-gradient(180deg, transparent, var(--bg-sunk)); }
+.contact__invitation { padding-block: 1.75rem 2rem; border-bottom: 1px solid var(--line); }
+.contact__invitation > .mono { color: var(--accent); }
+.contact__invitation p { margin-top: 1rem; font-size: var(--t-lead); color: var(--ink-2); line-height: 1.6; }
+.contact__email { display: inline-flex; align-items: center; gap: .75rem; margin-top: 1.5rem; font-size: clamp(1rem, 1.5vw, 1.35rem); letter-spacing: -.03em; border-bottom: 1px solid var(--line-2); padding-bottom: .35rem; overflow-wrap: anywhere; }
+.contact__email svg { flex-shrink: 0; transition: transform .3s var(--e-out); }
+.contact__email:hover svg { transform: translateX(4px); }
+.cform { background: var(--bg-raise); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: clamp(1.25rem, 3vw, 2.5rem); box-shadow: 0 24px 60px -48px rgba(0,0,0,.25); }
+.contact__resume { padding-bottom: 1.25rem; }

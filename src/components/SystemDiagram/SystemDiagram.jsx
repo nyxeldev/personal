@@ -1,80 +1,61 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import "./system-diagram.css";
 
 /**
- * Jonli tizim vizualizatsiyasi — real stack asosida.
- * Tinch holatda juda sekin oqadi; hover qilinganda arxitektura "jonlanadi".
+ * SEASMP arxitektura sxemasi. Tinch holatda juda sekin oqadi (pure CSS
+ * @keyframes — JS'siz ham ishlaydi). Tugunga hover qilinganda shu tugunga
+ * ulangan yo'llar yoritiladi va tezroq oqadi — bu qism sichqoncha
+ * hodisalariga bog'liq, JS bo'lmasa shunchaki ishga tushmaydi (xavfsiz
+ * progressiv yaxshilanish — Magnetic bilan bir xil tamoyil).
  */
 
 const NODES = [
-  { id: "data", label: "DATA", kind: "source", x: 172, y: 21, w: 96, h: 34 },
-  { id: "python", label: "PYTHON", kind: "core", x: 148, y: 119, w: 144, h: 58 },
-  { id: "postgres", label: "POSTGRESQL", kind: "leaf", x: 28, y: 271, w: 160, h: 58 },
-  { id: "fastapi", label: "FASTAPI", kind: "leaf", x: 252, y: 271, w: 160, h: 58 },
-  { id: "system", label: "SYSTEM", kind: "out", x: 156, y: 426, w: 128, h: 52 },
+  { id: "nextjs", label: "NEXT.JS", x: 220, y: 30, w: 146 },
+  { id: "fastify", label: "FASTIFY API", x: 220, y: 130, w: 160 },
+  { id: "fastapi", label: "FASTAPI", x: 104, y: 245, w: 148 },
+  { id: "postgres", label: "POSTGRESQL", x: 336, y: 245, w: 148 },
+  { id: "redis", label: "REDIS", x: 220, y: 365, w: 130 },
 ];
 
-// pathLength="100" — barcha yo'llar bir xil tezlikda oqishi uchun
 const EDGES = [
-  { id: "e1", d: "M220 55 V119", from: "data", to: "python", delay: 0 },
-  { id: "e2", d: "M220 177 V222", from: "python", to: "python", delay: 0.5 },
-  { id: "e3", d: "M108 222 H332", from: "python", to: "python", delay: 0.9 },
-  { id: "e4", d: "M108 222 V271", from: "python", to: "postgres", delay: 1.3 },
-  { id: "e5", d: "M332 222 V271", from: "python", to: "fastapi", delay: 1.3 },
-  { id: "e6", d: "M108 329 V378", from: "postgres", to: "system", delay: 1.9 },
-  { id: "e7", d: "M332 329 V378", from: "fastapi", to: "system", delay: 1.9 },
-  { id: "e8", d: "M108 378 H332", from: "system", to: "system", delay: 2.4 },
-  { id: "e9", d: "M220 378 V426", from: "system", to: "system", delay: 2.8 },
+  { id: "e1", from: "nextjs", to: "fastify", d: "M220 58V102", delay: 0 },
+  { id: "e2", from: "fastify", to: "fastapi", d: "M220 158V188H104V217", delay: 0.6 },
+  { id: "e3", from: "fastify", to: "postgres", d: "M220 158V188H336V217", delay: 1.1 },
+  { id: "e4", from: "fastify", to: "redis", d: "M220 158V337", delay: 1.6 },
+  { id: "e5", from: "fastapi", to: "postgres", d: "M178 245H262", delay: 2.1 },
 ];
+
+const NOTES = {
+  nextjs: { name: "Interface", text: "Role-specific dashboards for students, teachers and administrators." },
+  fastify: { name: "Application core", text: "Routes, validation and access checks. The boundary between the interface and application data." },
+  fastapi: { name: "Analytics service", text: "Python analytics behind an internal HTTP contract, separate from the core API." },
+  postgres: { name: "Relational data", text: "Application records modeled with Prisma and stored in PostgreSQL." },
+  redis: { name: "Short-lived state", text: "Expiring attendance tokens and infrastructure for scheduled analytics tasks." },
+};
 
 export default function SystemDiagram() {
   const [hot, setHot] = useState(null);
-  const box = useRef(null);
-  const raf = useRef(0);
-
-  const edgeIsHot = (e) => hot && (e.from === hot || e.to === hot);
-
-  // kursorga sezilar-sezilmas ergashadi — chuqurlik hissi uchun
-  const onMove = (e) => {
-    const el = box.current;
-    if (!el) return;
-    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    const r = el.getBoundingClientRect();
-    const dx = (e.clientX - (r.left + r.width / 2)) / (r.width / 2);
-    const dy = (e.clientY - (r.top + r.height / 2)) / (r.height / 2);
-
-    cancelAnimationFrame(raf.current);
-    raf.current = requestAnimationFrame(() => {
-      el.style.setProperty("--px", `${(dx * 7).toFixed(2)}px`);
-      el.style.setProperty("--py", `${(dy * 7).toFixed(2)}px`);
-    });
-  };
-
-  const onLeave = () => {
-    const el = box.current;
-    cancelAnimationFrame(raf.current);
-    setHot(null);
-    if (el) {
-      el.style.setProperty("--px", "0px");
-      el.style.setProperty("--py", "0px");
-    }
-  };
+  const [selected, setSelected] = useState("fastify");
+  const active = hot || selected;
+  const edgeIsHot = (e) => e.from === active || e.to === active;
 
   return (
-    <div
-      ref={box}
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
-      className="sysdia"
-      role="img"
-      aria-label="System architecture: data flows into Python, which writes to PostgreSQL and serves FastAPI, together forming the running system."
-    >
-      <svg viewBox="0 0 440 500" className="sysdia__svg" aria-hidden="true">
-        {/* chiziqlar */}
+    <div className="sysdia">
+      <svg
+        viewBox="0 0 440 420"
+        className="sysdia__svg"
+        role="img"
+        aria-labelledby="architecture-title architecture-desc"
+      >
+        <title id="architecture-title">SEASMP service schematic</title>
+        <desc id="architecture-desc">
+          Next.js calls the Fastify core API. Fastify calls FastAPI analytics
+          over HTTP and uses PostgreSQL and Redis. The Python analytics service
+          also reads PostgreSQL.
+        </desc>
+
         <g className="sysdia__edges">
           {EDGES.map((e) => (
             <g key={e.id} className={edgeIsHot(e) ? "is-hot" : ""}>
@@ -89,29 +70,28 @@ export default function SystemDiagram() {
           ))}
         </g>
 
-        {/* tugunlar */}
-        <g className="sysdia__nodes">
+        <g>
           {NODES.map((n) => (
             <g
               key={n.id}
-              className={`sysdia__node sysdia__node--${n.kind} ${hot === n.id ? "is-hot" : ""}`}
+              className={`sysdia__node ${active === n.id ? "is-hot" : ""}`}
               onMouseEnter={() => setHot(n.id)}
               onMouseLeave={() => setHot(null)}
             >
               <rect
-                x={n.x}
-                y={n.y}
-                width={n.w}
-                height={n.h}
-                rx="6"
                 className="sysdia__box"
+                x={n.x - n.w / 2}
+                y={n.y - 28}
+                width={n.w}
+                height="56"
+                rx="6"
               />
               <text
-                x={n.x + n.w / 2}
-                y={n.y + n.h / 2}
                 className="sysdia__label"
-                dominantBaseline="central"
+                x={n.x}
+                y={n.y}
                 textAnchor="middle"
+                dominantBaseline="central"
               >
                 {n.label}
               </text>
@@ -119,6 +99,18 @@ export default function SystemDiagram() {
           ))}
         </g>
       </svg>
+      <div className="sysdia__controls" aria-label="Explore the architecture">
+        {NODES.map((n) => (
+          <button type="button" key={n.id} aria-pressed={selected === n.id}
+            onClick={() => setSelected(n.id)} aria-controls="architecture-note">
+            {n.label.replace(" API", "")}
+          </button>
+        ))}
+      </div>
+      <div className="sysdia__note" id="architecture-note" aria-live="polite" aria-atomic="true">
+        <span className="mono">{NOTES[selected].name}</span>
+        <p>{NOTES[selected].text}</p>
+      </div>
     </div>
   );
 }

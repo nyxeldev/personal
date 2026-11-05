@@ -99,6 +99,7 @@
   stroke-linecap: round;
   stroke-dasharray: 32 100;
   stroke-dashoffset: 132;
+  opacity: 0.9;
   animation: jv-flow 5.5s linear infinite;
 }
 
@@ -112,7 +113,9 @@
   fill: #121217;
   stroke: var(--line-2);
   stroke-width: 1.5;
-  transition: stroke var(--d-mid) var(--e-io), fill var(--d-mid) var(--e-io);
+  transition:
+    stroke var(--d-mid) var(--e-io),
+    fill var(--d-mid) var(--e-io);
 }
 
 .joinviz__nodes text {
@@ -132,6 +135,11 @@
 .joinviz__nodes g:hover rect {
   stroke: var(--accent);
   fill: var(--accent-wash);
+}
+
+/* diagramma ustiga kelganda oqim tezlashadi — "jonlanadi" */
+.joinviz:hover .joinviz__flows path {
+  animation-duration: 1.8s;
 }
 
 .joinviz__join rect {
@@ -336,3 +344,15 @@
     opacity: 0.4;
   }
 }
+
+.datastory__note {
+  color: var(--ink-3);
+  font-size: var(--t-sm);
+  max-width: 72ch;
+  margin-top: 2rem;
+}
+
+.stat { padding: 1.25rem; border: 1px solid var(--line-2); border-radius: 12px; background: rgba(255,255,255,.025); }
+.stat__n { letter-spacing: -.065em; }
+.stat__k { color: var(--ink-3); }
+@media (max-width: 620px) { .statrow { grid-template-columns: repeat(2,minmax(0,1fr)); gap: .75rem; } .stat { padding: 1rem; } }

@@ -3,9 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 
 /** Element ekranga kirganda bir marta true qaytaradi. */
-export default function useInView({ threshold = 0.18, rootMargin = "0px 0px -8% 0px" } = {}) {
+export default function useInView({ threshold = 0, rootMargin = "0px 0px -32px 0px" } = {}) {
   const ref = useRef(null);
   const [inView, setInView] = useState(false);
+  const [armed, setArmed] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
@@ -17,6 +18,9 @@ export default function useInView({ threshold = 0.18, rootMargin = "0px 0px -8% 
       return;
     }
 
+    // Arm only after this component has hydrated. Failed bundle loads leave
+    // server-rendered content visible. Cap the ratio for tall project cards.
+    setArmed(true);
     const io = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -24,12 +28,14 @@ export default function useInView({ threshold = 0.18, rootMargin = "0px 0px -8% 
           io.disconnect();
         }
       },
-      { threshold, rootMargin }
+      { threshold: Math.min(threshold, 48 / Math.max(el.offsetHeight, 1)), rootMargin }
     );
 
     io.observe(el);
-    return () => io.disconnect();
+    return () => {
+      io.disconnect();
+    };
   }, [threshold, rootMargin]);
 
-  return [ref, inView];
+  return [ref, inView, armed];
 }

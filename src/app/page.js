@@ -9,6 +9,7 @@ import Decisions from "@/components/Decisions/Decisions";
 import Contact from "@/components/Contact/Contact";
 import Footer from "@/components/Footer/Footer";
 import CommandCenter from "@/components/CommandCenter/CommandCenter";
+import Experience from "@/components/Experience/Experience";
 
 export default function Home() {
   return (
@@ -18,13 +19,14 @@ export default function Home() {
         Skip to content
       </a>
       <Nav />
-      <main id="main">
+      <main id="main" tabIndex={-1}>
         <Hero />
-        <WhoIAm />
-        <WhatIBuild />
         <Work />
         <DataStory />
         <Decisions />
+        <WhatIBuild />
+        <Experience />
+        <WhoIAm />
         <Contact />
       </main>
       <Footer />

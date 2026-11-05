@@ -1,21 +1,22 @@
 "use client";
-
 import { useEffect, useRef, useState } from "react";
-import { Moon, Sun, ArrowUpRight } from "lucide-react";
+import { Moon, Sun, ArrowUpRight, X } from "lucide-react";
 import useTheme from "@/hooks/useTheme";
 import usePlatformKey from "@/hooks/usePlatformKey";
 import Magnetic from "@/components/ui/Magnetic";
+import { SITE } from "@/lib/site";
+import { trapDialogTab } from "@/lib/dialogFocus";
 import "./nav.css";
 
 const LINKS = [
-  { id: "about", num: "01", label: "About" },
-  { id: "build", num: "02", label: "Expertise" },
-  { id: "work", num: "03", label: "Work" },
-  { id: "data", num: "04", label: "Data" },
-  { id: "decisions", num: "05", label: "Decisions" },
-  { id: "contact", num: "06", label: "Contact" },
+  { id: "work", label: "Work" },
+  { id: "data", label: "Data" },
+  { id: "decisions", label: "Decisions" },
+  { id: "build", label: "Skills" },
+  { id: "experience", label: "Experience" },
+  { id: "about", label: "About" },
+  { id: "contact", label: "Contact" },
 ];
-
 export default function Nav() {
   const { theme, toggleTheme } = useTheme();
   const { modKey } = usePlatformKey();
@@ -24,112 +25,87 @@ export default function Nav() {
   const [active, setActive] = useState("");
   const sheetRef = useRef(null);
   const burgerRef = useRef(null);
-
-  // fon chizig'i faqat scroll qilingach chiqadi
   useEffect(() => {
     const onScroll = () => setStuck(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  // qaysi bo'lim ko'rinayotganini kuzatadi
   useEffect(() => {
-    const sections = LINKS.map((l) => document.getElementById(l.id)).filter(Boolean);
-    if (!sections.length || typeof IntersectionObserver === "undefined") return;
-
+    if (!window.IntersectionObserver) return;
     const io = new IntersectionObserver(
       (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        const visible = entries.filter((e) => e.isIntersecting)[0];
         if (visible) setActive(visible.target.id);
       },
-      { rootMargin: "-45% 0px -45% 0px", threshold: [0, 0.25, 0.5] }
+      { rootMargin: "-25% 0px -55% 0px" },
     );
-
-    sections.forEach((s) => io.observe(s));
+    LINKS.forEach((l) => {
+      const el = document.getElementById(l.id);
+      if (el) io.observe(el);
+    });
     return () => io.disconnect();
   }, []);
-
-  // menyu ochiqda sahifa scroll qilinmasin
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
-
-  // Esc bilan yopish, Tab menyudan chiqib ketmasin, yopilgach fokus tugmaga qaytsin
   useEffect(() => {
     if (!open) return;
-
-    const sheet = sheetRef.current;
-    const focusables = sheet
-      ? sheet.querySelectorAll('a[href], button:not([disabled])')
-      : [];
-    focusables[0]?.focus();
-
-    const onKey = (e) => {
-      if (e.key === "Escape") {
-        setOpen(false);
-        return;
-      }
-      if (e.key !== "Tab" || !focusables.length) return;
-
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
+    const dialog = sheetRef.current;
+    const previous = document.body.style.overflow;
+    dialog.showModal();
+    document.body.style.overflow = "hidden";
+    const resize = () => {
+      if (window.innerWidth > 1180) setOpen(false);
     };
-
-    window.addEventListener("keydown", onKey);
+    window.addEventListener("resize", resize);
     return () => {
-      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("resize", resize);
+      dialog.close();
+      document.body.style.overflow = previous;
       burgerRef.current?.focus();
     };
   }, [open]);
-
-  const isDark = theme === "dark";
-
+  const jump = (id) => {
+    setOpen(false);
+    requestAnimationFrame(() => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.setAttribute("tabindex", "-1");
+        el.focus({ preventScroll: true });
+      }
+    });
+  };
   return (
     <>
       <header className={`nav ${stuck ? "is-stuck" : ""}`}>
         <div className="nav__inner shell">
-          <a href="#top" className="nav__mark" aria-label="Jahongir Hamidov — home">
+          <a
+            href="#top"
+            className="nav__mark"
+            aria-label="Jahongir Hamidov — home"
+          >
             <span className="nav__mark-glyph">JH</span>
             <span className="nav__mark-text">Jahongir Hamidov</span>
           </a>
-
           <nav className="nav__links" aria-label="Sections">
             {LINKS.map((l) => (
               <a
                 key={l.id}
                 href={`#${l.id}`}
                 className={`nav__link ${active === l.id ? "is-active" : ""}`}
+                aria-current={active === l.id ? "location" : undefined}
               >
-                <span className="nav__link-num">{l.num}</span>
                 {l.label}
               </a>
             ))}
           </nav>
-
           <div className="nav__end">
             <button
+              type="button"
               className="nav__cmdk"
               onClick={() => window.dispatchEvent(new CustomEvent("cmdk:open"))}
               aria-label="Open command centre"
             >
-              <span className="nav__cmdk-key">{modKey}</span>
-              <span className="nav__cmdk-key">K</span>
+              <span className="nav__cmdk-key">{modKey} K</span>
             </button>
-
             <Magnetic strength={0.2}>
               <a
                 className="nav__resume"
@@ -137,28 +113,32 @@ export default function Nav() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Résumé
-                <ArrowUpRight size={14} strokeWidth={2} />
+                View résumé
+                <ArrowUpRight size={14} />
               </a>
             </Magnetic>
-
             <button
+              type="button"
               className="nav__icon"
               onClick={toggleTheme}
-              aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
+              aria-label={
+                theme === "dark"
+                  ? "Switch to light theme"
+                  : "Switch to dark theme"
+              }
             >
-              {isDark ? <Sun size={16} strokeWidth={1.8} /> : <Moon size={16} strokeWidth={1.8} />}
+              {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
             </button>
-
             <button
+              type="button"
               ref={burgerRef}
               className="nav__burger"
-              onClick={() => setOpen((v) => !v)}
-              aria-label={open ? "Close menu" : "Open menu"}
+              onClick={() => setOpen(true)}
+              aria-label="Open menu"
               aria-expanded={open}
               aria-controls="nav-sheet"
             >
-              <span className={`nav__burger-bars ${open ? "is-x" : ""}`} aria-hidden="true">
+              <span className="nav__burger-bars" aria-hidden="true">
                 <i />
                 <i />
               </span>
@@ -166,40 +146,68 @@ export default function Nav() {
           </div>
         </div>
       </header>
-
-      {/* mobil menyu — to'liq ekran, shaffof emas */}
-      <div
+      <dialog
         id="nav-sheet"
         ref={sheetRef}
-        className={`sheet ${open ? "is-open" : ""}`}
-        inert={!open}
+        className="sheet"
+        aria-labelledby="menu-title"
+        onKeyDown={trapDialogTab}
+        onCancel={(e) => {
+          e.preventDefault();
+          setOpen(false);
+        }}
       >
-        <nav className="sheet__links" aria-label="Sections">
+        <div className="sheet__head">
+          <span id="menu-title" className="mono">
+            Explore the portfolio
+          </span>
+          <button
+            type="button"
+            className="sheet__close"
+            onClick={() => setOpen(false)}
+            aria-label="Close menu"
+          >
+            <X size={22} />
+          </button>
+        </div>
+        <nav className="sheet__links" aria-label="Mobile sections">
           {LINKS.map((l, i) => (
             <a
               key={l.id}
               href={`#${l.id}`}
               className="sheet__link"
-              style={{ "--i": i }}
-              onClick={() => setOpen(false)}
+              onClick={() => jump(l.id)}
             >
-              <span className="sheet__num">{l.num}</span>
+              <span className="sheet__num" aria-hidden="true">0{i + 1}</span>
               {l.label}
             </a>
           ))}
         </nav>
-
-        <a
-          className="sheet__resume"
-          href="/files/Resume.pdf"
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => setOpen(false)}
-        >
-          Download résumé
-          <ArrowUpRight size={16} strokeWidth={2} />
-        </a>
-      </div>
+        <div className="sheet__actions">
+          <a
+            className="sheet__resume"
+            href="/files/Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setOpen(false)}
+          >
+            View résumé
+            <ArrowUpRight size={16} />
+          </a>
+          <a className="sheet__email" href={`mailto:${SITE.email}`}>
+            Email Jahongir
+          </a>
+        </div>
+      </dialog>
+      <noscript>
+        <nav className="nojs-nav" aria-label="Sections">
+          {LINKS.map((l) => (
+            <a key={l.id} href={`#${l.id}`}>
+              {l.label}
+            </a>
+          ))}
+        </nav>
+      </noscript>
     </>
   );
 }

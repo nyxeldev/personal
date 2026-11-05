@@ -2,10 +2,7 @@
 
 import useInView from "./useInView";
 
-/**
- * Matnni so'zlarga bo'lib, pastdan ko'tarib chiqaradi.
- * Har bir so'z overflow-hidden niqob ichida — shunda "line reveal" hissi chiqadi.
- */
+/** Word entrances retain readable server-rendered text until hydration. */
 export default function SplitText({
   text,
   as: Tag = "span",
@@ -13,11 +10,11 @@ export default function SplitText({
   stagger = 42,
   className = "",
 }) {
-  const [ref, inView] = useInView({ threshold: 0.3 });
+  const [ref, inView, armed] = useInView({ threshold: 0.3 });
   const words = String(text).split(" ");
 
   return (
-    <Tag ref={ref} className={`split ${inView ? "is-in" : ""} ${className}`.trim()}>
+    <Tag ref={ref} className={`split ${armed ? "is-armed" : ""} ${inView ? "is-in" : ""} ${className}`.trim()}>
       {words.map((word, i) => (
         <span className="split__line" key={`${word}-${i}`}>
           <span
@@ -25,7 +22,7 @@ export default function SplitText({
             style={{ "--word-delay": `${delay + i * stagger}ms` }}
           >
             {word}
-            {i < words.length - 1 ? "\u00a0" : ""}
+            {i < words.length - 1 ? " " : ""}
           </span>
         </span>
       ))}

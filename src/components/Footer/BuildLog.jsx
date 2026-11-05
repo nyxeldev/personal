@@ -1,103 +1,137 @@
 "use client";
-
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SITE } from "@/lib/site";
-
-/**
- * GitHub'ning ochiq, autentifikatsiyasiz API'sidan real ma'lumot oladi —
- * repo soni va oxirgi faoliyat. Hech qanday qiymat o'ylab topilmaydi:
- * so'rov uzilsa yoki muddat tugasa, komponent shunchaki hech narsa
- * chizmaydi (eski yoki soxta raqam ko'rsatishdan ko'ra yaxshiroq).
- *
- * So'rov brauzerning o'zidan — tashrif buyuruvchining IP'si bilan —
- * ketadi, chunki sayt statik eksport, server yo'q. GitHub'ning
- * autentifikatsiyasiz chegarasi (soatiga 60 so'rov) bitta sahifa
- * yuklanishida ikkita so'rov bilan hech qachon yetib bo'lmaydigan son.
- */
-
-const EVENT_LABEL = {
-  PushEvent: "pushed to",
-  CreateEvent: "created in",
-  PullRequestEvent: "opened a PR in",
-  IssuesEvent: "opened an issue in",
-  IssueCommentEvent: "commented in",
-  ReleaseEvent: "released in",
-  ForkEvent: "forked",
-  WatchEvent: "starred",
-};
-
+const CACHE_KEY = `github-snapshot:${SITE.githubHandle}`;
+const MAX_AGE = 10 * 60 * 1000;
 function timeAgo(iso) {
-  const s = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
-  if (s < 60) return "just now";
-  const m = Math.floor(s / 60);
-  if (m < 60) return `${m}m ago`;
-  const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h ago`;
-  const d = Math.floor(h / 24);
-  if (d < 30) return `${d}d ago`;
-  const mo = Math.floor(d / 30);
-  if (mo < 12) return `${mo}mo ago`;
-  return `${Math.floor(mo / 12)}y ago`;
+  const days = Math.max(
+    0,
+    Math.floor((Date.now() - Date.parse(iso)) / 86400000),
+  );
+  return days === 0 ? "today" : days === 1 ? "1 day ago" : `${days} days ago`;
 }
-
+function eventLabel(event) {
+  const action = event.payload?.action;
+  if (event.type === "PullRequestEvent")
+    return ["opened", "closed", "reopened"].includes(action)
+      ? `${action} a PR in`
+      : "updated a PR in";
+  if (event.type === "IssuesEvent")
+    return ["opened", "closed", "reopened"].includes(action)
+      ? `${action} an issue in`
+      : "updated an issue in";
+  return (
+    {
+      PushEvent: "pushed to",
+      CreateEvent: "created in",
+      IssueCommentEvent: "commented in",
+      ReleaseEvent: "released in",
+      ForkEvent: "forked",
+      WatchEvent: "starred",
+    }[event.type] || "was active in"
+  );
+}
 export default function BuildLog() {
   const [data, setData] = useState(null);
-
+  const ref = useRef(null);
   useEffect(() => {
     let cancelled = false;
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 6000);
-
-    const user = fetch(`https://api.github.com/users/${SITE.githubHandle}`, {
-      signal: ctrl.signal,
-    }).then((r) => (r.ok ? r.json() : null));
-
-    const events = fetch(`https://api.github.com/users/${SITE.githubHandle}/events/public`, {
-      signal: ctrl.signal,
-    }).then((r) => (r.ok ? r.json() : null));
-
-    Promise.all([user, events])
-      .then(([u, ev]) => {
-        if (cancelled || !u) return;
-
-        const latest = Array.isArray(ev) ? ev[0] : null;
-
-        setData({
-          repos: u.public_repos,
-          lastLabel: latest ? EVENT_LABEL[latest.type] || "active in" : null,
-          lastRepo: latest ? latest.repo.name.split("/")[1] : null,
-          lastRepoUrl: latest ? `https://github.com/${latest.repo.name}` : null,
-          lastAt: latest ? latest.created_at : null,
-        });
-      })
-      .catch(() => {
-        // tarmoq xatosi, timeout yoki rate limit — jim turamiz
-      })
-      .finally(() => clearTimeout(timer));
-
+    let ctrl;
+    let timer;
+    let observer;
+    try {
+      const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
+      if (
+        cached &&
+        Date.now() - cached.updatedAt < MAX_AGE &&
+        cached.updatedAt <= Date.now() &&
+        ((Number.isInteger(cached.repos) && cached.repos >= 0) ||
+          (cached.repos === null && cached.lastAt)) &&
+        (!cached.lastAt ||
+          (Number.isFinite(Date.parse(cached.lastAt)) &&
+            /^[\w.-]+\/[\w.-]+$/.test(cached.lastRepo || "") &&
+            typeof cached.lastLabel === "string"))
+      ) {
+        setData(cached);
+        return;
+      }
+    } catch {}
+    const load = async () => {
+      observer?.disconnect();
+      ctrl = new AbortController();
+      timer = setTimeout(() => ctrl.abort(), 6000);
+      const read = (path) =>
+        fetch(`https://api.github.com/users/${SITE.githubHandle}${path}`, {
+          signal: ctrl.signal,
+        }).then((r) => (r.ok ? r.json() : null));
+      const [profile, events] = await Promise.allSettled([
+        read(""),
+        read("/events/public"),
+      ]);
+      clearTimeout(timer);
+      if (cancelled) return;
+      const user = profile.status === "fulfilled" ? profile.value : null;
+      const ev =
+        events.status === "fulfilled" && Array.isArray(events.value)
+          ? events.value[0]
+          : null;
+      const latest =
+        ev &&
+        /^[\w.-]+\/[\w.-]+$/.test(ev.repo?.name || "") &&
+        Number.isFinite(Date.parse(ev.created_at))
+          ? ev
+          : null;
+      const next = {
+        repos: Number.isInteger(user?.public_repos) ? user.public_repos : null,
+        lastLabel: latest ? eventLabel(latest) : null,
+        lastRepo: latest?.repo.name || null,
+        lastAt: latest?.created_at || null,
+        updatedAt: Date.now(),
+      };
+      if (next.repos === null && !next.lastAt) return;
+      setData(next);
+      // Cache profile-only snapshots too. Failure never produces invented values.
+      try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify(next));
+      } catch {}
+    };
+    if (window.IntersectionObserver) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) load();
+        },
+        { rootMargin: "150px" },
+      );
+      observer.observe(ref.current);
+    } else load();
     return () => {
       cancelled = true;
-      ctrl.abort();
+      observer?.disconnect();
+      ctrl?.abort();
       clearTimeout(timer);
     };
   }, []);
-
-  if (!data) return null;
-
   return (
-    <div className="buildlog mono">
-      <span className="buildlog__dot" aria-hidden="true" />
-      <span>{data.repos} public repos on GitHub</span>
-      {data.lastAt && (
-        <>
-          <span className="buildlog__sep" aria-hidden="true">
-            ·
-          </span>
-          <a href={data.lastRepoUrl} target="_blank" rel="noopener noreferrer">
-            {data.lastLabel} {data.lastRepo}
-          </a>
-          <span className="buildlog__time">{timeAgo(data.lastAt)}</span>
-        </>
+    <div ref={ref}>
+      {data && (
+        <div className="buildlog mono">
+          <span className="buildlog__dot" aria-hidden="true" />
+          <span>GitHub snapshot</span>
+          {data.repos !== null && <span>· {data.repos} public repos</span>}
+          {data.lastAt && (
+            <>
+              <span>·</span>
+              <a
+                href={`https://github.com/${data.lastRepo}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {data.lastLabel} {data.lastRepo.split("/")[1]}
+              </a>
+              <time dateTime={data.lastAt}>{timeAgo(data.lastAt)}</time>
+            </>
+          )}
+        </div>
       )}
     </div>
   );

@@ -1,278 +1,274 @@
 "use client";
-
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  ArrowUpRight,
-  Download,
-  Github,
-  Linkedin,
-  Mail,
-  Moon,
-  Send,
-  Sun,
-  Hash,
-  Boxes,
-} from "lucide-react";
+import { ArrowUpRight, X } from "lucide-react";
 import useTheme from "@/hooks/useTheme";
 import usePlatformKey from "@/hooks/usePlatformKey";
+import { SITE } from "@/lib/site";
+import { trapDialogTab } from "@/lib/dialogFocus";
 import "./command-center.css";
 
+const fold = (value) =>
+  value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
 export default function CommandCenter() {
   const { theme, toggleTheme } = useTheme();
-
   const { modKey } = usePlatformKey();
-
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [cursor, setCursor] = useState(0);
-
+  const dialogRef = useRef(null);
   const inputRef = useRef(null);
-  const listRef = useRef(null);
   const restoreTo = useRef(null);
-
   const close = useCallback(() => {
     setOpen(false);
     setQuery("");
     setCursor(0);
   }, []);
-
   const go = useCallback(
-    (hash) => {
+    (id) => {
       close();
-      // modal yopilib, fokus qaytganidan keyin suramiz
       requestAnimationFrame(() => {
-        document.getElementById(hash)?.scrollIntoView({ behavior: "smooth" });
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.setAttribute("tabindex", "-1");
+        el.focus({ preventScroll: true });
+        el.scrollIntoView({
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)")
+            .matches
+            ? "instant"
+            : "smooth",
+        });
+        history.replaceState(null, "", `#${id}`);
       });
     },
-    [close]
+    [close],
   );
-
   const openUrl = useCallback(
     (url) => {
       close();
       window.open(url, "_blank", "noopener,noreferrer");
     },
-    [close]
+    [close],
   );
-
   const items = useMemo(
     () => [
-      // --- bo'limlar ---
-      { id: "s-about", group: "Jump to", label: "Who I am", icon: Hash, keywords: "about bio intro", run: () => go("about") },
-      { id: "s-build", group: "Jump to", label: "Expertise", icon: Hash, keywords: "skills stack tech", run: () => go("build") },
-      { id: "s-work", group: "Jump to", label: "Selected work", icon: Hash, keywords: "projects case study seasmp", run: () => go("work") },
-      { id: "s-data", group: "Jump to", label: "Data engineering", icon: Hash, keywords: "logistics payout amazon relay", run: () => go("data") },
-      { id: "s-decisions", group: "Jump to", label: "Engineering decisions", icon: Hash, keywords: "why reasoning tradeoffs", run: () => go("decisions") },
-      { id: "s-contact", group: "Jump to", label: "Contact", icon: Hash, keywords: "email message hire", run: () => go("contact") },
-
-      // --- loyihalar ---
+      ...[
+        ["work", "Selected work"],
+        ["data", "Logistics investigation"],
+        ["decisions", "Engineering decisions"],
+        ["build", "Capabilities"],
+        ["experience", "Experience"],
+        ["about", "About / trajectory"],
+        ["contact", "Contact"],
+      ].map(([id, label]) => ({
+        id,
+        label,
+        keywords: "sections",
+        run: () => go(id),
+      })),
       {
-        id: "p-seasmp",
-        group: "Projects",
-        label: "SEASMP — source on GitHub",
-        icon: Boxes,
-        keywords: "education analytics fastify fastapi postgres repo",
-        run: () => openUrl("https://github.com/nyxeldev/seasmp"),
+        id: "seasmp",
+        label: "SEASMP · implementation",
+        keywords: "project education analytics",
+        run: () => go("seasmp"),
       },
       {
-        id: "p-ielts",
-        group: "Projects",
+        id: "ielts",
         label: "IELTS Speaking Practice — live demo",
-        icon: Boxes,
-        keywords: "speaking ielts nextjs demo",
+        keywords: "project speaking",
         run: () => openUrl("https://speakready.netlify.app"),
       },
-
-      // --- amallar ---
       {
-        id: "a-resume",
-        group: "Actions",
-        label: "Download résumé",
-        icon: Download,
-        keywords: "resume cv pdf hire download",
+        id: "resume",
+        label: "View résumé",
+        keywords: "resume cv pdf",
         run: () => openUrl("/files/Resume.pdf"),
       },
-      { id: "a-github", group: "Actions", label: "GitHub — nyxeldev", icon: Github, keywords: "code repos", run: () => openUrl("https://github.com/nyxeldev") },
-      { id: "a-linkedin", group: "Actions", label: "LinkedIn", icon: Linkedin, keywords: "profile", run: () => openUrl("https://www.linkedin.com/in/iamhamidov/") },
-      { id: "a-telegram", group: "Actions", label: "Telegram — @nyxeldev", icon: Send, keywords: "chat message", run: () => openUrl("https://t.me/nyxeldev") },
       {
-        id: "a-email",
-        group: "Actions",
-        label: "Email imhamidovic@gmail.com",
-        icon: Mail,
-        keywords: "mail contact write",
+        id: "github",
+        label: "GitHub ↗ nyxeldev",
+        keywords: "code source",
+        run: () => openUrl(SITE.github),
+      },
+      {
+        id: "linkedin",
+        label: "LinkedIn",
+        keywords: "profile",
+        run: () => openUrl(SITE.linkedin),
+      },
+      {
+        id: "email",
+        label: `Email ${SITE.email}`,
+        keywords: "contact mail",
         run: () => {
           close();
-          window.location.href = "mailto:imhamidovic@gmail.com";
+          window.location.href = `mailto:${SITE.email}`;
         },
       },
-
-      // --- sozlamalar ---
       {
-        id: "t-theme",
-        group: "Preferences",
-        label: theme === "dark" ? "Switch to light theme" : "Switch to dark theme",
-        icon: theme === "dark" ? Sun : Moon,
-        keywords: "theme dark light appearance",
+        id: "theme",
+        label:
+          theme === "dark" ? "Switch to light theme" : "Switch to dark theme",
+        keywords: "appearance",
         run: () => {
           toggleTheme();
           close();
         },
       },
     ],
-    [theme, go, openUrl, toggleTheme, close]
+    [go, openUrl, close, theme, toggleTheme],
   );
-
-  // "resume" yozilganda "résumé" ham topilsin
-  const fold = (v) =>
-    v
-      .normalize("NFD")
-      .replace(/[̀-ͯ]/g, "")
-      .toLowerCase();
-
-  const results = useMemo(() => {
-    const q = fold(query.trim());
-    if (!q) return items;
-    return items.filter((it) => fold(`${it.label} ${it.group} ${it.keywords}`).includes(q));
-  }, [items, query]);
-
-  // ⌘K / Ctrl+K ochadi
+  const results = useMemo(
+    () =>
+      items.filter((it) =>
+        fold(`${it.label} ${it.keywords}`).includes(fold(query.trim())),
+      ),
+    [items, query],
+  );
   useEffect(() => {
+    const requestOpen = () => {
+      if (document.querySelector(".sheet[open]")) return;
+      restoreTo.current = document.activeElement;
+      setQuery("");
+      setCursor(0);
+      setOpen(true);
+    };
     const onKey = (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
-        setOpen((v) => {
-          if (!v) restoreTo.current = document.activeElement;
-          return !v;
-        });
+        if (open) close();
+        else requestOpen();
       }
     };
-    const onOpen = () => {
-      restoreTo.current = document.activeElement;
-      setOpen(true);
-    };
-
     window.addEventListener("keydown", onKey);
-    window.addEventListener("cmdk:open", onOpen);
+    window.addEventListener("cmdk:open", requestOpen);
     return () => {
       window.removeEventListener("keydown", onKey);
-      window.removeEventListener("cmdk:open", onOpen);
+      window.removeEventListener("cmdk:open", requestOpen);
     };
-  }, []);
-
-  // ochiqda: fokus, scroll qulfi, klaviatura boshqaruvi
+  }, [open, close]);
   useEffect(() => {
     if (!open) return;
-
-    const prevOverflow = document.body.style.overflow;
+    const dialog = dialogRef.current;
+    const previous = document.body.style.overflow;
+    dialog.showModal();
     document.body.style.overflow = "hidden";
     inputRef.current?.focus();
-
-    const onKey = (e) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        close();
-      } else if (e.key === "ArrowDown") {
-        e.preventDefault();
-        setCursor((c) => (results.length ? (c + 1) % results.length : 0));
-      } else if (e.key === "ArrowUp") {
-        e.preventDefault();
-        setCursor((c) => (results.length ? (c - 1 + results.length) % results.length : 0));
-      } else if (e.key === "Enter") {
-        e.preventDefault();
-        results[cursor]?.run();
-      } else if (e.key === "Tab") {
-        // modal ichida qolsin
-        e.preventDefault();
-      }
-    };
-
-    window.addEventListener("keydown", onKey);
     return () => {
-      window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prevOverflow;
+      dialog.close();
+      document.body.style.overflow = previous;
       restoreTo.current?.focus?.();
     };
-  }, [open, results, cursor, close]);
-
-  // tanlangan qator ko'rinib tursin
+  }, [open]);
   useEffect(() => {
-    if (!open) return;
-    listRef.current
-      ?.querySelector(`[data-i="${cursor}"]`)
-      ?.scrollIntoView({ block: "nearest" });
-  }, [cursor, open]);
-
-  if (!open) return null;
-
-  let lastGroup = null;
-
+    if (open)
+      document
+        .getElementById(`command-${results[cursor]?.id}`)
+        ?.scrollIntoView({ block: "nearest" });
+  }, [open, cursor, results]);
+  const navigate = (e) => {
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      setCursor((c) =>
+        results.length
+          ? (c + (e.key === "ArrowDown" ? 1 : -1) + results.length) %
+            results.length
+          : 0,
+      );
+    }
+    if (e.key === "Home" && e.altKey) {
+      e.preventDefault();
+      setCursor(0);
+    }
+    if (e.key === "End" && e.altKey) {
+      e.preventDefault();
+      setCursor(Math.max(0, results.length - 1));
+    }
+    if (e.key === "Enter") {
+      e.preventDefault();
+      results[cursor]?.run();
+    }
+  };
   return (
-    <div className="cmdk" role="dialog" aria-modal="true" aria-label="Command centre">
-      <button className="cmdk__scrim" aria-label="Close" onClick={close} tabIndex={-1} />
-
+    <dialog
+      ref={dialogRef}
+      className="cmdk"
+      aria-label="Command centre"
+      onKeyDown={trapDialogTab}
+      onCancel={(e) => {
+        e.preventDefault();
+        close();
+      }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) close();
+      }}
+    >
       <div className="cmdk__panel">
         <div className="cmdk__search">
           <input
             ref={inputRef}
             className="cmdk__input"
-            placeholder="Search sections, projects, actions…"
+            placeholder="Search projects, sections, actions…"
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
               setCursor(0);
             }}
-            aria-label="Search"
+            onKeyDown={navigate}
+            role="combobox"
+            aria-label="Search commands"
+            aria-expanded={open}
+            aria-autocomplete="list"
+            aria-controls="command-results"
+            aria-activedescendant={
+              open && results[cursor]
+                ? `command-${results[cursor].id}`
+                : undefined
+            }
             autoComplete="off"
             spellCheck="false"
           />
-          <kbd className="cmdk__esc">esc</kbd>
+          <button
+            className="cmdk__close"
+            onClick={close}
+            type="button"
+            aria-label="Close command centre"
+          >
+            <X size={18} />
+          </button>
         </div>
-
-        <div className="cmdk__list" ref={listRef} role="listbox" aria-label="Results">
-          {results.length === 0 && <p className="cmdk__empty">Nothing matches that.</p>}
-
-          {results.map((it, i) => {
-            const Icon = it.icon;
-            const head = it.group !== lastGroup ? it.group : null;
-            lastGroup = it.group;
-
-            return (
-              <div key={it.id}>
-                {head && <div className="cmdk__group mono">{head}</div>}
-                <button
-                  type="button"
-                  data-i={i}
-                  role="option"
-                  aria-selected={i === cursor}
-                  className={`cmdk__item ${i === cursor ? "is-on" : ""}`}
-                  onMouseMove={() => setCursor(i)}
-                  onClick={() => it.run()}
-                  tabIndex={-1}
-                >
-                  <Icon size={15} strokeWidth={1.7} className="cmdk__icon" />
-                  <span className="cmdk__label">{it.label}</span>
-                  <ArrowUpRight size={14} strokeWidth={1.7} className="cmdk__go" />
-                </button>
-              </div>
-            );
-          })}
+        <div
+          id="command-results"
+          className="cmdk__list"
+          role="listbox"
+          aria-label="Commands"
+        >
+          {results.map((it, i) => (
+            <div
+              id={`command-${it.id}`}
+              key={it.id}
+              role="option"
+              aria-selected={i === cursor}
+              className={`cmdk__item ${i === cursor ? "is-on" : ""}`}
+              onMouseEnter={() => setCursor(i)}
+              onClick={() => it.run()}
+            >
+              <span className="cmdk__label">{it.label}</span>
+              <ArrowUpRight size={14} />
+            </div>
+          ))}
         </div>
-
+        <p className="cmdk__empty" role="status">
+          {results.length === 0
+            ? "No matching commands."
+            : `${results.length} commands`}
+        </p>
         <div className="cmdk__foot mono">
-          <span>
-            <kbd>↑</kbd>
-            <kbd>↓</kbd> navigate
-          </span>
-          <span>
-            <kbd>↵</kbd> open
-          </span>
-          <span>
-            <kbd>{modKey}</kbd>
-            <kbd>K</kbd> toggle
-          </span>
+          ↑ ↓ select · Enter open · Esc close · {modKey} K
         </div>
       </div>
-    </div>
+    </dialog>
   );
 }

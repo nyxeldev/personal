@@ -38,7 +38,8 @@
   --danger: #bf3434;
 
   /* Shriftlar */
-  --sans: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --sans:
+    var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --mono: var(--font-mono), ui-monospace, "SF Mono", Menlo, monospace;
 
   /* Tipografik shkala — fluid */
@@ -54,7 +55,7 @@
 
   /* Ritm */
   --gut: clamp(1.25rem, 0.6rem + 2.6vw, 3.5rem);
-  --sec-y: clamp(5rem, 3rem + 9vw, 11rem);
+  --sec-y: clamp(3.5rem, 2rem + 5vw, 6.5rem);
   --max: 1320px;
   --max-text: 58ch;
 
@@ -66,7 +67,7 @@
   --d-slow: 0.8s;
 
   --radius: 4px;
-  --radius-lg: 10px;
+  --radius-lg: 18px;
 }
 
 .dark-theme {
@@ -84,7 +85,7 @@
 
   --line: #222228;
   --line-2: #32323a;
-  --line-strong: #5c5c64;
+  --line-strong: #777780;
   --line-ink: #e4e4de;
 
   --accent: #5b8bff;
@@ -124,12 +125,16 @@ body {
   line-height: 1.6;
   font-synthesis-weight: none;
   font-optical-sizing: auto;
-  font-feature-settings: "cv05" 1, "ss03" 1;
+  font-feature-settings:
+    "cv05" 1,
+    "ss03" 1;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-  transition: background-color var(--d-mid) var(--e-io), color var(--d-mid) var(--e-io);
+  overflow-x: clip;
+  transition:
+    background-color var(--d-mid) var(--e-io),
+    color var(--d-mid) var(--e-io);
 }
 
 img,
@@ -260,8 +265,10 @@ p {
   font-weight: 500;
   letter-spacing: -0.01em;
   white-space: nowrap;
-  transition: background-color var(--d-fast) var(--e-io),
-    color var(--d-fast) var(--e-io), border-color var(--d-fast) var(--e-io),
+  transition:
+    background-color var(--d-fast) var(--e-io),
+    color var(--d-fast) var(--e-io),
+    border-color var(--d-fast) var(--e-io),
     transform var(--d-fast) var(--e-out);
 }
 
@@ -294,42 +301,45 @@ p {
 }
 
 /* ---------- 5. Animatsiya yordamchilari ---------- */
+/* Motion is armed per component after hydration; SSR remains readable. */
 .reveal {
-  opacity: 0;
-  transform: translateY(18px);
-  transition: opacity 0.7s var(--e-out), transform 0.7s var(--e-out);
-  transition-delay: var(--reveal-delay, 0ms);
-}
-
-.reveal.is-in {
   opacity: 1;
   transform: none;
 }
 
-/* Harf-harf ochilish */
-.split {
-  display: inline-block;
-}
-
-.split__line {
-  display: inline-block;
-  overflow: hidden;
-  vertical-align: top;
-  /* descender (g, y, p) kesilmasligi uchun ozgina havo */
-  padding-bottom: 0.12em;
-  margin-bottom: -0.12em;
-}
-
 .split__word {
   display: inline-block;
-  transform: translateY(104%);
-  transition: transform 0.9s var(--e-out);
-  transition-delay: var(--word-delay, 0ms);
-  will-change: transform;
 }
 
-.is-in .split__word {
-  transform: none;
+@media (prefers-reduced-motion: no-preference) {
+  .reveal.is-armed:not(.is-in) {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  .reveal.is-armed {
+    transition: opacity 0.7s var(--e-out), transform 0.7s var(--e-out);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  .split.is-armed .split__line {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    /* descender (g, y, p) kesilmasligi uchun ozgina havo */
+    padding-bottom: 0.14em;
+    margin-bottom: -0.14em;
+  }
+
+  .split.is-armed:not(.is-in) .split__word {
+    transform: translateY(104%);
+  }
+
+  .split.is-armed .split__word {
+    transition: transform 0.9s var(--e-out);
+    transition-delay: var(--word-delay, 0ms);
+    will-change: transform;
+  }
 }
 
 /* Fon to'ri */
@@ -337,10 +347,15 @@ p {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-image: linear-gradient(var(--line) 1px, transparent 1px),
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
     linear-gradient(90deg, var(--line) 1px, transparent 1px);
   background-size: 72px 72px;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 20%, transparent 75%);
+  mask-image: radial-gradient(
+    ellipse 80% 60% at 50% 0%,
+    #000 20%,
+    transparent 75%
+  );
   opacity: 0.55;
 }
 
@@ -364,6 +379,11 @@ p {
 
   .split__word {
     transform: none;
+  }
+
+  .plx__in,
+  .magnetic {
+    transform: none !important;
   }
 }
 
@@ -397,13 +417,30 @@ p {
   pointer-events: none;
 }
 
-/* ---------- 8. Kirish xoreografiyasi ---------- */
-@keyframes page-in {
-  from {
-    opacity: 0;
-  }
+.action-wrap {
+  display: inline-block;
+}
+.chip {
+  display: inline-block;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--line-2);
+  border-radius: 100px;
+  font-size: var(--t-xs);
+  color: var(--ink-2);
 }
 
-body {
-  animation: page-in 0.5s var(--e-io) both;
+/* Shared surface treatment and pointer feedback. */
+@media (hover: hover) {
+  .btn:hover { transform: translateY(-2px); }
+  .decision-card, .capability, .experience__entry {
+    transition: border-color .3s ease, box-shadow .3s ease;
+  }
+  .decision-card:hover { border-color: var(--accent-line); box-shadow: 0 16px 40px -24px var(--accent-line); }
+  .capability:hover, .experience__entry:hover { border-color: var(--accent); }
 }
+@media (prefers-reduced-motion: reduce) {
+  .btn:hover { transform: none; }
+}
+
+/* A keyboard visit must never land in a visually hidden reveal. */
+.reveal.is-armed:focus-within { opacity: 1; transform: none; }

@@ -1,5 +1,3 @@
-"use client";
-
 import { ArrowUp } from "lucide-react";
 import BuildLog from "./BuildLog";
 import "./footer.css";
@@ -27,7 +25,12 @@ export default function Footer() {
 
         <nav className="foot__links" aria-label="Elsewhere">
           {LINKS.map((l) => (
-            <a key={l.label} href={l.href} target="_blank" rel="noopener noreferrer">
+            <a
+              key={l.label}
+              href={l.href}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {l.label}
             </a>
           ))}

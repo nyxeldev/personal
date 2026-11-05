@@ -8,6 +8,9 @@ const SCALE = 1.18;
 /**
  * Element ekran bo'ylab o'tganda ichidagi rasmni sekin siljitadi.
  * `amount` — piksellarda to'liq yurish masofasi.
+ *
+ * JS ishlamasa yoki hali yuklanmagan bo'lsa ichidagi rasm oddiy holatda
+ * (scale/translate'siz) qoladi — faqat JS mount bo'lgach stil qo'yiladi.
  */
 export default function Parallax({ amount = 28, className = "", children }) {
   const frame = useRef(null);

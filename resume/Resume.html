@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Jahongir Hamidov — Résumé</title>
+    <style>
+      @page {
+        size: A4;
+        margin: 15mm 17mm;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        font:
+          9.5pt/1.3 Arial,
+          sans-serif;
+        color: #18212b;
+        margin: 0;
+      }
+      h1 {
+        font-size: 25pt;
+        letter-spacing: -0.6pt;
+        margin: 0 0 3pt;
+      }
+      .role {
+        font-size: 12pt;
+        margin: 0 0 6pt;
+      }
+      .links {
+        font-size: 9pt;
+        margin: 0 0 12pt;
+      }
+      a {
+        color: #184eb8;
+        text-decoration: none;
+      }
+      h2 {
+        font-size: 10pt;
+        letter-spacing: 1pt;
+        text-transform: uppercase;
+        color: #184eb8;
+        border-bottom: 1px solid #d9dfe5;
+        padding-bottom: 4pt;
+        margin: 12pt 0 6pt;
+      }
+      h3 {
+        font-size: 10.5pt;
+        margin: 6pt 0 2pt;
+      }
+      p {
+        margin: 4pt 0;
+      }
+      ul {
+        padding-left: 13pt;
+        margin: 4pt 0;
+      }
+      li {
+        margin: 3pt 0;
+      }
+      .meta {
+        color: #536171;
+        font-size: 9pt;
+      }
+      .skills p {
+        margin: 2pt 0;
+      }
+      .entry {
+        break-inside: avoid;
+      }
+      footer {
+        font-size: 8pt;
+        color: #536171;
+        margin-top: 12pt;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Jahongir Hamidov</h1>
+    <p class="role">
+      Full-Stack Developer · React / Next.js · Node.js · Python
+    </p>
+    <p class="links">
+      <a href="mailto:imhamidovic@gmail.com">imhamidovic@gmail.com</a> ·
+      <a href="https://github.com/nyxeldev">github.com/nyxeldev</a> ·
+      <a href="https://www.linkedin.com/in/iamhamidov/"
+        >linkedin.com/in/iamhamidov</a
+      >
+      · <a href="https://nyxeldev.pro">nyxeldev.pro</a>
+    </p>
+    <h2>Summary</h2>
+    <p>
+      Full-Stack Developer building data-driven, intelligent, and
+      security-focused systems. Started in React and frontend development; now
+      building Node.js/Python services, relational models and analytics
+      pipelines. Investigated logistics settlement data and specified automation
+      requirements. Studying Information Security Management.
+    </p>
+    <h2>Technical skills</h2>
+    <div class="skills">
+      <p>
+        <b>Frontend:</b> React, Next.js, JavaScript, TypeScript, Tailwind CSS,
+        shadcn/ui
+      </p>
+      <p>
+        <b>Backend &amp; data:</b> Node.js, Fastify, FastAPI, REST APIs,
+        WebSockets, Prisma, PostgreSQL, Redis, Python, SQL, ETL, Scikit-learn,
+        Celery
+      </p>
+      <p>
+        <b>Security &amp; testing:</b> RBAC, JWT access tokens, opaque refresh
+        rotation, TOTP 2FA, audit logging, rate limiting, Docker, Nginx, GitHub
+        Actions, Jest, Vitest, pytest, Playwright
+      </p>
+    </div>
+    <h2>Selected project</h2>
+    <div class="entry">
+      <h3>
+        SEASMP — Smart Education Analytics &amp; Security Monitoring Platform
+      </h3>
+      <p class="meta">
+        Solo developer · May 2026 — present · In development ·
+        <a href="https://github.com/nyxeldev/seasmp"
+          >github.com/nyxeldev/seasmp</a
+        >
+      </p>
+      <ul>
+        <li>
+          Built role-specific Next.js dashboards and a Fastify core API with
+          Prisma/PostgreSQL data access. A separate FastAPI service handles
+          Python analytics through synchronous internal HTTP.
+        </li>
+        <li>
+          Implemented QR attendance using five-minute course/date tokens in
+          Redis, authenticated enrollment checks and duplicate-attendance
+          checks. The token does not establish physical presence or person
+          binding.
+        </li>
+        <li>
+          Built ETL and Random Forest training with balanced class weights,
+          nightly rescoring and monthly retraining. Training records AUC and
+          replaces the active artifact; conditional promotion remains a planned
+          improvement.
+        </li>
+        <li>
+          The recorded dataset snapshot had 191 enrollments and six dropout
+          events; predictive reliability is not established by this small
+          sample.
+        </li>
+        <li>
+          Implemented role/ownership checks, TOTP 2FA and audit logging for
+          authentication and selected mutations. JWT access tokens use opaque,
+          hashed refresh tokens; refresh exchange deletes the previous stored
+          token.
+        </li>
+        <li>
+          Investigated proxy-derived client IP issues affecting rate limiting
+          and audit IP attribution. CI defines five test jobs before Docker
+          image publishing to GHCR; configuration is distinct from a verified
+          successful run.
+        </li>
+      </ul>
+    </div>
+    <h2>Experience</h2>
+    <div class="entry">
+      <h3>
+        Internal Tooling &amp; Data Analysis · MIM Logistics LLC, Tashkent
+      </h3>
+      <p class="meta">
+        July 2025 — present · Amazon Relay carrier · Settlement investigation
+        and automation specification, 2026
+      </p>
+      <ul>
+        <li>
+          Investigated settlement/trip record semantics and join keys used for
+          driver payroll. In the analyzed samples, invoice-total rows doubled
+          naive gross; joining only on Load ID omitted 47% of payout.
+        </li>
+        <li>
+          Traced a 1-of-37 match rate to mismatched date ranges rather than
+          unpaid loads. Validated four compensation models against real payroll
+          at zero variance.
+        </li>
+        <li>
+          Specified fixed-point money handling, data-driven compensation rules
+          and ORM/database tenant isolation. These were architecture
+          requirements, not a claim of deployed automation.
+        </li>
+      </ul>
+    </div>
+    <h2>Education &amp; languages</h2>
+    <p>
+      <b>International Islamic Academy of Uzbekistan</b> · BSc, Information
+      Security Management · 2023 — present
+    </p>
+    <p>
+      <b>Najot Ta’lim, Tashkent</b> · Front-End Development (ReactJS) bootcamp ·
+      July 2023 — May 2024
+    </p>
+    <p>
+      ICPC National Round finalist · Uzbek: Native · English: Upper-Intermediate
+      · Russian: Pre-Intermediate
+    </p>
+    <footer>
+      Project implementation reviewed against public source in October 2026.
+      Internal employer records remain private.
+    </footer>
+  </body>
+</html>

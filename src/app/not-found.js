@@ -15,17 +15,16 @@ export default function NotFound() {
       <div className="lost__inner shell">
         <span className="mono lost__code">404</span>
 
-        <h1 className="lost__head">This route doesn&rsquo;t exist.</h1>
+        <h1 className="lost__head">This page could not be found.</h1>
 
         <p className="lost__sub">
-          But apparently you found something interesting —
-          <br />
-          there&rsquo;s nothing broken here, just nothing at this address.
+          The address may have changed. Return to the portfolio to explore my
+          work.
         </p>
 
         <Link href="/" className="btn btn--primary lost__back">
           <ArrowLeft size={16} strokeWidth={2} className="btn__arrow" />
-          Back to system
+          Back to portfolio
         </Link>
       </div>
     </main>

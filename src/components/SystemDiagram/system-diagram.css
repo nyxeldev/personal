@@ -1,6 +1,6 @@
 .sysdia {
   width: 100%;
-  max-width: 440px;
+  max-width: 420px;
   margin-inline: auto;
 }
 
@@ -8,8 +8,6 @@
   width: 100%;
   height: auto;
   overflow: visible;
-  transform: translate3d(var(--px, 0), var(--py, 0), 0);
-  transition: transform 0.6s var(--e-out);
 }
 
 /* ---------- chiziqlar ---------- */
@@ -26,10 +24,10 @@
   stroke: var(--accent);
   stroke-width: 2;
   stroke-linecap: round;
-  stroke-dasharray: 30 100;
-  stroke-dashoffset: 130;
-  opacity: 0.9;
-  /* tinch holat — juda sekin */
+  stroke-dasharray: 9 100;
+  stroke-dashoffset: 109;
+  opacity: 0.85;
+  /* tinch holat — juda sekin, pure CSS, JS'siz ham ishlaydi */
   animation: sd-flow 9s linear infinite;
 }
 
@@ -54,47 +52,20 @@
 .sysdia__label {
   font-family: var(--mono);
   font-size: 12px;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.1em;
   fill: var(--ink-2);
   transition: fill var(--d-mid) var(--e-io);
   user-select: none;
 }
 
-/* manba va chiqish tugunlari biroz boshqacha */
-.sysdia__node--source .sysdia__box,
-.sysdia__node--out .sysdia__box {
-  fill: transparent;
-  stroke-dasharray: 3 4;
-}
-
-.sysdia__node--source .sysdia__label,
-.sysdia__node--out .sysdia__label {
-  fill: var(--ink-3);
-  font-size: 11px;
-}
-
-.sysdia__node--core .sysdia__box {
-  stroke: var(--ink);
-}
-
-.sysdia__node--core .sysdia__label {
-  fill: var(--ink);
-}
-
-/* ---------- hover: arxitektura jonlanadi ---------- */
-.sysdia:hover .sysdia__flow {
-  animation-duration: 2.6s;
-}
-
-.sysdia:hover .sysdia__wire {
-  stroke: var(--accent-line);
-}
-
+/* ---------- hover: tugun va unga ulangan yo'llar yonadi ---------- */
+.sysdia__node:hover .sysdia__box,
 .sysdia__node.is-hot .sysdia__box {
   fill: var(--accent-wash);
   stroke: var(--accent);
 }
 
+.sysdia__node:hover .sysdia__label,
 .sysdia__node.is-hot .sysdia__label {
   fill: var(--accent);
 }
@@ -109,16 +80,13 @@
   animation-duration: 1.3s;
 }
 
-/* SVG kichrayganda yozuv ham kichrayadi — viewBox birligida kattalashtiramiz */
-@media (max-width: 620px) {
-  .sysdia__label {
-    font-size: 15px;
-  }
+/* diagramma ustiga kelganda umumiy oqim ham tezlashadi */
+.sysdia:hover .sysdia__flow {
+  animation-duration: 2.6s;
+}
 
-  .sysdia__node--source .sysdia__label,
-  .sysdia__node--out .sysdia__label {
-    font-size: 14px;
-  }
+.sysdia:hover .sysdia__wire {
+  stroke: var(--accent-line);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -128,4 +96,22 @@
     stroke-dashoffset: 0;
     opacity: 0.35;
   }
+}
+
+.sysdia { position: relative; }
+.sysdia__svg { max-height: 340px; }
+.sysdia__controls { display: flex; justify-content: center; flex-wrap: wrap; gap: .35rem; margin-top: .25rem; }
+.sysdia__controls button { font-family: var(--mono); font-size: 9px; letter-spacing: .06em; padding: .5rem .6rem; color: #a6b5ce; border: 1px solid transparent; border-radius: 6px; transition: color .2s ease, background .2s ease, border-color .2s ease; }
+.sysdia__controls button:hover { color: #f0f5ff; background: #1b2b46; }
+.sysdia__controls button[aria-pressed="true"] { border-color: #456798; color: #d7e5ff; background: #1b2e4d; }
+.sysdia__note { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #30415f; min-height: 95px; }
+.sysdia__note .mono { color: #9ebae8; font-size: 9px; }
+.sysdia__note p { font-size: 12px; color: #bac7dc; line-height: 1.6; margin-top: .45rem; max-width: 44ch; }
+@media (prefers-reduced-motion: no-preference) {
+  .sysdia__box { animation: sd-appear .9s var(--e-out) both; }
+  .sysdia__node:nth-child(2) .sysdia__box { animation-delay: .1s; }
+  .sysdia__node:nth-child(3) .sysdia__box { animation-delay: .2s; }
+  .sysdia__node:nth-child(4) .sysdia__box { animation-delay: .3s; }
+  .sysdia__node:nth-child(5) .sysdia__box { animation-delay: .4s; }
+  @keyframes sd-appear { from { opacity: .25; } to { opacity: 1; } }
 }
