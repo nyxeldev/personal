@@ -1,32 +1,17 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, Mail, Github, Linkedin, Send } from "lucide-react";
+import { ArrowRight, Github, Linkedin, Send } from "lucide-react";
 import { SITE } from "@/lib/site";
 import SplitText from "@/components/ui/SplitText";
 import Reveal from "@/components/ui/Reveal";
+import useLanguage from "@/hooks/useLanguage";
 import "./contact.css";
 
-const EMPTY = { name: "", email: "", phone: "", message: "" };
-const CHANNELS = [
-  {
-    icon: Mail,
-    label: "Email",
-    value: SITE.email,
-    href: `mailto:${SITE.email}`,
-  },
-  {
-    icon: Github,
-    label: "GitHub",
-    value: SITE.githubHandle,
-    href: SITE.github,
-  },
-  {
-    icon: Linkedin,
-    label: "LinkedIn",
-    value: "iamhamidov",
-    href: SITE.linkedin,
-  },
-  { icon: Send, label: "Telegram", value: "@nyxeldev", href: SITE.telegram },
+const EMPTY = { name: "", email: "", message: "" };
+const CHANNEL_META = [
+  { icon: Github, key: "github", value: SITE.githubHandle, href: SITE.github },
+  { icon: Linkedin, key: "linkedin", value: "iamhamidov", href: SITE.linkedin },
+  { icon: Send, key: "telegram", value: "@nyxeldev", href: SITE.telegram },
 ];
 function Field({
   name,
@@ -71,6 +56,9 @@ function Field({
   );
 }
 export default function Contact() {
+  const { t } = useLanguage();
+  const strings = t("contact.form");
+  const channelLabels = t("contact.channels");
   const [form, setForm] = useState(EMPTY),
     [errors, setErrors] = useState({}),
     [status, setStatus] = useState(null),
@@ -93,14 +81,14 @@ export default function Contact() {
     if (sending || !ready) return;
     if (trap) return;
     const next = {};
-    if (!form.name.trim()) next.name = "Enter your name.";
+    if (!form.name.trim()) next.name = strings.errors.name;
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
-      next.email = "Enter a valid email address.";
+      next.email = strings.errors.email;
     if (form.message.trim().length < 10)
-      next.message = "Enter at least 10 characters.";
+      next.message = strings.errors.message;
     setErrors(next);
     if (Object.keys(next).length) {
-      setStatus({ type: "err", text: "Please check the highlighted fields." });
+      setStatus({ type: "err", text: strings.errors.checkFields });
       formRef.current.elements.namedItem(Object.keys(next)[0])?.focus();
       return;
     }
@@ -108,7 +96,7 @@ export default function Contact() {
       Object.entries(form).map(([k, v]) => [k, v.trim()]),
     );
     setSending(true);
-    setStatus({ type: "info", text: "Sending…" });
+    setStatus({ type: "info", text: strings.sending });
     const body = new FormData();
     Object.entries(clean).forEach(([k, v]) => body.append(k, v));
     body.append("_subject", `Portfolio — ${clean.name}`);
@@ -133,18 +121,18 @@ export default function Contact() {
       setForm(EMPTY);
       setStatus({
         type: "ok",
-        text: "Your message was accepted. Thank you for getting in touch.",
+        text: strings.status.ok,
       });
     } catch {
       const subject = encodeURIComponent(`Portfolio — ${clean.name}`),
         message = encodeURIComponent(
-          [clean.message, "", clean.name, clean.email, clean.phone]
+          [clean.message, "", clean.name, clean.email]
             .filter(Boolean)
             .join("\n"),
         );
       setStatus({
         type: "err",
-        text: "Could not send. Your message is still here.",
+        text: strings.status.err,
         mailto: `mailto:${SITE.email}?subject=${subject}&body=${message}`,
       });
     } finally {
@@ -162,29 +150,35 @@ export default function Contact() {
       <div className="shell">
         <div className="sec-label">
           <span className="sec-label__num">07</span>
-          <span>Contact</span>
+          <span>{t("contact.sectionLabel")}</span>
           <span className="sec-label__bar" />
         </div>
         <h2 className="contact__head" id="contact-title">
-          <SplitText text="Have a role or project in mind?" as="span" />
+          <SplitText text={t("contact.heading")} as="span" />
         </h2>
         <Reveal as="p" className="contact__intro" delay={160}>
-          Email is the simplest way to reach me. You can also view my résumé or
-          send a message below.
+          {t("contact.intro")}
         </Reveal>
         <div className="contact__grid">
           <div className="channels">
             <div className="contact__invitation">
-              <span className="mono">Let’s start a conversation</span>
-              <p>Full-stack &amp; backend opportunities.<br />Based in Tashkent. Open to remote work.</p>
-              <a href={`mailto:${SITE.email}`} className="contact__email">{SITE.email}<ArrowRight size={20} /></a>
+              <span className="mono">{t("contact.invitation")}</span>
+              <p>
+                {t("contact.invitationBody1")}
+                <br />
+                {t("contact.invitationBody2")}
+              </p>
+              <a href={`mailto:${SITE.email}`} className="contact__email">
+                {SITE.email}
+                <ArrowRight size={20} />
+              </a>
             </div>
-            {CHANNELS.map((c, i) => {
+            {CHANNEL_META.map((c, i) => {
               const Icon = c.icon;
               return (
                 <Reveal
                   as="a"
-                  key={c.label}
+                  key={c.key}
                   className="channel"
                   delay={220 + i * 60}
                   href={c.href}
@@ -199,7 +193,7 @@ export default function Contact() {
                     <Icon size={16} />
                   </span>
                   <span className="channel__text">
-                    <span className="channel__label mono">{c.label}</span>
+                    <span className="channel__label mono">{channelLabels[c.key]}</span>
                     <span className="channel__value">{c.value}</span>
                   </span>
                   <ArrowRight size={15} className="channel__arrow" />
@@ -213,14 +207,14 @@ export default function Contact() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                View résumé ↗
+                {t("contact.viewResume")}
               </a>
               <a
                 className="worklink"
                 href="/files/Resume.pdf"
-                download="Jahongir-Hamidov-Resume.pdf"
+                download="NYXELDEV-Resume.pdf"
               >
-                Download PDF ↓
+                {t("contact.downloadPdf")}
               </a>
             </div>
           </div>
@@ -232,11 +226,11 @@ export default function Contact() {
               aria-busy={sending}
             >
               <fieldset disabled={!ready || sending}>
-                <legend className="mono">Send a message</legend>
+                <legend className="mono">{strings.legend}</legend>
                 <div className="cform__row">
                   <Field
                     name="name"
-                    label="Name"
+                    label={strings.name}
                     form={form}
                     update={update}
                     errors={errors}
@@ -246,7 +240,7 @@ export default function Contact() {
                   />
                   <Field
                     name="email"
-                    label="Email"
+                    label={strings.email}
                     form={form}
                     update={update}
                     errors={errors}
@@ -256,16 +250,6 @@ export default function Contact() {
                     required
                   />
                 </div>
-                <Field
-                  name="phone"
-                  label="Phone — optional"
-                  form={form}
-                  update={update}
-                  errors={errors}
-                  type="tel"
-                  autoComplete="tel"
-                  maxLength={40}
-                />
                 <div className="honey" aria-hidden="true">
                   <label htmlFor="company-website">Company website</label>
                   <input
@@ -279,7 +263,7 @@ export default function Contact() {
                 </div>
                 <Field
                   name="message"
-                  label="Message"
+                  label={strings.message}
                   form={form}
                   update={update}
                   errors={errors}
@@ -288,16 +272,13 @@ export default function Contact() {
                   required
                 />
                 <button type="submit" className="btn btn--primary">
-                  {sending ? "Sending…" : "Send message"}
+                  {sending ? strings.sending : strings.send}
                   <ArrowRight size={16} />
                 </button>
               </fieldset>
-              <p className="cform__privacy">
-                The form uses FormSubmit to deliver your message. Please avoid
-                sending confidential information.
-              </p>
+              <p className="cform__privacy">{strings.privacy}</p>
               <noscript>
-                <p>Email me directly; the form requires JavaScript.</p>
+                <p>{strings.noscript}</p>
               </noscript>
               {status && (
                 <p
@@ -308,9 +289,7 @@ export default function Contact() {
                   {status.mailto && (
                     <>
                       {" "}
-                      <a href={status.mailto}>
-                        Open your message in your email app
-                      </a>
+                      <a href={status.mailto}>{strings.openInEmailApp}</a>
                     </>
                   )}
                 </p>

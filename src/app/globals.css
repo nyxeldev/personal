@@ -5,37 +5,37 @@
 
 /* ---------- 1. Tokenlar ---------- */
 :root {
-  /* Sirtlar */
-  --bg: #f8f8f6;
-  --bg-raise: #ffffff;
-  --bg-sunk: #f1f1ed;
-  --bg-ink: #0a0a0a;
+  /* Sirtlar — Dusk: yagona sxema, na to'q-qora, na oq */
+  --bg: #2b2d31;
+  --bg-raise: #38393e;
+  --bg-sunk: #242629;
+  --bg-ink: #f0f0ec;
 
-  /* Matn — ink-3 va ink-4 mayda yorliqlar uchun, AA dan o'tadi */
-  --ink: #0a0a0a;
-  --ink-2: #44443f;
-  --ink-3: #5e5e59;
-  --ink-4: #686863;
-  --on-ink: #f8f8f6;
-  --on-ink-2: #9a9a93;
+  /* Matn */
+  --ink: #f0f0ec;
+  --ink-2: #b4b4ad;
+  --ink-3: #8e8e88;
+  --ink-4: #7d7d78;
+  --on-ink: #2b2d31;
+  --on-ink-2: #4a4a46;
 
-  /* Chiziqlar — line-strong forma elementlari chegarasi uchun (3:1) */
-  --line: #e4e4de;
-  --line-2: #d3d3ca;
-  --line-strong: #93938d;
-  --line-ink: #262626;
+  /* Chiziqlar */
+  --line: #35373c;
+  --line-2: #44454b;
+  --line-strong: #6f7076;
+  --line-ink: #e4e4de;
 
   /* Akcent — electric blue / cyan */
-  --accent: #0b4cff;
-  --accent-hi: #3d74ff;
-  --accent-lo: #0836b8;
-  --cyan: #00c8f0;
-  --accent-wash: rgba(11, 76, 255, 0.08);
-  --accent-line: rgba(11, 76, 255, 0.22);
+  --accent: #7ea4ff;
+  --accent-hi: #a0bdff;
+  --accent-lo: #5f85e0;
+  --cyan: #2ad8ff;
+  --accent-wash: rgba(126, 164, 255, 0.12);
+  --accent-line: rgba(126, 164, 255, 0.3);
   /* akcent foni ustidagi matn */
-  --on-accent: #ffffff;
+  --on-accent: #1b1d20;
 
-  --danger: #bf3434;
+  --danger: #ff8a8a;
 
   /* Shriftlar */
   --sans:
@@ -70,36 +70,6 @@
   --radius-lg: 18px;
 }
 
-.dark-theme {
-  --bg: #08080a;
-  --bg-raise: #101014;
-  --bg-sunk: #0c0c0f;
-  --bg-ink: #f2f2ef;
-
-  --ink: #f4f4f1;
-  --ink-2: #b4b4ad;
-  --ink-3: #8e8e88;
-  --ink-4: #7d7d78;
-  --on-ink: #08080a;
-  --on-ink-2: #4a4a46;
-
-  --line: #222228;
-  --line-2: #32323a;
-  --line-strong: #777780;
-  --line-ink: #e4e4de;
-
-  --accent: #5b8bff;
-  --accent-hi: #8aacff;
-  --accent-lo: #3566e8;
-  --cyan: #2ad8ff;
-  --accent-wash: rgba(91, 139, 255, 0.12);
-  --accent-line: rgba(91, 139, 255, 0.3);
-  /* och ko'k akcent ustida oq o'qilmaydi — to'q matn qo'yamiz */
-  --on-accent: #08080a;
-
-  --danger: #ff8a8a;
-}
-
 /* ---------- 2. Reset ---------- */
 *,
 *::before,
@@ -115,6 +85,31 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
+  scrollbar-color: var(--line-strong) var(--bg-sunk);
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-sunk);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 100px;
+  border: 2px solid var(--bg-sunk);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--bg-sunk);
 }
 
 body {
@@ -132,9 +127,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: clip;
-  transition:
-    background-color var(--d-mid) var(--e-io),
-    color var(--d-mid) var(--e-io);
 }
 
 img,
@@ -427,16 +419,23 @@ p {
   border-radius: 100px;
   font-size: var(--t-xs);
   color: var(--ink-2);
+  transition:
+    border-color var(--d-fast) var(--e-io),
+    color var(--d-fast) var(--e-io),
+    transform var(--d-fast) var(--e-out);
 }
 
 /* Shared surface treatment and pointer feedback. */
 @media (hover: hover) {
   .btn:hover { transform: translateY(-2px); }
-  .decision-card, .capability, .experience__entry {
-    transition: border-color .3s ease, box-shadow .3s ease;
+  .btn:active { transform: translateY(0) scale(0.97); }
+  .chip:hover { border-color: var(--accent); color: var(--ink); transform: translateY(-1px); }
+  .decision-card, .capability, .experience__entry, .cs {
+    transition: border-color .3s ease, box-shadow .3s ease, transform .3s var(--e-out);
   }
-  .decision-card:hover { border-color: var(--accent-line); box-shadow: 0 16px 40px -24px var(--accent-line); }
-  .capability:hover, .experience__entry:hover { border-color: var(--accent); }
+  .decision-card:hover { border-color: var(--accent-line); box-shadow: 0 16px 40px -24px var(--accent-line); transform: translateY(-3px); }
+  .capability:hover, .experience__entry:hover { border-color: var(--accent); transform: translateY(-3px); }
+  .cs:hover { box-shadow: 0 24px 70px -36px var(--accent-line); }
 }
 @media (prefers-reduced-motion: reduce) {
   .btn:hover { transform: none; }

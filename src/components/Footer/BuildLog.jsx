@@ -1,37 +1,52 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { SITE } from "@/lib/site";
+import useLanguage from "@/hooks/useLanguage";
 const CACHE_KEY = `github-snapshot:${SITE.githubHandle}`;
 const MAX_AGE = 10 * 60 * 1000;
-function timeAgo(iso) {
+function timeAgo(iso, strings) {
   const days = Math.max(
     0,
     Math.floor((Date.now() - Date.parse(iso)) / 86400000),
   );
-  return days === 0 ? "today" : days === 1 ? "1 day ago" : `${days} days ago`;
+  return days === 0
+    ? strings.today
+    : days === 1
+      ? strings.oneDayAgo
+      : `${days} ${strings.daysAgo}`;
 }
-function eventLabel(event) {
+function eventLabel(event, events) {
   const action = event.payload?.action;
   if (event.type === "PullRequestEvent")
-    return ["opened", "closed", "reopened"].includes(action)
-      ? `${action} a PR in`
-      : "updated a PR in";
+    return (
+      {
+        opened: events.openedPrIn,
+        closed: events.closedPrIn,
+        reopened: events.reopenedPrIn,
+      }[action] || events.updatedPrIn
+    );
   if (event.type === "IssuesEvent")
-    return ["opened", "closed", "reopened"].includes(action)
-      ? `${action} an issue in`
-      : "updated an issue in";
+    return (
+      {
+        opened: events.openedIssueIn,
+        closed: events.closedIssueIn,
+        reopened: events.reopenedIssueIn,
+      }[action] || events.updatedIssueIn
+    );
   return (
     {
-      PushEvent: "pushed to",
-      CreateEvent: "created in",
-      IssueCommentEvent: "commented in",
-      ReleaseEvent: "released in",
-      ForkEvent: "forked",
-      WatchEvent: "starred",
-    }[event.type] || "was active in"
+      PushEvent: events.pushedTo,
+      CreateEvent: events.createdIn,
+      IssueCommentEvent: events.commentedIn,
+      ReleaseEvent: events.releasedIn,
+      ForkEvent: events.forked,
+      WatchEvent: events.starred,
+    }[event.type] || events.wasActiveIn
   );
 }
 export default function BuildLog() {
+  const { t } = useLanguage();
+  const strings = t("footer.buildLog");
   const [data, setData] = useState(null);
   const ref = useRef(null);
   useEffect(() => {
@@ -50,7 +65,7 @@ export default function BuildLog() {
         (!cached.lastAt ||
           (Number.isFinite(Date.parse(cached.lastAt)) &&
             /^[\w.-]+\/[\w.-]+$/.test(cached.lastRepo || "") &&
-            typeof cached.lastLabel === "string"))
+            typeof cached.lastType === "string"))
       ) {
         setData(cached);
         return;
@@ -83,7 +98,8 @@ export default function BuildLog() {
           : null;
       const next = {
         repos: Number.isInteger(user?.public_repos) ? user.public_repos : null,
-        lastLabel: latest ? eventLabel(latest) : null,
+        lastType: latest?.type || null,
+        lastAction: latest?.payload?.action || null,
         lastRepo: latest?.repo.name || null,
         lastAt: latest?.created_at || null,
         updatedAt: Date.now(),
@@ -116,8 +132,12 @@ export default function BuildLog() {
       {data && (
         <div className="buildlog mono">
           <span className="buildlog__dot" aria-hidden="true" />
-          <span>GitHub snapshot</span>
-          {data.repos !== null && <span>· {data.repos} public repos</span>}
+          <span>{strings.snapshot}</span>
+          {data.repos !== null && (
+            <span>
+              · {data.repos} {strings.publicRepos}
+            </span>
+          )}
           {data.lastAt && (
             <>
               <span>·</span>
@@ -126,9 +146,10 @@ export default function BuildLog() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {data.lastLabel} {data.lastRepo.split("/")[1]}
+                {eventLabel({ type: data.lastType, payload: { action: data.lastAction } }, strings.events)}{" "}
+                {data.lastRepo.split("/")[1]}
               </a>
-              <time dateTime={data.lastAt}>{timeAgo(data.lastAt)}</time>
+              <time dateTime={data.lastAt}>{timeAgo(data.lastAt, strings)}</time>
             </>
           )}
         </div>

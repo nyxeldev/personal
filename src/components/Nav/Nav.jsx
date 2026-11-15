@@ -1,25 +1,18 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { Moon, Sun, ArrowUpRight, X } from "lucide-react";
-import useTheme from "@/hooks/useTheme";
+import { ArrowUpRight, X, Search } from "lucide-react";
 import usePlatformKey from "@/hooks/usePlatformKey";
 import Magnetic from "@/components/ui/Magnetic";
 import { SITE } from "@/lib/site";
 import { trapDialogTab } from "@/lib/dialogFocus";
+import useLanguage, { LANGUAGES } from "@/hooks/useLanguage";
 import "./nav.css";
 
-const LINKS = [
-  { id: "work", label: "Work" },
-  { id: "data", label: "Data" },
-  { id: "decisions", label: "Decisions" },
-  { id: "build", label: "Skills" },
-  { id: "experience", label: "Experience" },
-  { id: "about", label: "About" },
-  { id: "contact", label: "Contact" },
-];
+const LINK_IDS = ["work", "data", "decisions", "build", "experience", "about", "contact"];
 export default function Nav() {
-  const { theme, toggleTheme } = useTheme();
   const { modKey } = usePlatformKey();
+  const { lang, setLang, t } = useLanguage();
+  const LINKS = LINK_IDS.map((id) => ({ id, label: t(`nav.links.${id}`) }));
   const [stuck, setStuck] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("");
@@ -76,14 +69,10 @@ export default function Nav() {
   return (
     <>
       <header className={`nav ${stuck ? "is-stuck" : ""}`}>
-        <div className="nav__inner shell">
-          <a
-            href="#top"
-            className="nav__mark"
-            aria-label="Jahongir Hamidov — home"
-          >
-            <span className="nav__mark-glyph">JH</span>
-            <span className="nav__mark-text">Jahongir Hamidov</span>
+        <div className="nav__inner">
+          <a href="#top" className="nav__mark" aria-label={t("nav.home")}>
+            <span className="nav__mark-glyph">NX</span>
+            <span className="nav__mark-text">NYXELDEV</span>
           </a>
           <nav className="nav__links" aria-label="Sections">
             {LINKS.map((l) => (
@@ -104,8 +93,22 @@ export default function Nav() {
               onClick={() => window.dispatchEvent(new CustomEvent("cmdk:open"))}
               aria-label="Open command centre"
             >
+              <Search size={13} strokeWidth={2} aria-hidden="true" />
               <span className="nav__cmdk-key">{modKey} K</span>
             </button>
+            <div className="nav__lang" role="group" aria-label={t("nav.language")}>
+              {LANGUAGES.map((code) => (
+                <button
+                  key={code}
+                  type="button"
+                  className={`nav__lang-btn ${lang === code ? "is-active" : ""}`}
+                  onClick={() => setLang(code)}
+                  aria-pressed={lang === code}
+                >
+                  {code.toUpperCase()}
+                </button>
+              ))}
+            </div>
             <Magnetic strength={0.2}>
               <a
                 className="nav__resume"
@@ -113,28 +116,16 @@ export default function Nav() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                View résumé
+                {t("nav.resume")}
                 <ArrowUpRight size={14} />
               </a>
             </Magnetic>
             <button
               type="button"
-              className="nav__icon"
-              onClick={toggleTheme}
-              aria-label={
-                theme === "dark"
-                  ? "Switch to light theme"
-                  : "Switch to dark theme"
-              }
-            >
-              {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
-            </button>
-            <button
-              type="button"
               ref={burgerRef}
               className="nav__burger"
               onClick={() => setOpen(true)}
-              aria-label="Open menu"
+              aria-label={t("nav.openMenu")}
               aria-expanded={open}
               aria-controls="nav-sheet"
             >
@@ -159,13 +150,13 @@ export default function Nav() {
       >
         <div className="sheet__head">
           <span id="menu-title" className="mono">
-            Explore the portfolio
+            {t("nav.sheetTitle")}
           </span>
           <button
             type="button"
             className="sheet__close"
             onClick={() => setOpen(false)}
-            aria-label="Close menu"
+            aria-label={t("nav.closeMenu")}
           >
             <X size={22} />
           </button>
@@ -191,12 +182,25 @@ export default function Nav() {
             rel="noopener noreferrer"
             onClick={() => setOpen(false)}
           >
-            View résumé
+            {t("nav.resume")}
             <ArrowUpRight size={16} />
           </a>
           <a className="sheet__email" href={`mailto:${SITE.email}`}>
-            Email Jahongir
+            {t("nav.emailMe")}
           </a>
+          <div className="sheet__lang" role="group" aria-label={t("nav.language")}>
+            {LANGUAGES.map((code) => (
+              <button
+                key={code}
+                type="button"
+                className={`sheet__lang-btn ${lang === code ? "is-active" : ""}`}
+                onClick={() => setLang(code)}
+                aria-pressed={lang === code}
+              >
+                {code.toUpperCase()}
+              </button>
+            ))}
+          </div>
         </div>
       </dialog>
       <noscript>

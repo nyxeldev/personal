@@ -6,8 +6,8 @@ export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL || "https://nyxeldev.pro";
 
 export const SITE = {
-  name: "Jahongir Hamidov",
-  title: "Jahongir Hamidov — Full-Stack Developer",
+  name: "NYXELDEV",
+  title: "NYXELDEV — Full-Stack Developer",
   description:
     "Full-Stack Developer building data-driven, intelligent, and security-focused systems.",
   email: "imhamidovic@gmail.com",

@@ -32,15 +32,9 @@
   background: var(--bg-raise);
   border: 1px solid var(--line-2);
   border-radius: var(--radius-lg);
-  box-shadow:
-    0 24px 60px -12px rgba(0, 0, 0, 0.3),
-    0 0 0 1px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.7);
   overflow: hidden;
   animation: cmdk-in 0.22s var(--e-out);
-}
-
-.dark-theme .cmdk__panel {
-  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.7);
 }
 
 @keyframes cmdk-fade {

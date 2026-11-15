@@ -1,12 +1,15 @@
+"use client";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import SplitText from "@/components/ui/SplitText";
 import Reveal from "@/components/ui/Reveal";
 import Magnetic from "@/components/ui/Magnetic";
 import SystemDiagram from "@/components/SystemDiagram/SystemDiagram";
 import { SITE } from "@/lib/site";
+import useLanguage from "@/hooks/useLanguage";
 import "./hero.css";
 
 export default function Hero() {
+  const { t } = useLanguage();
   return (
     <section className="hero" id="top">
       <div className="grid-bg" aria-hidden="true" />
@@ -15,15 +18,15 @@ export default function Hero() {
         <div className="hero__copy">
           <Reveal className="hero__eyebrow">
             <span className="hero__dot" aria-hidden="true" />
-            <span className="mono">Available for work</span>
+            <span className="mono">{t("hero.available")}</span>
             <span className="hero__sep" aria-hidden="true" />
-            <span className="mono">Tashkent, UZ</span>
+            <span className="mono">{t("hero.location")}</span>
           </Reveal>
 
           <h1 className="hero__name" aria-label={SITE.name}>
-            <SplitText text="Jahongir" as="span" delay={60} />
+            <SplitText text="NYXEL" as="span" delay={60} />
             <SplitText
-              text="Hamidov"
+              text="DEV"
               as="span"
               delay={160}
               className="hero__name-last"
@@ -31,19 +34,17 @@ export default function Hero() {
           </h1>
 
           <Reveal className="hero__role" delay={380}>
-            <span className="hero__role-main">Full-Stack Developer</span>
-            <span className="hero__role-tags mono">Data · AI · Security</span>
+            <span className="hero__role-main">{t("hero.role")}</span>
           </Reveal>
 
           <Reveal as="p" className="hero__lead lead" delay={460}>
-            From the interface to the data behind it.
-            I build full-stack systems with analytics and security in mind.
+            {t("hero.lead")}
           </Reveal>
 
           <Reveal className="hero__cta" delay={560}>
             <Magnetic strength={0.25} className="action-wrap">
               <a href="#work" className="btn btn--primary">
-                View selected work
+                {t("hero.ctaPrimary")}
                 <ArrowRight size={16} strokeWidth={2} className="btn__arrow" />
               </a>
             </Magnetic>
@@ -55,7 +56,7 @@ export default function Hero() {
                 rel="noopener noreferrer"
                 className="btn btn--ghost"
               >
-                View résumé
+                {t("hero.ctaResume")}
                 <ArrowUpRight
                   size={16}
                   strokeWidth={2}
@@ -65,35 +66,35 @@ export default function Hero() {
             </Magnetic>
           </Reveal>
           <div className="hero__direct">
-            <a href={`mailto:${SITE.email}`}>Email me</a>
+            <a href={`mailto:${SITE.email}`}>{t("hero.emailMe")}</a>
             <a href={SITE.github} target="_blank" rel="noopener noreferrer">
-              GitHub ↗
+              {t("hero.github")} ↗
             </a>
-            <span>Tashkent · Open to remote work</span>
+            <span>{t("hero.directNote")}</span>
           </div>
         </div>
 
         <Reveal className="hero__viz" delay={300}>
-          <div className="hero__viz-top mono"><span>Inside the system</span><span>SEASMP / 01</span></div>
+          <div className="hero__viz-top mono"><span>{t("hero.insideSystem")}</span><span>{t("hero.seasmpTag")}</span></div>
           <SystemDiagram />
           <span className="hero__viz-cap mono">
-            SEASMP · service schematic
-            <span className="hero__viz-hint"> — hover to trace</span>
+            {t("hero.vizCaption")}
+            <span className="hero__viz-hint">{t("hero.vizHint")}</span>
           </span>
         </Reveal>
       </div>
 
       <Reveal className="hero__proof shell" delay={680}>
-        <span className="mono">A closer look</span>
-        <a href="#seasmp"><span>01</span><strong>Full-stack architecture</strong><ArrowUpRight size={16} /></a>
-        <a href="#data"><span>02</span><strong>Real-world data investigation</strong><ArrowUpRight size={16} /></a>
-        <a href="#decisions"><span>03</span><strong>The reasoning behind the code</strong><ArrowUpRight size={16} /></a>
+        <span className="mono">{t("hero.closerLook")}</span>
+        <a href="#seasmp"><span>01</span><strong>{t("hero.proof1")}</strong><ArrowUpRight size={16} /></a>
+        <a href="#data"><span>02</span><strong>{t("hero.proof2")}</strong><ArrowUpRight size={16} /></a>
+        <a href="#decisions"><span>03</span><strong>{t("hero.proof3")}</strong><ArrowUpRight size={16} /></a>
       </Reveal>
 
       <div className="hero__floor shell" aria-hidden="true">
-        <span className="mono">Scroll</span>
+        <span className="mono">{t("hero.scroll")}</span>
         <span className="hero__floor-line" />
-        <span className="mono">01 / Selected work</span>
+        <span className="mono">{t("hero.nextSection")}</span>
       </div>
     </section>
   );

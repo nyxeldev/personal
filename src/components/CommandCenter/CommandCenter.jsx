@@ -1,10 +1,10 @@
 "use client";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowUpRight, X } from "lucide-react";
-import useTheme from "@/hooks/useTheme";
 import usePlatformKey from "@/hooks/usePlatformKey";
 import { SITE } from "@/lib/site";
 import { trapDialogTab } from "@/lib/dialogFocus";
+import useLanguage from "@/hooks/useLanguage";
 import "./command-center.css";
 
 const fold = (value) =>
@@ -13,8 +13,9 @@ const fold = (value) =>
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase();
 export default function CommandCenter() {
-  const { theme, toggleTheme } = useTheme();
   const { modKey } = usePlatformKey();
+  const { t } = useLanguage();
+  const items_i18n = t("commandCenter.items");
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [cursor, setCursor] = useState(0);
@@ -54,71 +55,55 @@ export default function CommandCenter() {
   );
   const items = useMemo(
     () => [
-      ...[
-        ["work", "Selected work"],
-        ["data", "Logistics investigation"],
-        ["decisions", "Engineering decisions"],
-        ["build", "Capabilities"],
-        ["experience", "Experience"],
-        ["about", "About / trajectory"],
-        ["contact", "Contact"],
-      ].map(([id, label]) => ({
-        id,
-        label,
-        keywords: "sections",
-        run: () => go(id),
-      })),
+      ...["work", "data", "decisions", "build", "experience", "about", "contact"].map(
+        (id) => ({
+          id,
+          label: items_i18n[id],
+          keywords: "sections",
+          run: () => go(id),
+        }),
+      ),
       {
         id: "seasmp",
-        label: "SEASMP · implementation",
+        label: items_i18n.seasmp,
         keywords: "project education analytics",
         run: () => go("seasmp"),
       },
       {
         id: "ielts",
-        label: "IELTS Speaking Practice — live demo",
+        label: items_i18n.ielts,
         keywords: "project speaking",
         run: () => openUrl("https://speakready.netlify.app"),
       },
       {
         id: "resume",
-        label: "View résumé",
+        label: items_i18n.resume,
         keywords: "resume cv pdf",
         run: () => openUrl("/files/Resume.pdf"),
       },
       {
         id: "github",
-        label: "GitHub ↗ nyxeldev",
+        label: items_i18n.github,
         keywords: "code source",
         run: () => openUrl(SITE.github),
       },
       {
         id: "linkedin",
-        label: "LinkedIn",
+        label: items_i18n.linkedin,
         keywords: "profile",
         run: () => openUrl(SITE.linkedin),
       },
       {
         id: "email",
-        label: `Email ${SITE.email}`,
+        label: `${items_i18n.email} ${SITE.email}`,
         keywords: "contact mail",
         run: () => {
           close();
           window.location.href = `mailto:${SITE.email}`;
         },
       },
-      {
-        id: "theme",
-        label:
-          theme === "dark" ? "Switch to light theme" : "Switch to dark theme",
-        keywords: "appearance",
-        run: () => {
-          toggleTheme();
-          close();
-        },
-      },
     ],
-    [go, openUrl, close, theme, toggleTheme],
+    [go, openUrl, close, items_i18n],
   );
   const results = useMemo(
     () =>
@@ -210,7 +195,7 @@ export default function CommandCenter() {
           <input
             ref={inputRef}
             className="cmdk__input"
-            placeholder="Search projects, sections, actions…"
+            placeholder={t("commandCenter.placeholder")}
             value={query}
             onChange={(e) => {
               setQuery(e.target.value);
@@ -234,7 +219,7 @@ export default function CommandCenter() {
             className="cmdk__close"
             onClick={close}
             type="button"
-            aria-label="Close command centre"
+            aria-label={t("commandCenter.close")}
           >
             <X size={18} />
           </button>
@@ -262,11 +247,11 @@ export default function CommandCenter() {
         </div>
         <p className="cmdk__empty" role="status">
           {results.length === 0
-            ? "No matching commands."
-            : `${results.length} commands`}
+            ? t("commandCenter.empty")
+            : `${results.length} ${t("commandCenter.results")}`}
         </p>
         <div className="cmdk__foot mono">
-          ↑ ↓ select · Enter open · Esc close · {modKey} K
+          ↑ ↓ {t("commandCenter.hint")} {modKey} K
         </div>
       </div>
     </dialog>

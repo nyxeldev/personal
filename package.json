@@ -10,10 +10,12 @@
     "resume": "python scripts/render_resume.py"
   },
   "dependencies": {
+    "@react-three/fiber": "^9.8.2",
     "lucide-react": "^0.501.0",
     "next": "15.5.27",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "three": "^0.180.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

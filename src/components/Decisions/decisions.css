@@ -43,6 +43,11 @@
 .decision-card__cost strong {
   color: var(--ink);
 }
+.decisions__footnote {
+  margin-top: 1.5rem;
+  color: var(--ink-3);
+  font-size: var(--t-sm);
+}
 @media (max-width: 760px) {
   .decisions__top,
   .decision-grid {

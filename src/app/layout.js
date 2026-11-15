@@ -1,7 +1,7 @@
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/hooks/useTheme";
 import { SITE, SITE_URL } from "@/lib/site";
+import { LanguageProvider } from "@/hooks/useLanguage";
 
 const sans = Inter({
   subsets: ["latin"],
@@ -22,7 +22,7 @@ export const metadata = {
   title: SITE.title,
   description: SITE.description,
   keywords: [
-    "Jahongir Hamidov",
+    "NYXELDEV",
     "full-stack developer",
     "data engineering",
     "FastAPI",
@@ -43,7 +43,7 @@ export const metadata = {
         url: "/images/og.png",
         width: 1200,
         height: 630,
-        alt: "Jahongir Hamidov — Full-Stack Developer. Data, AI, Security.",
+        alt: "NYXELDEV — Full-Stack Developer. Data, AI, Security.",
       },
     ],
   },
@@ -57,10 +57,7 @@ export const metadata = {
 };
 
 export const viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f8f8f6" },
-    { media: "(prefers-color-scheme: dark)", color: "#08080a" },
-  ],
+  themeColor: "#2b2d31",
 };
 
 // Qidiruv tizimlari (Google) va ijtimoiy tarmoqlar sahifani shaxs
@@ -83,30 +80,15 @@ const personJsonLd = {
   ],
 };
 
-// Apply the saved theme before paint. Motion is armed by hydrated components.
-const bootScript = `
-try {
-  var t = localStorage.getItem("theme") === "dark" ? "dark" : "light";
-  document.documentElement.classList.add(t + "-theme");
-} catch (e) {
-  document.documentElement.classList.add("light-theme");
-}
-`;
-
 export default function RootLayout({ children }) {
   return (
-    <html
-      lang="en"
-      className={`${sans.variable} ${mono.variable}`}
-      suppressHydrationWarning
-    >
+    <html lang="en" className={`${sans.variable} ${mono.variable}`}>
       <body>
-        <script dangerouslySetInnerHTML={{ __html: bootScript }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
-        <ThemeProvider>{children}</ThemeProvider>
+        <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>
   );

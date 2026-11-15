@@ -85,13 +85,6 @@ class Portfolio(unittest.TestCase):
         cta = self.page.locator(".hero__cta").bounding_box()
         self.assertLess(cta["y"] + cta["height"], 667)
         self.page.screenshot(path=str(ARTIFACTS / "hero-short.png"))
-        for width, height in [(390, 844), (1440, 900)]:
-            self.page.set_viewport_size({"width": width, "height": height})
-            self.page.get_by_role("button", name="Switch to dark theme").click()
-            self.page.wait_for_timeout(450)
-            self.page.screenshot(path=str(ARTIFACTS / f"dark-{width}.png"))
-            self.page.get_by_role("button", name="Switch to light theme").click()
-            self.page.wait_for_timeout(450)
         self.page.set_viewport_size({"width": 1440, "height": 1000})
         for section in ["work", "data", "decisions", "build", "experience", "about", "contact"]:
             self.page.locator(f"#{section}").evaluate("e=>e.scrollIntoView({behavior:'instant'})")
@@ -108,8 +101,9 @@ class Portfolio(unittest.TestCase):
             resume = dialog.get_by_role("link", name="View résumé")
             resume.focus()
             self.page.keyboard.press("Tab")
-            expect(dialog.get_by_role("link", name="Email Jahongir")).to_be_focused()
-            self.page.keyboard.press("Tab")
+            expect(dialog.get_by_role("link", name="Email me")).to_be_focused()
+            for _ in range(4):
+                self.page.keyboard.press("Tab")
             expect(dialog.get_by_role("button", name="Close menu")).to_be_focused()
             self.page.keyboard.press("Escape")
             expect(dialog).not_to_be_visible()
@@ -143,16 +137,7 @@ class Portfolio(unittest.TestCase):
         expect(self.page.locator("#data")).to_be_focused()
         self.assertEqual(self.page.evaluate("document.body.style.overflow"), "")
 
-    def test_04_theme_storage_and_reduced_motion(self):
-        self.page.get_by_role("button", name="Switch to dark theme").click()
-        self.page.reload(wait_until="networkidle")
-        expect(self.page.locator("html")).to_have_class(__import__("re").compile("dark-theme"))
-        self.page.evaluate("localStorage.setItem('theme','invalid')")
-        self.page.reload(wait_until="networkidle")
-        expect(self.page.locator("html")).to_have_class(__import__("re").compile("light-theme"))
-        self.page.evaluate("Object.defineProperty(window,'localStorage',{get(){throw new DOMException('Denied','SecurityError')}})")
-        self.page.get_by_role("button", name="Switch to dark theme").click()
-        expect(self.page.locator("html")).to_have_class(__import__("re").compile("dark-theme"))
+    def test_04_reduced_motion(self):
         self.page.emulate_media(reduced_motion="reduce")
         self.assertEqual(self.page.locator("html").evaluate("e=>getComputedStyle(e).scrollBehavior"), "auto")
         self.assertEqual(self.page.locator(".hero__dot").evaluate("e=>getComputedStyle(e).animationName"), "none")
@@ -180,7 +165,7 @@ class Portfolio(unittest.TestCase):
         context = self.browser.new_context(java_script_enabled=False, viewport={"width": 390, "height": 667})
         page = context.new_page()
         page.goto(self.url)
-        expect(page.get_by_role("heading", name="Jahongir Hamidov", exact=True)).to_be_visible()
+        expect(page.get_by_role("heading", name="NYXELDEV", exact=True)).to_be_visible()
         expect(page.locator(".hero__lead")).to_be_visible()
         self.assertEqual(page.locator(".hero__lead").evaluate("e=>getComputedStyle(e).opacity"), "1")
         expect(page.locator("#seasmp-model")).to_be_visible()

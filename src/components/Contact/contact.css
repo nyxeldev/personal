@@ -105,7 +105,7 @@
 }
 
 .cform__status.is-ok {
-  color: #136c34;
+  color: #4ade80;
 }
 
 .cform__status.is-err {
@@ -116,10 +116,6 @@
   color: inherit;
   text-decoration: underline;
   text-underline-offset: 3px;
-}
-
-.dark-theme .cform__status.is-ok {
-  color: #4ade80;
 }
 
 /* ---------- aloqa kanallari ---------- */

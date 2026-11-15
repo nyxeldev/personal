@@ -10,6 +10,48 @@
   overflow: visible;
 }
 
+.sysdia__stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 440 / 420;
+  max-height: 340px;
+  margin-inline: auto;
+}
+
+.sysdia__stage .sysdia__svg {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+}
+
+.sysdia__canvas-wrap {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.sysdia__canvas-wrap.is-ready {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sysdia__canvas-wrap {
+    transition: none;
+  }
+}
+
+.sysdia__canvas-wrap canvas {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  cursor: default;
+}
+
 /* ---------- chiziqlar ---------- */
 .sysdia__wire {
   fill: none;
@@ -101,12 +143,50 @@
 .sysdia { position: relative; }
 .sysdia__svg { max-height: 340px; }
 .sysdia__controls { display: flex; justify-content: center; flex-wrap: wrap; gap: .35rem; margin-top: .25rem; }
-.sysdia__controls button { font-family: var(--mono); font-size: 9px; letter-spacing: .06em; padding: .5rem .6rem; color: #a6b5ce; border: 1px solid transparent; border-radius: 6px; transition: color .2s ease, background .2s ease, border-color .2s ease; }
-.sysdia__controls button:hover { color: #f0f5ff; background: #1b2b46; }
-.sysdia__controls button[aria-pressed="true"] { border-color: #456798; color: #d7e5ff; background: #1b2e4d; }
-.sysdia__note { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #30415f; min-height: 95px; }
-.sysdia__note .mono { color: #9ebae8; font-size: 9px; }
-.sysdia__note p { font-size: 12px; color: #bac7dc; line-height: 1.6; margin-top: .45rem; max-width: 44ch; }
+.sysdia__controls button { font-family: var(--mono); font-size: 9px; letter-spacing: .06em; padding: .5rem .6rem; color: var(--ctrl-text); border: 1px solid transparent; border-radius: 6px; transition: color .2s ease, background .2s ease, border-color .2s ease; }
+.sysdia__controls button:hover { color: var(--ctrl-hover-text); background: var(--ctrl-hover-bg); }
+.sysdia__controls button[aria-pressed="true"] { border-color: var(--ctrl-active-border); color: var(--ctrl-active-text); background: var(--ctrl-active-bg); }
+.sysdia__note { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--note-line); min-height: 95px; }
+.sysdia__note .mono { color: var(--note-label); font-size: 9px; }
+.sysdia__note p { font-size: 12px; color: var(--note-text); line-height: 1.6; margin-top: .45rem; max-width: 44ch; }
+
+.sysdia__trace {
+  margin-top: .85rem;
+  padding: .6rem .75rem;
+  border: 1px solid var(--note-line);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, .28);
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  font-size: 10px;
+  line-height: 1.5;
+  overflow: hidden;
+}
+.sysdia__trace-prompt { color: var(--ctrl-text); letter-spacing: .02em; }
+.sysdia__trace-tag { color: var(--note-line); }
+.sysdia__trace-line {
+  color: var(--note-label);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+}
+.sysdia__trace-cursor {
+  display: inline-block;
+  width: 6px;
+  height: 11px;
+  margin-left: 1px;
+  background: var(--accent);
+  vertical-align: text-bottom;
+  animation: sysdia-blink 1s step-end infinite;
+}
+@keyframes sysdia-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sysdia__trace-cursor { animation: none; opacity: 1; }
+}
 @media (prefers-reduced-motion: no-preference) {
   .sysdia__box { animation: sd-appear .9s var(--e-out) both; }
   .sysdia__node:nth-child(2) .sysdia__box { animation-delay: .1s; }
