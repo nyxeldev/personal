@@ -64,7 +64,7 @@
   line-height: 1.5;
 }
 
-@media (max-width: 920px) {
+@media (max-width: 960px) {
   .who__grid {
     grid-template-columns: 1fr;
   }

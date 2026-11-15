@@ -105,7 +105,7 @@
 }
 
 .cform__status.is-ok {
-  color: #4ade80;
+  color: var(--success);
 }
 
 .cform__status.is-err {
@@ -145,7 +145,7 @@
   height: 34px;
   flex-shrink: 0;
   border: 1px solid var(--line-2);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   color: var(--ink-3);
   transition:
     color var(--d-fast) var(--e-io),
@@ -194,7 +194,7 @@
 }
 
 /* ---------- moslashuv ---------- */
-@media (max-width: 920px) {
+@media (max-width: 960px) {
   .contact__grid {
     grid-template-columns: 1fr;
   }

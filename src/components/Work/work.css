@@ -63,9 +63,9 @@
 .cs__badge {
   padding: 0.4rem 0.75rem;
   border: 1px solid var(--line-2);
-  border-radius: 100px;
+  border-radius: var(--radius-pill);
   color: var(--ink-3);
-  font-size: 10px;
+  font-size: var(--t-xs);
 }
 
 /* ---------- ajratilgan topilma ---------- */
@@ -288,13 +288,13 @@
 }
 
 /* ---------- moslashuv ---------- */
-@media (max-width: 920px) {
+@media (max-width: 960px) {
   .mini {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 860px) {
+@media (max-width: 960px) {
   .find,
   .next {
     grid-template-columns: 1fr;
@@ -302,7 +302,7 @@
   }
 }
 
-@media (max-width: 680px) {
+@media (max-width: 760px) {
   .cs__head {
     flex-direction: column;
   }
@@ -364,7 +364,7 @@
   flex-wrap: wrap;
   overflow-wrap: anywhere;
 }
-@media (max-width: 680px) {
+@media (max-width: 760px) {
   .cs__overview,
   .cs__details {
     grid-template-columns: 1fr;
@@ -390,7 +390,7 @@
 .next[open] .next__label span { transform: rotate(45deg); }
 .next__list { padding-bottom: .5rem; }
 .mini__media { box-shadow: 0 20px 40px -24px rgba(0,0,0,.25); }
-@media (max-width: 680px) {
+@media (max-width: 760px) {
   .cs__highlights { grid-template-columns: 1fr; }
   .cs__highlights > div + div { border-left: 0; border-top: 1px solid var(--line); }
   .cs__highlights > div { padding-block: 1rem; }

@@ -28,7 +28,7 @@
 .experience__entry .experience__role {
   color: var(--ink);
 }
-@media (max-width: 920px) {
+@media (max-width: 960px) {
   .experience__grid {
     grid-template-columns: 1fr;
   }

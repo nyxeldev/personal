@@ -68,5 +68,5 @@
 }
 
 .capability__heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
-.capability__icon { width: 48px; height: 48px; display: grid; place-items: center; color: var(--accent); background: var(--accent-wash); border: 1px solid var(--accent-line); border-radius: 12px; }
+.capability__icon { width: 48px; height: 48px; display: grid; place-items: center; color: var(--accent); background: var(--accent-wash); border: 1px solid var(--accent-line); border-radius: var(--radius); }
 .capability li a:hover { color: var(--accent); }

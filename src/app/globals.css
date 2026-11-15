@@ -5,37 +5,33 @@
 
 /* ---------- 1. Tokenlar ---------- */
 :root {
-  /* Sirtlar — Dusk: yagona sxema, na to'q-qora, na oq */
-  --bg: #2b2d31;
-  --bg-raise: #38393e;
-  --bg-sunk: #242629;
-  --bg-ink: #f0f0ec;
+  /* Sirtlar — Dusk: chuqur grafit, na to'q-qora, na "Discord grey" */
+  --bg: #141519;
+  --bg-raise: #1c1d22;
+  --bg-sunk: #0e0f12;
 
   /* Matn */
-  --ink: #f0f0ec;
-  --ink-2: #b4b4ad;
-  --ink-3: #8e8e88;
-  --ink-4: #7d7d78;
-  --on-ink: #2b2d31;
-  --on-ink-2: #4a4a46;
+  --ink: #ededea;
+  --ink-2: #b9b9b3;
+  --ink-3: #9d9d97;
+  --ink-4: #8a8a85;
+  --on-ink: #141519;
 
   /* Chiziqlar */
-  --line: #35373c;
-  --line-2: #44454b;
-  --line-strong: #6f7076;
-  --line-ink: #e4e4de;
+  --line: #24252b;
+  --line-2: #2f3037;
+  --line-strong: #4a4b53;
 
-  /* Akcent — electric blue / cyan */
+  /* Akcent — electric blue */
   --accent: #7ea4ff;
   --accent-hi: #a0bdff;
-  --accent-lo: #5f85e0;
-  --cyan: #2ad8ff;
   --accent-wash: rgba(126, 164, 255, 0.12);
   --accent-line: rgba(126, 164, 255, 0.3);
   /* akcent foni ustidagi matn */
   --on-accent: #1b1d20;
 
   --danger: #ff8a8a;
+  --success: #4ade80;
 
   /* Shriftlar */
   --sans:
@@ -51,7 +47,7 @@
   --t-body: 1rem;
   --t-sm: 0.875rem;
   --t-xs: 0.75rem;
-  --t-mono: 0.6875rem;
+  --t-mono: 0.75rem;
 
   /* Ritm */
   --gut: clamp(1.25rem, 0.6rem + 2.6vw, 3.5rem);
@@ -66,8 +62,11 @@
   --d-mid: 0.4s;
   --d-slow: 0.8s;
 
-  --radius: 4px;
+  /* Radius shkalasi */
+  --radius-sm: 6px;
+  --radius: 10px;
   --radius-lg: 18px;
+  --radius-pill: 999px;
 }
 
 /* ---------- 2. Reset ---------- */
@@ -100,7 +99,7 @@ html {
 
 ::-webkit-scrollbar-thumb {
   background: var(--line-strong);
-  border-radius: 100px;
+  border-radius: var(--radius-pill);
   border: 2px solid var(--bg-sunk);
 }
 
@@ -210,9 +209,9 @@ p {
   gap: 0.75rem;
   font-family: var(--mono);
   font-size: var(--t-mono);
-  letter-spacing: 0.18em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--ink-3);
+  color: var(--ink-2);
   margin-bottom: clamp(2rem, 1rem + 3vw, 4rem);
 }
 
@@ -232,7 +231,7 @@ p {
 .mono {
   font-family: var(--mono);
   font-size: var(--t-mono);
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink-3);
 }
@@ -252,7 +251,7 @@ p {
   align-items: center;
   gap: 0.6rem;
   padding: 0.95rem 1.5rem;
-  border-radius: 100px;
+  border-radius: var(--radius-pill);
   font-size: var(--t-sm);
   font-weight: 500;
   letter-spacing: -0.01em;
@@ -416,7 +415,7 @@ p {
   display: inline-block;
   padding: 0.35rem 0.65rem;
   border: 1px solid var(--line-2);
-  border-radius: 100px;
+  border-radius: var(--radius-pill);
   font-size: var(--t-xs);
   color: var(--ink-2);
   transition:

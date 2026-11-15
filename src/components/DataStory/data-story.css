@@ -1,8 +1,11 @@
-/* Butun bo'lim teskari (qora) tasma — sahifadagi eng kuchli nuqta */
+/* Butun bo'lim teskari (qora) tasma — sahifadagi ATAYLAB qilingan yagona
+   kuchli urg'u nuqtasi (mikro-tema). Qolgan hamma joyda bitta Dusk sxemasi
+   ishlatiladi; faqat shu bo'lim o'z fonini va token to'plamini qayta
+   belgilaydi. Akcent rangi global --accent bilan bir xil tusda saqlanadi,
+   shuning uchun bu "boshqa dizayn tizimi" emas, bitta nuqtadagi kontrast. */
 .datastory {
   background: #09090b;
   color: #f4f4f1;
-  margin-block: clamp(3rem, 7vw, 6rem);
   overflow: hidden;
 
   /* bo'lim ichidagi tokenlarni qayta belgilaymiz */
@@ -12,10 +15,10 @@
   --ink-4: #7d7d78;
   --line: #222228;
   --line-2: #33333b;
-  --accent: #5b8bff;
+  --accent: #7ea4ff;
   --on-accent: #08080a;
-  --accent-line: rgba(91, 139, 255, 0.35);
-  --accent-wash: rgba(91, 139, 255, 0.12);
+  --accent-line: rgba(126, 164, 255, 0.3);
+  --accent-wash: rgba(126, 164, 255, 0.12);
 }
 
 .datastory .shell {
@@ -112,7 +115,7 @@
 }
 
 .joinviz__sub {
-  font-size: 9.5px !important;
+  font-size: 12px !important;
   letter-spacing: 0.06em !important;
   fill: var(--ink-4) !important;
   text-transform: none;
@@ -133,7 +136,7 @@
 }
 
 .joinviz__join text {
-  fill: #ff8f8f;
+  fill: var(--danger);
 }
 
 .joinviz__out rect {
@@ -151,17 +154,17 @@
 
 .joinviz__fault {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  fill: #ff8f8f;
+  fill: var(--danger);
 }
 
 .joinviz__loss {
   font-family: var(--mono);
   font-size: 13px;
   letter-spacing: 0.08em;
-  fill: #ff8f8f;
+  fill: var(--danger);
 }
 
 /* ---------- jonli tergov replayi ---------- */
@@ -242,12 +245,12 @@
 
 .replay__dot {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: var(--t-xs);
   letter-spacing: 0.06em;
   padding: 0.45rem 0.65rem;
   color: var(--ink-4);
   border: 1px solid var(--line-2);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   transition:
     color var(--d-fast) var(--e-io),
     border-color var(--d-fast) var(--e-io),
@@ -265,7 +268,7 @@
 }
 
 .replay__restart {
-  font-size: 10px;
+  font-size: var(--t-xs);
   letter-spacing: 0.06em;
   color: var(--ink-4);
   transition: color var(--d-fast) var(--e-io);
@@ -288,7 +291,7 @@
   justify-content: space-between;
   padding: 0.55rem 0.8rem;
   border: 1px solid var(--line-2);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   font-size: var(--t-sm);
   color: var(--ink-2);
   font-variant-numeric: tabular-nums;
@@ -301,14 +304,14 @@
 
 .replay__row--sum {
   border-color: #8a4b4b;
-  color: #ff8f8f;
+  color: var(--danger);
   font-weight: 500;
 }
 
 .replay__visual-note {
   margin-top: 0.6rem;
   color: var(--ink-4);
-  font-size: 10px;
+  font-size: var(--t-xs);
   letter-spacing: 0.04em;
   max-width: 480px;
 }
@@ -330,7 +333,7 @@
 
 .replay__datelabel,
 .replay__daterange {
-  font-size: 10px;
+  font-size: var(--t-xs);
   letter-spacing: 0.06em;
   color: var(--ink-4);
 }
@@ -342,7 +345,7 @@
 .replay__bar {
   position: relative;
   height: 8px;
-  border-radius: 100px;
+  border-radius: var(--radius-pill);
   background: var(--line-2);
 }
 
@@ -350,12 +353,12 @@
   position: absolute;
   top: 0;
   height: 100%;
-  border-radius: 100px;
+  border-radius: var(--radius-pill);
   background: var(--accent);
 }
 
 .replay__bar-fill--b {
-  background: #ff8f8f;
+  background: var(--danger);
 }
 
 /* ---------- join vizuali (02) ---------- */
@@ -371,7 +374,7 @@
   margin-top: 1.5rem;
 }
 
-@media (max-width: 860px) {
+@media (max-width: 960px) {
   .replay__stage {
     grid-template-columns: 1fr;
   }
@@ -397,7 +400,7 @@
   caption-side: top;
   text-align: left;
   color: var(--ink-4);
-  font-size: 10px;
+  font-size: var(--t-xs);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-bottom: 0.75rem;
@@ -414,7 +417,7 @@
 .jointable__table th {
   color: var(--ink-4);
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: var(--t-xs);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   font-weight: 400;
@@ -425,7 +428,7 @@
 }
 
 .jointable__blank {
-  color: #ff8f8f;
+  color: var(--danger);
   font-family: var(--mono);
 }
 
@@ -546,7 +549,7 @@
 }
 
 /* diagramma siqilib o'qilmay qolmasin — ramka ichida surib ko'riladi */
-@media (max-width: 620px) {
+@media (max-width: 560px) {
   .joinviz {
     padding-bottom: 0.5rem;
   }
@@ -565,11 +568,11 @@
     margin-top: 0.85rem;
     text-align: center;
     color: var(--ink-4);
-    font-size: 10px;
+    font-size: var(--t-xs);
   }
 }
 
-@media (max-width: 1040px) {
+@media (max-width: 960px) {
   .faults {
     grid-template-columns: 1fr;
     gap: 1.75rem;
@@ -580,7 +583,7 @@
   }
 }
 
-@media (max-width: 920px) {
+@media (max-width: 960px) {
   .datastory__top {
     grid-template-columns: 1fr;
   }
@@ -595,7 +598,7 @@
   }
 }
 
-@media (max-width: 620px) {
+@media (max-width: 560px) {
   .statrow {
     grid-template-columns: 1fr;
     gap: 1.75rem;
@@ -618,7 +621,7 @@
   margin-top: 2rem;
 }
 
-.stat { padding: 1.25rem; border: 1px solid var(--line-2); border-radius: 12px; background: rgba(255,255,255,.025); }
+.stat { padding: 1.25rem; border: 1px solid var(--line-2); border-radius: var(--radius); background: rgba(255,255,255,.025); }
 .stat__n { letter-spacing: -.065em; }
 .stat__k { color: var(--ink-3); }
-@media (max-width: 620px) { .statrow { grid-template-columns: repeat(2,minmax(0,1fr)); gap: .75rem; } .stat { padding: 1rem; } }
+@media (max-width: 560px) { .statrow { grid-template-columns: repeat(2,minmax(0,1fr)); gap: .75rem; } .stat { padding: 1rem; } }

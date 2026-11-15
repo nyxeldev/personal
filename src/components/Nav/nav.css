@@ -15,7 +15,7 @@
   max-width: var(--max);
   margin-inline: auto;
   padding-inline: 1.1rem 0.6rem;
-  border-radius: 100px;
+  border-radius: var(--radius-pill);
   border: 1px solid transparent;
   background: transparent;
   pointer-events: auto;
@@ -51,11 +51,11 @@
   place-items: center;
   width: 28px;
   height: 28px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   background: var(--ink);
   color: var(--on-ink);
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: var(--t-xs);
   letter-spacing: 0.02em;
   transition: background-color var(--d-fast) var(--e-io);
 }
@@ -82,7 +82,7 @@
   align-items: baseline;
   gap: 0.4rem;
   padding: 0.5rem 0.75rem;
-  border-radius: 100px;
+  border-radius: var(--radius-pill);
   font-size: var(--t-sm);
   color: var(--ink-3);
   transition:
@@ -92,7 +92,7 @@
 
 .nav__link-num {
   font-family: var(--mono);
-  font-size: 9px;
+  font-size: var(--t-xs);
   letter-spacing: 0.1em;
   color: var(--ink-4);
   transition: color var(--d-fast) var(--e-io);
@@ -134,7 +134,7 @@
   gap: 0.28rem;
   padding: 0.38rem 0.55rem;
   border: 1px solid var(--line-2);
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   color: var(--ink-3);
   transition:
     color var(--d-fast) var(--e-io),
@@ -144,7 +144,7 @@
 
 .nav__cmdk-key {
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: var(--t-xs);
   letter-spacing: 0.02em;
 }
 
@@ -160,16 +160,16 @@
   align-items: center;
   gap: 2px;
   padding: 3px;
-  border-radius: 100px;
+  border-radius: var(--radius-pill);
   background: var(--bg-sunk);
   box-shadow: inset 0 0 0 1px var(--line-2);
 }
 
 .nav__lang-btn {
   padding: 0.3rem 0.55rem;
-  border-radius: 100px;
+  border-radius: var(--radius-pill);
   font-family: var(--mono);
-  font-size: 10px;
+  font-size: var(--t-xs);
   letter-spacing: 0.04em;
   color: var(--ink-3);
   transition:
@@ -186,7 +186,7 @@
   background: var(--accent);
 }
 
-@media (max-width: 720px) {
+@media (max-width: 760px) {
   .nav__lang {
     display: none;
   }
@@ -198,7 +198,7 @@
   gap: 0.35rem;
   padding: 0.55rem 1.1rem;
   border: none;
-  border-radius: 100px;
+  border-radius: var(--radius-pill);
   font-size: var(--t-sm);
   font-weight: 500;
   color: var(--on-accent);
@@ -266,7 +266,7 @@
 }
 
 /* ---------- moslashuv ---------- */
-@media (max-width: 1080px) {
+@media (max-width: 1180px) {
   .nav__link-num {
     display: none;
   }
@@ -341,7 +341,7 @@
 }
 .sheet__num {
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: var(--t-xs);
   color: var(--accent);
 }
 .sheet__actions {
@@ -354,7 +354,7 @@
   align-items: center;
   gap: 0.5rem;
   padding: 1rem;
-  border-radius: 100px;
+  border-radius: var(--radius-pill);
   background: var(--ink);
   color: var(--on-ink);
 }
@@ -372,7 +372,7 @@
 }
 .sheet__lang-btn {
   padding: 0.5rem 1rem;
-  border-radius: 100px;
+  border-radius: var(--radius-pill);
   font-family: var(--mono);
   font-size: 12px;
   letter-spacing: 0.04em;
