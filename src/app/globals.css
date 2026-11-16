@@ -276,9 +276,9 @@ p {
   color: var(--on-ink);
 }
 
+/* Akcent rang faqat havolalar/faol holatlar uchun — tugma fonida ishlatilmaydi. */
 .btn--primary:hover {
-  background: var(--accent);
-  color: var(--on-accent);
+  background: color-mix(in srgb, var(--ink) 85%, white 15%);
 }
 
 .btn--ghost {
@@ -289,6 +289,12 @@ p {
 .btn--ghost:hover {
   border-color: var(--ink);
   background: var(--bg-raise);
+}
+
+.btn--sm {
+  padding: 0.55rem 1.1rem;
+  font-size: var(--t-xs);
+  gap: 0.35rem;
 }
 
 /* ---------- 5. Animatsiya yordamchilari ---------- */
@@ -429,12 +435,21 @@ p {
   .btn:hover { transform: translateY(-2px); }
   .btn:active { transform: translateY(0) scale(0.97); }
   .chip:hover { border-color: var(--accent); color: var(--ink); transform: translateY(-1px); }
-  .decision-card, .capability, .experience__entry, .cs {
+  /* Bitta karta retsepti: chegara/radius/fon bir xil, hover — nozik chegara
+     + max 2px ko'tarilish. .capability/.experience__entry qutilanmagan
+     ro'yxat elementi bo'lgani uchun soyasiz, lekin bir xil tegish tili bilan. */
+  .decision-card, .capability, .experience__entry, .cs, .mini {
     transition: border-color .3s ease, box-shadow .3s ease, transform .3s var(--e-out);
   }
-  .decision-card:hover { border-color: var(--accent-line); box-shadow: 0 16px 40px -24px var(--accent-line); transform: translateY(-3px); }
-  .capability:hover, .experience__entry:hover { border-color: var(--accent); transform: translateY(-3px); }
-  .cs:hover { box-shadow: 0 24px 70px -36px var(--accent-line); }
+  .decision-card:hover, .cs:hover, .mini:hover {
+    border-color: var(--accent-line);
+    box-shadow: 0 16px 40px -24px var(--accent-line);
+    transform: translateY(-2px);
+  }
+  .capability:hover, .experience__entry:hover {
+    border-color: var(--accent-line);
+    transform: translateY(-2px);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .btn:hover { transform: none; }

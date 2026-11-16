@@ -213,6 +213,7 @@
   padding: clamp(1.5rem, 3vw, 2.5rem);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
+  background: var(--bg-raise);
 }
 
 .mini__media {
@@ -374,7 +375,6 @@
 
 .work__head { margin-bottom: 1.25rem; }
 .work__intro { margin-bottom: 3rem; }
-.cs { box-shadow: 0 16px 60px -40px rgba(0,0,0,.22); }
 .cs__head { background: linear-gradient(115deg, var(--accent-wash), transparent 65%); }
 .cs__title { font-size: clamp(2.5rem, 5vw, 4.5rem); }
 .cs__highlights { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); border-bottom: 1px solid var(--line); }

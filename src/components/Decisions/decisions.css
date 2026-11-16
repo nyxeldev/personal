@@ -23,6 +23,7 @@
 .decision-card {
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
+  background: var(--bg-raise);
   padding: clamp(1.25rem, 3vw, 2rem);
 }
 .decision-card h3 {

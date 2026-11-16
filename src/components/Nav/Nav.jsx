@@ -111,7 +111,7 @@ export default function Nav() {
             </div>
             <Magnetic strength={0.2}>
               <a
-                className="nav__resume"
+                className="btn btn--primary btn--sm nav__resume-link"
                 href="/files/Resume.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -176,7 +176,7 @@ export default function Nav() {
         </nav>
         <div className="sheet__actions">
           <a
-            className="sheet__resume"
+            className="sheet__resume btn btn--primary"
             href="/files/Resume.pdf"
             target="_blank"
             rel="noopener noreferrer"

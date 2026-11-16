@@ -165,8 +165,10 @@
   box-shadow: inset 0 0 0 1px var(--line-2);
 }
 
-.nav__lang-btn {
-  padding: 0.3rem 0.55rem;
+/* Desktop (.nav__lang-btn) va mobil sheet (.sheet__lang-btn) — bitta umumiy
+   retsept, faqat o'lcham farq qiladi. */
+.nav__lang-btn,
+.sheet__lang-btn {
   border-radius: var(--radius-pill);
   font-family: var(--mono);
   font-size: var(--t-xs);
@@ -177,49 +179,36 @@
     background-color var(--d-fast) var(--e-io);
 }
 
-.nav__lang-btn:hover {
+.nav__lang-btn:hover,
+.sheet__lang-btn:hover {
   color: var(--ink);
 }
 
-.nav__lang-btn.is-active {
+.nav__lang-btn.is-active,
+.sheet__lang-btn.is-active {
   color: var(--on-accent);
   background: var(--accent);
+}
+
+.nav__lang-btn {
+  position: relative;
+  padding: 0.3rem 0.55rem;
+}
+
+/* Ko'rinishini kattalashtirmay, tegish nishonini 44x44px gacha kengaytiradi. */
+.nav__lang-btn::after {
+  content: "";
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
 }
 
 @media (max-width: 760px) {
   .nav__lang {
     display: none;
   }
-}
-
-.nav__resume {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.55rem 1.1rem;
-  border: none;
-  border-radius: var(--radius-pill);
-  font-size: var(--t-sm);
-  font-weight: 500;
-  color: var(--on-accent);
-  background: linear-gradient(135deg, var(--accent-hi), var(--accent) 65%);
-  box-shadow:
-    0 2px 10px -2px color-mix(in srgb, var(--accent) 55%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25);
-  transition:
-    transform var(--d-fast) var(--e-out),
-    box-shadow var(--d-fast) var(--e-io);
-}
-
-.nav__resume:hover {
-  transform: translateY(-1px);
-  box-shadow:
-    0 6px 18px -3px color-mix(in srgb, var(--accent) 65%, transparent),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-}
-
-.nav__resume:active {
-  transform: translateY(0);
 }
 
 /* ---------- burger ---------- */
@@ -289,7 +278,7 @@
 
 @media (max-width: 560px) {
   .nav__mark-text,
-  .nav__resume {
+  .nav__resume-link {
     display: none;
   }
 }
@@ -348,15 +337,10 @@
   display: grid;
   gap: 1rem;
 }
+/* Rang/radius/padding — .btn--primary'dan; shu yerda faqat joylashuv. */
 .sheet__resume {
-  display: flex;
+  width: 100%;
   justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 1rem;
-  border-radius: var(--radius-pill);
-  background: var(--ink);
-  color: var(--on-ink);
 }
 .sheet__email {
   text-align: center;
@@ -370,21 +354,14 @@
   gap: 0.4rem;
   margin-top: 0.5rem;
 }
+/* O'lcham/soya — faqat mobil sheet uchun; rang va tipografiya yuqoridagi
+   umumiy .nav__lang-btn, .sheet__lang-btn retseptidan keladi. */
 .sheet__lang-btn {
   padding: 0.5rem 1rem;
-  border-radius: var(--radius-pill);
-  font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  color: var(--ink-3);
+  min-height: 44px;
   box-shadow: inset 0 0 0 1px var(--line-2);
-  transition:
-    color var(--d-fast) var(--e-io),
-    background-color var(--d-fast) var(--e-io);
 }
 .sheet__lang-btn.is-active {
-  color: var(--on-accent);
-  background: var(--accent);
   box-shadow: none;
 }
 .nojs-nav {
