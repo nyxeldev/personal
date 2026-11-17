@@ -13,6 +13,7 @@ export default function Nav() {
   const { modKey } = usePlatformKey();
   const { lang, setLang, t } = useLanguage();
   const LINKS = LINK_IDS.map((id) => ({ id, label: t(`nav.links.${id}`) }));
+  const langIndex = LANGUAGES.indexOf(lang);
   const [stuck, setStuck] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("");
@@ -96,7 +97,13 @@ export default function Nav() {
               <Search size={13} strokeWidth={2} aria-hidden="true" />
               <span className="nav__cmdk-key">{modKey} K</span>
             </button>
-            <div className="nav__lang" role="group" aria-label={t("nav.language")}>
+            <div
+              className="nav__lang"
+              role="group"
+              aria-label={t("nav.language")}
+              style={{ "--i": langIndex }}
+            >
+              <span className="nav__lang-thumb" aria-hidden="true" />
               {LANGUAGES.map((code) => (
                 <button
                   key={code}
@@ -188,7 +195,13 @@ export default function Nav() {
           <a className="sheet__email" href={`mailto:${SITE.email}`}>
             {t("nav.emailMe")}
           </a>
-          <div className="sheet__lang" role="group" aria-label={t("nav.language")}>
+          <div
+            className="sheet__lang"
+            role="group"
+            aria-label={t("nav.language")}
+            style={{ "--i": langIndex }}
+          >
+            <span className="sheet__lang-thumb" aria-hidden="true" />
             {LANGUAGES.map((code) => (
               <button
                 key={code}

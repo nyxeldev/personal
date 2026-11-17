@@ -39,10 +39,23 @@ export function LanguageProvider({ children }) {
 
   const setLang = useCallback((next) => {
     if (!LANGUAGES.includes(next)) return;
-    setLangState(next);
-    try {
-      localStorage.setItem("lang", next);
-    } catch {}
+    const apply = () => {
+      setLangState(next);
+      try {
+        localStorage.setItem("lang", next);
+      } catch {}
+    };
+    // Sahifa matni almashganda yumshoq fade — Chrome/Edge'da View Transitions
+    // API orqali, boshqa brauzerlarda va reduced-motion'da oddiy (animatsiyasiz)
+    // yangilanish bilan asl holatga qaytadi.
+    const reduced =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    if (!reduced && typeof document !== "undefined" && document.startViewTransition) {
+      document.startViewTransition(apply);
+    } else {
+      apply();
+    }
   }, []);
 
   const t = useCallback(

@@ -155,28 +155,44 @@
 }
 
 /* ---------- til almashtirgich ---------- */
+/* Grid + absolut "thumb" — 3 til teng ustunlarga bo'linadi, thumb esa
+   --i (0/1/2) orqali translateX bilan tanlangan til ustiga suzib boradi.
+   Shu bilan rang almashtirish o'rniga bitta urg'u elementi harakatlanadi. */
 .nav__lang {
-  display: flex;
-  align-items: center;
-  gap: 2px;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   padding: 3px;
   border-radius: var(--radius-pill);
   background: var(--bg-sunk);
   box-shadow: inset 0 0 0 1px var(--line-2);
 }
 
+.nav__lang-thumb,
+.sheet__lang-thumb {
+  position: absolute;
+  inset: 3px auto 3px 3px;
+  width: calc((100% - 6px) / 3);
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  transform: translateX(calc(var(--i, 0) * 100%));
+  transition: transform var(--d-mid) var(--e-out);
+  z-index: 0;
+  pointer-events: none;
+}
+
 /* Desktop (.nav__lang-btn) va mobil sheet (.sheet__lang-btn) — bitta umumiy
    retsept, faqat o'lcham farq qiladi. */
 .nav__lang-btn,
 .sheet__lang-btn {
+  position: relative;
+  z-index: 1;
   border-radius: var(--radius-pill);
   font-family: var(--mono);
   font-size: var(--t-xs);
   letter-spacing: 0.04em;
   color: var(--ink-3);
-  transition:
-    color var(--d-fast) var(--e-io),
-    background-color var(--d-fast) var(--e-io);
+  transition: color var(--d-fast) var(--e-io);
 }
 
 .nav__lang-btn:hover,
@@ -187,11 +203,9 @@
 .nav__lang-btn.is-active,
 .sheet__lang-btn.is-active {
   color: var(--on-accent);
-  background: var(--accent);
 }
 
 .nav__lang-btn {
-  position: relative;
   padding: 0.3rem 0.55rem;
 }
 
@@ -349,20 +363,22 @@
   text-underline-offset: 4px;
 }
 .sheet__lang {
-  display: flex;
-  justify-content: center;
-  gap: 0.4rem;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 3px;
   margin-top: 0.5rem;
+  border-radius: var(--radius-pill);
+  background: var(--bg-sunk);
+  box-shadow: inset 0 0 0 1px var(--line-2);
 }
-/* O'lcham/soya — faqat mobil sheet uchun; rang va tipografiya yuqoridagi
-   umumiy .nav__lang-btn, .sheet__lang-btn retseptidan keladi. */
+/* O'lcham — faqat mobil sheet uchun; rang, tipografiya va thumb yuqoridagi
+   umumiy .nav__lang-btn/.sheet__lang-btn va .nav__lang-thumb/.sheet__lang-thumb
+   retseptidan keladi. */
 .sheet__lang-btn {
   padding: 0.5rem 1rem;
   min-height: 44px;
-  box-shadow: inset 0 0 0 1px var(--line-2);
-}
-.sheet__lang-btn.is-active {
-  box-shadow: none;
+  text-align: center;
 }
 .nojs-nav {
   display: flex;

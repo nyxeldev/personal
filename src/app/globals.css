@@ -382,6 +382,23 @@ p {
   .magnetic {
     transform: none !important;
   }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* Til almashtirilganda sahifa matni yumshoq fade bo'lib o'tadi (View
+   Transitions API, hooks/useLanguage.js'da ishga tushiriladi) — sayt
+   bo'ylab ishlatiladigan o'rtacha tezlik/egilish bilan bir xil. */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: var(--d-mid);
+    animation-timing-function: var(--e-io);
+  }
 }
 
 /* ---------- 6. Skip link ---------- */
