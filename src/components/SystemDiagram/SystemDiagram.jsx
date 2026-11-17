@@ -72,9 +72,12 @@ export default function SystemDiagram() {
   const [use3d, setUse3d] = useState(false);
   const [sceneReady, setSceneReady] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
-  const accent = "#86adff";
-  const fogColor = "#0c1525";
-  const labelColor = "#dfe8fb";
+  // Saytning globals.css'dagi --accent/--bg-sunk/--ink token'lari bilan bir xil —
+  // 3D canvas CSS o'zgaruvchilarini o'qiy olmagani uchun shu qiymatlar qo'lda
+  // sinxronlangan (globals.css o'zgarsa, shu yerni ham yangilash kerak).
+  const accent = "#7ea4ff";
+  const fogColor = "#0e0f12";
+  const labelColor = "#ededea";
   const active = hot || selected;
   const edgeIsHot = (e) => e.from === active || e.to === active;
 

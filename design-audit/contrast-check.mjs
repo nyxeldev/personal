@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 // WCAG 2.1 contrast checker for this site's design tokens.
-// Token values below are copied by hand from src/app/globals.css (:root),
-// src/components/DataStory/data-story.css (.datastory local overrides) and
-// src/components/Hero/hero.css (.hero__viz local overrides) — update them
-// here whenever those files change.
+// Token values below are copied by hand from src/app/globals.css (:root) and
+// src/components/DataStory/data-story.css (.datastory local overrides) —
+// update them here whenever those files change.
 
 const AA_NORMAL = 4.5;
 const AA_LARGE = 3.0;
@@ -58,19 +57,11 @@ const dataStoryTokens = {
   "on-accent": "#08080a",
 };
 
-// ---------- 3. Hero system-diagram card local override (.hero__viz) ----------
-// The card's actual background is a radial-gradient between #182c4a and
-// #0c1525; we check against the darker end (#0c1525) as the worst case.
-const heroVizTokens = {
-  bg: "#0c1525",
-  "ink-2": "#becbe1",
-  "ink-4": "#91a0b8",
-  accent: "#86adff",
-  "viz-cap": "#a2b2cc",
-  "note-label": "#9ebae8",
-  "note-text": "#bac7dc",
-  "ctrl-text": "#a6b5ce",
-};
+// Note: .hero__viz (the "Inside the System" card) no longer has its own
+// local token overrides — it reuses the global tokens above directly
+// (background is a radial-gradient between --bg-raise and --bg-sunk), so
+// it's already covered by the "Global tokens" checks and needs no
+// separate section here.
 
 function checkGroup(label, tokens, bgKeys, textKeys, threshold) {
   const rows = [];
@@ -154,15 +145,6 @@ ok =
     dataStoryTokens,
     ["bg"],
     ["ink", "ink-2", "ink-3", "ink-4", "accent"],
-    AA_NORMAL,
-  ) && ok;
-
-ok =
-  checkGroup(
-    "Hero system-diagram card (.hero__viz, worst-case bg)",
-    heroVizTokens,
-    ["bg"],
-    ["ink-2", "ink-4", "accent", "viz-cap", "note-label", "note-text", "ctrl-text"],
     AA_NORMAL,
   ) && ok;
 

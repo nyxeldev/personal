@@ -143,17 +143,17 @@
 .sysdia { position: relative; }
 .sysdia__svg { max-height: 340px; }
 .sysdia__controls { display: flex; justify-content: center; flex-wrap: wrap; gap: .35rem; margin-top: .25rem; }
-.sysdia__controls button { font-family: var(--mono); font-size: var(--t-xs); letter-spacing: .06em; padding: .5rem .6rem; color: var(--ctrl-text, #a6b5ce); border: 1px solid transparent; border-radius: var(--radius-sm); transition: color .2s ease, background .2s ease, border-color .2s ease; }
-.sysdia__controls button:hover { color: var(--ctrl-hover-text, #f0f5ff); background: var(--ctrl-hover-bg, #1b2b46); }
-.sysdia__controls button[aria-pressed="true"] { border-color: var(--ctrl-active-border, #456798); color: var(--ctrl-active-text, #d7e5ff); background: var(--ctrl-active-bg, #1b2e4d); }
-.sysdia__note { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--note-line, #30415f); min-height: 95px; }
-.sysdia__note .mono { color: var(--note-label, #9ebae8); font-size: var(--t-xs); }
-.sysdia__note p { font-size: 12px; color: var(--note-text, #bac7dc); line-height: 1.6; margin-top: .45rem; max-width: 44ch; }
+.sysdia__controls button { font-family: var(--mono); font-size: var(--t-xs); letter-spacing: .06em; padding: .5rem .6rem; color: var(--ink-3); border: 1px solid transparent; border-radius: var(--radius-sm); transition: color .2s ease, background .2s ease, border-color .2s ease; }
+.sysdia__controls button:hover { color: var(--ink); background: var(--bg-raise); }
+.sysdia__controls button[aria-pressed="true"] { border-color: var(--accent-line); color: var(--ink); background: var(--accent-wash); }
+.sysdia__note { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--line-2); min-height: 95px; }
+.sysdia__note .mono { color: var(--accent); font-size: var(--t-xs); }
+.sysdia__note p { font-size: 12px; color: var(--ink-2); line-height: 1.6; margin-top: .45rem; max-width: 44ch; }
 
 .sysdia__trace {
   margin-top: .85rem;
   padding: .6rem .75rem;
-  border: 1px solid var(--note-line, #30415f);
+  border: 1px solid var(--line-2);
   border-radius: var(--radius-sm);
   background: rgba(0, 0, 0, .28);
   display: flex;
@@ -163,10 +163,10 @@
   line-height: 1.5;
   overflow: hidden;
 }
-.sysdia__trace-prompt { color: var(--ctrl-text, #a6b5ce); letter-spacing: .02em; }
-.sysdia__trace-tag { color: var(--note-line, #30415f); }
+.sysdia__trace-prompt { color: var(--ink-3); letter-spacing: .02em; }
+.sysdia__trace-tag { color: var(--line-2); }
 .sysdia__trace-line {
-  color: var(--note-label, #9ebae8);
+  color: var(--accent);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: clip;

@@ -50,22 +50,17 @@
 .hero__direct { display: flex; flex-wrap: wrap; gap: .75rem 1.4rem; margin-top: 1.4rem; font-size: var(--t-sm); color: var(--ink-3); }
 .hero__direct a { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
 .hero__viz {
-  /* Deep navy console card — reads clearly against the Dusk page background. */
-  --ink-2: #becbe1; --ink-4: #91a0b8; --accent: #86adff;
-  --line-2: #344563; --accent-line: #385581; --accent-wash: rgba(102,155,255,.12);
-  --bg-raise: #142139; --viz-dot: #6b84ab; --viz-dot-o: .13;
-  --viz-cap: #a2b2cc;
-  --note-line: #30415f; --note-label: #9ebae8; --note-text: #bac7dc;
-  --ctrl-text: #a6b5ce; --ctrl-hover-text: #f0f5ff; --ctrl-hover-bg: #1b2b46;
-  --ctrl-active-border: #456798; --ctrl-active-text: #d7e5ff; --ctrl-active-bg: #1b2e4d;
+  /* Saytning umumiy palitrasidan foydalanadi (--bg-raise/--accent/--ink va h.k.)
+     — alohida "navy console" rangi emas, shu orqali diagramma ranglari
+     doim sayt ranglari bilan mos keladi. */
   position: relative; display: flex; flex-direction: column; align-items: center;
-  gap: 1.25rem; padding: 1.4rem 1.5rem; border: 1px solid #314361;
-  border-radius: var(--radius-lg); background: radial-gradient(ellipse at 50% 40%, #182c4a, #0c1525 75%);
-  box-shadow: 0 30px 80px -40px rgba(14,37,75,.6), inset 0 1px 0 rgba(255,255,255,.08);
+  gap: 1.25rem; padding: 1.4rem 1.5rem; border: 1px solid var(--line-2);
+  border-radius: var(--radius-lg); background: radial-gradient(ellipse at 50% 40%, var(--bg-raise), var(--bg-sunk) 75%);
+  box-shadow: 0 30px 80px -40px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06);
 }
-.hero__viz::before { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background-image: radial-gradient(var(--viz-dot) 1px, transparent 1px); background-size: 22px 22px; opacity: var(--viz-dot-o); }
-.hero__viz-top { width: 100%; display: flex; justify-content: space-between; gap: 1rem; color: var(--viz-cap); font-size: var(--t-xs); }
-.hero__viz-cap { color: var(--viz-cap); font-size: var(--t-xs); text-align: center; }
+.hero__viz::before { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background-image: radial-gradient(var(--line-2) 1px, transparent 1px); background-size: 22px 22px; opacity: .22; }
+.hero__viz-top { width: 100%; display: flex; justify-content: space-between; gap: 1rem; color: var(--ink-3); font-size: var(--t-xs); }
+.hero__viz-cap { color: var(--ink-3); font-size: var(--t-xs); text-align: center; }
 .hero__viz-hint { display: none; }
 .hero__proof { position: relative; display: grid; grid-template-columns: .6fr 1fr 1fr 1fr; align-items: center; gap: 1.5rem; margin-top: 1rem; padding-block: 1.5rem; border-top: 1px solid var(--line); }
 .hero__proof a { display: flex; align-items: center; gap: .75rem; font-size: var(--t-xs); }
