@@ -71,7 +71,7 @@ export default function Nav() {
       <header className={`nav ${stuck ? "is-stuck" : ""}`}>
         <div className="nav__inner">
           <a href="#top" className="nav__mark" aria-label={t("nav.home")}>
-            <span className="nav__mark-glyph">NX</span>
+            <span className="nav__mark-glyph" aria-hidden="true">NX</span>
             <span className="nav__mark-text">NYXELDEV</span>
           </a>
           <nav className="nav__links" aria-label="Sections">

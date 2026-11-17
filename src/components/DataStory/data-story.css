@@ -522,12 +522,16 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.025);
 }
 
 .stat__n {
   font-size: clamp(2rem, 1rem + 3.4vw, 3.4rem);
   font-weight: 500;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.065em;
   line-height: 1;
   font-variant-numeric: tabular-nums;
   color: var(--ink);
@@ -538,7 +542,7 @@
   font-size: var(--t-mono);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--ink-4);
+  color: var(--ink-3);
   line-height: 1.6;
 }
 
@@ -621,7 +625,4 @@
   margin-top: 2rem;
 }
 
-.stat { padding: 1.25rem; border: 1px solid var(--line-2); border-radius: var(--radius); background: rgba(255,255,255,.025); }
-.stat__n { letter-spacing: -.065em; }
-.stat__k { color: var(--ink-3); }
 @media (max-width: 560px) { .statrow { grid-template-columns: repeat(2,minmax(0,1fr)); gap: .75rem; } .stat { padding: 1rem; } }

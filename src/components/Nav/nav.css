@@ -214,8 +214,8 @@
 /* ---------- burger ---------- */
 .nav__burger {
   display: none;
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
   place-items: center;
 }
 
@@ -372,10 +372,6 @@
 }
 .nojs-nav a {
   text-decoration: underline;
-}
-.nav__burger {
-  width: 44px;
-  height: 44px;
 }
 @media (max-width: 560px) {
   .nav__inner {

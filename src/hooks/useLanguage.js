@@ -33,6 +33,10 @@ export function LanguageProvider({ children }) {
     setLangState(saved);
   }, []);
 
+  useEffect(() => {
+    document.documentElement.lang = lang;
+  }, [lang]);
+
   const setLang = useCallback((next) => {
     if (!LANGUAGES.includes(next)) return;
     setLangState(next);
