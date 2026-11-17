@@ -19,6 +19,13 @@
   --on-accent: #08080a;
   --accent-line: rgba(126, 164, 255, 0.3);
   --accent-wash: rgba(126, 164, 255, 0.12);
+  /* --danger (#ff8a8a) ning bosilgan/xira variantlari — "buzilgan bog'lanish"
+     chiziqlari uchun, qizil matndan farqli yumshoqroq urg'u kerak bo'lgan
+     joylarda (stroke/border). Ko'rinish o'zgarmadi, faqat endi bitta nomli
+     manbadan boshqariladi. */
+  --danger-line-faint: #4a3030;
+  --danger-line: #6b4242;
+  --danger-line-strong: #8a4b4b;
 }
 
 .datastory .shell {
@@ -78,7 +85,7 @@
 /* buzilgan bog'lanish — uzuq chiziq */
 .joinviz__broken {
   stroke-dasharray: 5 5;
-  stroke: #4a3030 !important;
+  stroke: var(--danger-line-faint) !important;
 }
 
 .joinviz__flows path {
@@ -132,7 +139,7 @@
 }
 
 .joinviz__join rect {
-  stroke: #8a4b4b;
+  stroke: var(--danger-line-strong);
 }
 
 .joinviz__join text {
@@ -147,7 +154,7 @@
 /* ---------- belgilar ---------- */
 .joinviz__leader {
   fill: none;
-  stroke: #6b4242;
+  stroke: var(--danger-line);
   stroke-width: 1;
   stroke-dasharray: 3 4;
 }
@@ -298,12 +305,12 @@
 }
 
 .replay__row--total {
-  border-color: #6b4242;
+  border-color: var(--danger-line);
   color: var(--ink);
 }
 
 .replay__row--sum {
-  border-color: #8a4b4b;
+  border-color: var(--danger-line-strong);
   color: var(--danger);
   font-weight: 500;
 }

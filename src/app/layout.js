@@ -59,7 +59,9 @@ export const metadata = {
 };
 
 export const viewport = {
-  themeColor: "#2b2d31",
+  // globals.css'dagi --bg bilan bir xil — mobil brauzer status-bar/address-bar
+  // sahifa foniga uzluksiz qo'shilib ketishi uchun.
+  themeColor: "#141519",
 };
 
 // Qidiruv tizimlari (Google) va ijtimoiy tarmoqlar sahifani shaxs
