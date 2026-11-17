@@ -27,16 +27,10 @@ export default function WhatIBuild() {
         </div>
         <div className="build__top">
           <h2 className="build__head" id="build-title">
-            <SplitText text={t("build.headingLine1")} as="span" />
-            <br />
-            <SplitText
-              text={t("build.headingLine2")}
-              as="span"
-              delay={110}
-              className="build__head-dim"
-            />
+            <SplitText text={t("build.headingLine1")} as="span" />{" "}
+            <SplitText text={t("build.headingLine2")} as="span" delay={110} />
           </h2>
-          <Reveal as="p" className="build__intro" delay={200}>
+          <Reveal as="p" className="build__intro lead" delay={200}>
             {t("build.intro")}
           </Reveal>
         </div>

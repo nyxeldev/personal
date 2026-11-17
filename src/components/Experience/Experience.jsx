@@ -20,17 +20,16 @@ export default function Experience() {
           <span>{t("experience.sectionLabel")}</span>
           <span className="sec-label__bar" />
         </div>
-        <div className="experience__grid">
-          <div>
-            <h2 id="experience-title">
-              <SplitText text={t("experience.headingLine1")} as="span" />
-              <br />
-              <SplitText text={t("experience.headingLine2")} as="span" delay={110} />
-            </h2>
-            <Reveal as="p" className="lead" delay={200}>
-              {t("experience.lead")}
-            </Reveal>
-          </div>
+        <div className="experience__head">
+          <h2 id="experience-title">
+            <SplitText text={t("experience.headingLine1")} as="span" />{" "}
+            <SplitText text={t("experience.headingLine2")} as="span" delay={110} />
+          </h2>
+          <Reveal as="p" className="lead" delay={200}>
+            {t("experience.lead")}
+          </Reveal>
+        </div>
+        <div className="experience__timeline">
           <Reveal as="article" className="experience__entry" delay={160}>
             <span className="mono">{entry.period}</span>
             <h3>{entry.company}</h3>

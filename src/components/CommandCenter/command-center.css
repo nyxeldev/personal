@@ -151,13 +151,6 @@
   opacity: 1;
 }
 
-.cmdk__empty {
-  padding: 1.75rem 0.65rem;
-  text-align: center;
-  color: var(--ink-3);
-  font-size: var(--t-sm);
-}
-
 /* ---------- pastki qator ---------- */
 .cmdk__foot {
   display: flex;
@@ -209,5 +202,6 @@
   padding: 0.5rem 1rem;
   font-size: var(--t-xs);
   text-align: left;
+  color: var(--ink-3);
   border-top: 1px solid var(--line);
 }

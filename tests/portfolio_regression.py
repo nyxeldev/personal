@@ -77,7 +77,8 @@ class Portfolio(unittest.TestCase):
                         self.assertGreaterEqual(box["x"], -1)
                         self.assertLessEqual(box["x"] + box["width"], width + 1)
                 if width <= 960:
-                    expect(self.page.locator(".hero__viz")).not_to_be_visible()
+                    expect(self.page.locator(".hero__viz")).to_be_visible()
+                    expect(self.page.locator(".hero__viz canvas")).to_have_count(0)
                     cta = self.page.locator(".hero__cta").bounding_box()
                     self.assertLess(cta["y"] + cta["height"], 900)
                 self.page.screenshot(path=str(ARTIFACTS / f"hero-{width}.png"))

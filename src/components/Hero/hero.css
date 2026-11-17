@@ -64,15 +64,14 @@
 .hero__proof strong { font-weight: 500; flex: 1; }
 .hero__proof a svg { transition: transform .3s var(--e-out); }
 .hero__proof a:hover svg { transform: translate(2px,-2px); }
-.hero__floor { display: flex; align-items: center; gap: 1rem; padding-block: 1.5rem; position: relative; }
-.hero__floor .mono { color: var(--ink-4); white-space: nowrap; }
-.hero__floor-line { flex: 1; height: 1px; background: var(--line); }
 @media (hover: hover) and (pointer: fine) { .hero__viz-hint { display: inline; } }
 @media (max-width: 960px) {
   .hero { min-height: auto; padding-top: 7rem; }
-  .hero__inner { grid-template-columns: 1fr; padding-bottom: 2rem; }
+  .hero__inner { grid-template-columns: minmax(0, 1fr); padding-bottom: 2rem; }
   .hero__copy { max-width: 660px; }
-  .hero__viz { display: none; }
+  /* Mobilda 3D sahna hech qachon yuklanmaydi (JS use3d shartini qarang) —
+     shu yerda faqat statik SVG kartani ixchamlashtiramiz. */
+  .hero__viz { margin-top: 1.5rem; max-width: 420px; padding: 1.1rem 1.25rem; }
   .hero__proof { grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
   .hero__proof > .mono { grid-column: 1 / -1; }
 }
@@ -84,6 +83,5 @@
   .hero__proof > .mono { margin-bottom: .75rem; }
   .hero__proof a { padding-block: .8rem; border-bottom: 1px solid var(--line); }
   .hero__proof a:last-child { border-bottom: 0; }
-  .hero__floor .mono:last-child { display: none; }
 }
 @media (max-height: 500px) { .hero { min-height: auto; padding-top: 6rem; } }

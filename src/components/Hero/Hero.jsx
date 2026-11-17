@@ -91,11 +91,6 @@ export default function Hero() {
         <a href="#decisions"><span>03</span><strong>{t("hero.proof3")}</strong><ArrowUpRight size={16} /></a>
       </Reveal>
 
-      <div className="hero__floor shell" aria-hidden="true">
-        <span className="mono">{t("hero.scroll")}</span>
-        <span className="hero__floor-line" />
-        <span className="mono">{t("hero.nextSection")}</span>
-      </div>
     </section>
   );
 }

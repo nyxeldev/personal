@@ -224,6 +224,40 @@
   background: var(--bg-sunk);
 }
 
+/* Minimal brauzer ramkasi — skrinshot atrofidagi bo'sh joyni "UI" sifatida o'qitadi. */
+.mini__frame {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 2rem;
+  padding-inline: 0.75rem;
+  background: var(--bg-raise);
+  border-bottom: 1px solid var(--line);
+}
+.mini__frame-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--line-2);
+}
+
+.mini__media-crop {
+  overflow: hidden;
+  aspect-ratio: 1100 / 560;
+}
+.mini__media-crop .plx,
+.mini__media-crop .plx__in {
+  display: block;
+  height: 100%;
+}
+.mini__media-crop img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 28%;
+  transform: scale(1.15);
+}
+
 .plx {
   display: block;
   overflow: hidden;
@@ -376,7 +410,6 @@
 .work__head { margin-bottom: 1.25rem; }
 .work__intro { margin-bottom: 3rem; }
 .cs__head { background: linear-gradient(115deg, var(--accent-wash), transparent 65%); }
-.cs__title { font-size: clamp(2.5rem, 5vw, 4.5rem); }
 .cs__highlights { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); border-bottom: 1px solid var(--line); }
 .cs__highlights > div { padding: clamp(1.25rem,3vw,2.5rem); }
 .cs__highlights > div + div { border-left: 1px solid var(--line); }

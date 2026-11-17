@@ -20,7 +20,6 @@ export default function WhoIAm() {
           <div className="who__main">
             <h2 className="who__head" id="about-title">
               <SplitText text={t("about.headingLine1")} as="span" />
-              <br />
               <SplitText
                 text={t("about.headingLine2")}
                 as="span"

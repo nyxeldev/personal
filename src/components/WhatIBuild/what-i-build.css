@@ -1,19 +1,12 @@
 .build__top {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 2rem;
-  align-items: end;
-  margin-bottom: 2.5rem;
+  max-width: 62ch;
+  margin-bottom: 3rem;
 }
 .build__head {
   font-size: var(--t-h1);
 }
-.build__head-dim {
-  color: var(--ink-3);
-}
 .build__intro {
-  color: var(--ink-2);
-  max-width: 48ch;
+  margin-top: 1rem;
 }
 .capabilities {
   display: grid;
@@ -54,11 +47,6 @@
   font-size: var(--t-sm);
   color: var(--ink-3);
   margin-top: 0.45rem;
-}
-@media (max-width: 960px) {
-  .build__top {
-    grid-template-columns: 1fr;
-  }
 }
 @media (max-width: 760px) {
   .capabilities {

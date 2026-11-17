@@ -134,23 +134,30 @@ export default function Work() {
             rel="noopener noreferrer"
             aria-label="Open IELTS Speaking Practice live demo"
           >
-            <Parallax amount={26}>
-              <picture>
-                <source
-                  srcSet="/images/ielts-640.webp 640w, /images/ielts-1100.webp 1100w"
-                  sizes="(max-width: 920px) 90vw, 40vw"
-                  type="image/webp"
-                />
-                <img
-                  src="/images/ielts-1100.webp"
-                  width="1100"
-                  height="688"
-                  loading="lazy"
-                  decoding="async"
-                  alt={t("work.ielts.imgAlt")}
-                />
-              </picture>
-            </Parallax>
+            <div className="mini__frame" aria-hidden="true">
+              <span className="mini__frame-dot" />
+              <span className="mini__frame-dot" />
+              <span className="mini__frame-dot" />
+            </div>
+            <div className="mini__media-crop">
+              <Parallax amount={26}>
+                <picture>
+                  <source
+                    srcSet="/images/ielts-640.webp 640w, /images/ielts-1100.webp 1100w"
+                    sizes="(max-width: 920px) 90vw, 40vw"
+                    type="image/webp"
+                  />
+                  <img
+                    src="/images/ielts-1100.webp"
+                    width="1100"
+                    height="688"
+                    loading="lazy"
+                    decoding="async"
+                    alt={t("work.ielts.imgAlt")}
+                  />
+                </picture>
+              </Parallax>
+            </div>
           </a>
           <div className="mini__body">
             <span className="cs__kicker mono">{t("work.ielts.kicker")}</span>

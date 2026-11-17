@@ -15,35 +15,6 @@ function timeAgo(iso, strings) {
       ? strings.oneDayAgo
       : `${days} ${strings.daysAgo}`;
 }
-function eventLabel(event, events) {
-  const action = event.payload?.action;
-  if (event.type === "PullRequestEvent")
-    return (
-      {
-        opened: events.openedPrIn,
-        closed: events.closedPrIn,
-        reopened: events.reopenedPrIn,
-      }[action] || events.updatedPrIn
-    );
-  if (event.type === "IssuesEvent")
-    return (
-      {
-        opened: events.openedIssueIn,
-        closed: events.closedIssueIn,
-        reopened: events.reopenedIssueIn,
-      }[action] || events.updatedIssueIn
-    );
-  return (
-    {
-      PushEvent: events.pushedTo,
-      CreateEvent: events.createdIn,
-      IssueCommentEvent: events.commentedIn,
-      ReleaseEvent: events.releasedIn,
-      ForkEvent: events.forked,
-      WatchEvent: events.starred,
-    }[event.type] || events.wasActiveIn
-  );
-}
 export default function BuildLog() {
   const { t } = useLanguage();
   const strings = t("footer.buildLog");
@@ -62,10 +33,7 @@ export default function BuildLog() {
         cached.updatedAt <= Date.now() &&
         ((Number.isInteger(cached.repos) && cached.repos >= 0) ||
           (cached.repos === null && cached.lastAt)) &&
-        (!cached.lastAt ||
-          (Number.isFinite(Date.parse(cached.lastAt)) &&
-            /^[\w.-]+\/[\w.-]+$/.test(cached.lastRepo || "") &&
-            typeof cached.lastType === "string"))
+        (!cached.lastAt || Number.isFinite(Date.parse(cached.lastAt)))
       ) {
         setData(cached);
         return;
@@ -90,18 +58,11 @@ export default function BuildLog() {
         events.status === "fulfilled" && Array.isArray(events.value)
           ? events.value[0]
           : null;
-      const latest =
-        ev &&
-        /^[\w.-]+\/[\w.-]+$/.test(ev.repo?.name || "") &&
-        Number.isFinite(Date.parse(ev.created_at))
-          ? ev
-          : null;
+      const lastAt =
+        ev && Number.isFinite(Date.parse(ev.created_at)) ? ev.created_at : null;
       const next = {
         repos: Number.isInteger(user?.public_repos) ? user.public_repos : null,
-        lastType: latest?.type || null,
-        lastAction: latest?.payload?.action || null,
-        lastRepo: latest?.repo.name || null,
-        lastAt: latest?.created_at || null,
+        lastAt,
         updatedAt: Date.now(),
       };
       if (next.repos === null && !next.lastAt) return;
@@ -139,18 +100,10 @@ export default function BuildLog() {
             </span>
           )}
           {data.lastAt && (
-            <>
-              <span>·</span>
-              <a
-                href={`https://github.com/${data.lastRepo}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {eventLabel({ type: data.lastType, payload: { action: data.lastAction } }, strings.events)}{" "}
-                {data.lastRepo.split("/")[1]}
-              </a>
+            <span>
+              · {strings.lastActivity}{" "}
               <time dateTime={data.lastAt}>{timeAgo(data.lastAt, strings)}</time>
-            </>
+            </span>
           )}
         </div>
       )}
