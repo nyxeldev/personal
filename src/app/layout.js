@@ -5,17 +5,15 @@ import { LanguageProvider } from "@/hooks/useLanguage";
 
 const sans = Inter({
   subsets: ["latin"],
-  // "optional" ga o'tkazildi: "swap" fallback va yuklangan shrift
-  // o'rtasidagi kenglik farqi tufayli Hero CTA tugmalarida CLS (layout
-  // shift) yaratardi — "optional" esa shriftni faqat tezda tayyor bo'lsa
-  // ishlatadi, aks holda fallback bilan qoladi, almashtirmaydi.
-  display: "optional",
+  display: "swap",
+  adjustFontFallback: true,
   variable: "--font-sans",
 });
 
 const mono = JetBrains_Mono({
   subsets: ["latin"],
-  display: "optional",
+  display: "swap",
+  adjustFontFallback: true,
   weight: ["400", "500"],
   variable: "--font-mono",
 });
