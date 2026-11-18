@@ -628,3 +628,32 @@ body.cursor-hidden .cursor__ring,
 body.cursor-hidden .cursor__glow {
   opacity: 0;
 }
+
+/* Sensorli (coarse pointer) qurilmalar uchun boshqacha his — doimiy
+   ergashuvchi kursor emas (barmoq pozitsiyasi "hover"siz ma'nosiz),
+   har bir teginishda shu nuqtadan kengayib so'nuvchi nur to'lqini.
+   position left/top orqali (statik), kattalashish/so'nish esa umumiy
+   keyframe orqali — har bir ripple uchun alohida transform kerak emas. */
+.cursor__ripple {
+  position: fixed;
+  z-index: 300;
+  width: 90px;
+  height: 90px;
+  margin: -45px 0 0 -45px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(circle, var(--accent-wash), transparent 70%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);
+  animation: cursor-ripple 650ms var(--e-out) forwards;
+}
+
+@keyframes cursor-ripple {
+  from {
+    transform: scale(0.25);
+    opacity: 0.55;
+  }
+  to {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
