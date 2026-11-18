@@ -23,10 +23,10 @@ export default function Hero() {
             <span className="mono">{t("hero.location")}</span>
           </Reveal>
 
-          <h1 className="hero__name" aria-label={SITE.name}>
-            <SplitText text="NYXEL" as="span" delay={60} />
+          <h1 className="hero__name" aria-label="Jahongir Hamidov">
+            <SplitText text="Jahongir" as="span" delay={60} />
             <SplitText
-              text="DEV"
+              text="Hamidov"
               as="span"
               delay={160}
               className="hero__name-last"

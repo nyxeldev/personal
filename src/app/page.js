@@ -1,5 +1,6 @@
 import Nav from "@/components/Nav/Nav";
 import ScrollProgress from "@/components/ui/ScrollProgress";
+import Cursor from "@/components/ui/Cursor";
 import Hero from "@/components/Hero/Hero";
 import WhoIAm from "@/components/WhoIAm/WhoIAm";
 import WhatIBuild from "@/components/WhatIBuild/WhatIBuild";
@@ -14,6 +15,7 @@ import Experience from "@/components/Experience/Experience";
 export default function Home() {
   return (
     <>
+      <Cursor />
       <ScrollProgress />
       <a className="skip" href="#main">
         Skip to content

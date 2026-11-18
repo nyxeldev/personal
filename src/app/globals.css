@@ -536,3 +536,95 @@ p {
 
 /* A keyboard visit must never land in a visually hidden reveal. */
 .reveal.is-armed:focus-within { opacity: 1; transform: none; }
+
+/* ---------- 8. Premium kursor ---------- */
+/* ui/Cursor.jsx orqali faqat sichqoncha + aniq ko'rsatkichli qurilmalarda,
+   reduced-motion'siz ishga tushadi (komponent aks holda umuman render
+   qilinmaydi). "cursor-active" klassi shu komponent muvaffaqiyatli
+   ishga tushgandagina body'ga qo'shiladi — shuning uchun JS ishlamay
+   qolsa ham asl kursor hech qachon yo'qolmaydi. Uch qatlam (dot/ring/glow)
+   bir xil transform'ni meros qiladi, lekin har birining o'z transition
+   davomiyligi borligi uchun turli tezlikda "lag" bilan ergashadi — shu
+   orqali chuqurlik hissi. Rang faqat --accent/--accent-line/--accent-wash
+   token'laridan, boshqa yangi rang yo'q. */
+body.cursor-active,
+body.cursor-active * {
+  cursor: none;
+}
+
+body.cursor-active input,
+body.cursor-active textarea {
+  cursor: text;
+}
+
+.cursor__dot,
+.cursor__ring,
+.cursor__glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 300;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform;
+}
+
+.cursor__dot {
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  background: var(--accent);
+  transition:
+    transform 0.1s var(--e-out),
+    opacity 0.2s var(--e-io),
+    width 0.25s var(--e-out),
+    height 0.25s var(--e-out),
+    margin 0.25s var(--e-out);
+}
+
+.cursor__ring {
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border: 1.5px solid var(--accent-line);
+  transition:
+    transform 0.18s var(--e-out),
+    width 0.25s var(--e-out),
+    height 0.25s var(--e-out),
+    margin 0.25s var(--e-out),
+    border-color 0.25s var(--e-io),
+    background-color 0.25s var(--e-io),
+    opacity 0.2s var(--e-io);
+}
+
+.cursor__glow {
+  width: 240px;
+  height: 240px;
+  margin: -120px 0 0 -120px;
+  background: radial-gradient(circle, var(--accent-wash), transparent 70%);
+  filter: blur(14px);
+  opacity: 0.6;
+  transition:
+    transform 0.5s var(--e-out),
+    opacity 0.3s var(--e-io);
+}
+
+body.cursor-hover .cursor__ring {
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px;
+  border-color: var(--accent);
+  background: var(--accent-wash);
+}
+
+body.cursor-hover .cursor__dot {
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+}
+
+body.cursor-hidden .cursor__dot,
+body.cursor-hidden .cursor__ring,
+body.cursor-hidden .cursor__glow {
+  opacity: 0;
+}

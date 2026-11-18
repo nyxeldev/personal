@@ -166,7 +166,7 @@ class Portfolio(unittest.TestCase):
         context = self.browser.new_context(java_script_enabled=False, viewport={"width": 390, "height": 667})
         page = context.new_page()
         page.goto(self.url)
-        expect(page.get_by_role("heading", name="NYXELDEV", exact=True)).to_be_visible()
+        expect(page.get_by_role("heading", name="Jahongir Hamidov", exact=True)).to_be_visible()
         expect(page.locator(".hero__lead")).to_be_visible()
         self.assertEqual(page.locator(".hero__lead").evaluate("e=>getComputedStyle(e).opacity"), "1")
         expect(page.locator("#seasmp-model")).to_be_visible()
