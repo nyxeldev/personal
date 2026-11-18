@@ -128,6 +128,58 @@ body {
   overflow-x: clip;
 }
 
+/* Butun sayt uchun xira, sekin suzuvchi fon nurlari — Hero'dagi
+   .hero__before bilan bir xil retsept (accent-wash, radial-gradient,
+   ease-in-out alternate), lekin butun body bo'ylab. position:fixed +
+   z-index:-1 bo'lgani uchun layout oqimidan tashqarida (CLS'ga ta'sir
+   qilmaydi) va faqat transform bilan animatsiya qilingani uchun arzon.
+   Datastory kabi o'z foniga ega bo'limlar buni tabiiy ravishda yopib
+   qo'yadi — shunday bo'lishi kerak. */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform;
+}
+
+body::before {
+  top: -22vmax;
+  left: -16vmax;
+  width: min(70vw, 900px);
+  height: min(70vw, 900px);
+  background: radial-gradient(ellipse at center, var(--accent-wash), transparent 60%);
+  animation: body-drift-a 42s ease-in-out infinite alternate;
+}
+
+body::after {
+  bottom: -26vmax;
+  right: -18vmax;
+  width: min(58vw, 760px);
+  height: min(58vw, 760px);
+  background: radial-gradient(ellipse at center, var(--accent-wash), transparent 60%);
+  animation: body-drift-b 50s ease-in-out infinite alternate;
+}
+
+@keyframes body-drift-a {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(5%, -6%) scale(1.1); }
+}
+
+@keyframes body-drift-b {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(-6%, 5%) scale(1.12); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after {
+    animation: none;
+  }
+}
+
 img,
 svg,
 video {
