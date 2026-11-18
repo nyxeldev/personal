@@ -129,12 +129,14 @@ body {
 }
 
 /* Butun sayt uchun xira, sekin suzuvchi fon nurlari — Hero'dagi
-   .hero__before bilan bir xil retsept (accent-wash, radial-gradient,
-   ease-in-out alternate), lekin butun body bo'ylab. position:fixed +
-   z-index:-1 bo'lgani uchun layout oqimidan tashqarida (CLS'ga ta'sir
-   qilmaydi) va faqat transform bilan animatsiya qilingani uchun arzon.
-   Datastory kabi o'z foniga ega bo'limlar buni tabiiy ravishda yopib
-   qo'yadi — shunday bo'lishi kerak. */
+   .hero__before bilan bir xil retsept (radial-gradient, ease-in-out
+   alternate), lekin butun body bo'ylab, kattaroq radius va kuchliroq
+   rang bilan — ekran o'rtasigacha ham yetib borishi uchun (oddiy
+   --accent-wash juda xira/kichik bo'lgani uchun o'rta qismda deyarli
+   bilinmas edi). position:fixed + z-index:-1 bo'lgani uchun layout
+   oqimidan tashqarida (CLS'ga ta'sir qilmaydi) va faqat transform bilan
+   animatsiya qilingani uchun arzon. Datastory kabi o'z foniga ega
+   bo'limlar buni tabiiy ravishda yopib qo'yadi — shunday bo'lishi kerak. */
 body::before,
 body::after {
   content: "";
@@ -146,20 +148,28 @@ body::after {
 }
 
 body::before {
-  top: -22vmax;
-  left: -16vmax;
-  width: min(70vw, 900px);
-  height: min(70vw, 900px);
-  background: radial-gradient(ellipse at center, var(--accent-wash), transparent 60%);
+  top: -30vmax;
+  left: -25vmax;
+  width: 95vmax;
+  height: 95vmax;
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in srgb, var(--accent) 24%, transparent),
+    transparent 70%
+  );
   animation: body-drift-a 42s ease-in-out infinite alternate;
 }
 
 body::after {
-  bottom: -26vmax;
-  right: -18vmax;
-  width: min(58vw, 760px);
-  height: min(58vw, 760px);
-  background: radial-gradient(ellipse at center, var(--accent-wash), transparent 60%);
+  bottom: -32vmax;
+  right: -26vmax;
+  width: 85vmax;
+  height: 85vmax;
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in srgb, var(--accent-hi) 22%, transparent),
+    transparent 70%
+  );
   animation: body-drift-b 50s ease-in-out infinite alternate;
 }
 
